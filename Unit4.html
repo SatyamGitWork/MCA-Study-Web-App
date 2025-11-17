@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive MongoDB Q&A Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Neutrals with Teal Accent -->
+    <!-- Application Structure Plan: A two-column SPA. Left column: sticky sidebar with navigation links to all 10 questions. Right column: main content area with answers. This structure is chosen for usability, allowing users to instantly jump to any topic, which is ideal for a Q&A/study guide format and far superior to the report's linear text file. -->
+    <!-- Visualization & Content Choices: Report Info: 10 Q&A pairs on MongoDB. Goal: Learn/Review. Presentation: Sticky nav + content sections. Interactions: (1) Nav Links (JS smooth-scroll, Goal: Fast navigation, Justification: Core usability for a long Q&A list). (2) Comparison Table (HTML/Tailwind, Goal: Compare ORM/ODM, Justification: Optimal for comparison). (3) Code Snippets (<pre>/<code>, Goal: Show commands, Justification: Clear presentation of code). No charts are needed for this text-based report. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f9fafb;
+        }
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+        code {
+            font-family: monospace;
+        }
+        pre code {
+            color: inherit;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-amber-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <h1 class="text-2xl font-bold text-amber-700 mb-6">MongoDB Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">An interactive guide to 10 key topics. Click a question to jump to the answer.</p>
+            <ul class="space-y-3">
+                <li><a href="#q1" class="font-medium text-gray-700 hover:text-amber-600">1. `find` vs. `findOne`</a></li>
+                <li><a href="#q2" class="font-medium text-gray-700 hover:text-amber-600">2. ORM vs. ODM</a></li>
+                <li><a href="#q3" class="font-medium text-gray-700 hover:text-amber-600">3. Why use NoSQL?</a></li>
+                <li><a href="#q4" class="font-medium text-gray-700 hover:text-amber-600">4. Why use MongoDB?</a></li>
+                <li><a href="#q5" class="font-medium text-gray-700 hover:text-amber-600">5. Features of MongoDB</a></li>
+                <li><a href="#q6" class="font-medium text-gray-700 hover:text-amber-600">6. How to create users & roles</a></li>
+                <li><a href="#q7" class="font-medium text-gray-700 hover:text-amber-600">7. How to remove a user</a></li>
+                <li><a href="#q8" class="font-medium text-gray-700 hover:text-amber-600">8. MongoDB data types</a></li>
+                <li><a href="#q9" class="font-medium text-gray-700 hover:text-amber-600">9. Create & drop database</a></li>
+                <li><a href="#q10" class="font-medium text-gray-700 hover:text-amber-600">10. Connect Node.js to MongoDB</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <section id="q1" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">1. Difference between `find` and `findOne`</h2>
+                <p class="text-lg text-gray-700 mb-6">This section breaks down the two primary methods for querying documents in MongoDB. The key difference lies in what they return: a cursor for multiple documents versus a single document object.</p>
+                <h3 class="text-xl font-semibold mb-2">`db.collection.find(query, projection)`</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                    <li><strong>Purpose:</strong> Retrieves <strong>multiple</strong> documents that match the <code>query</code> criteria.</li>
+                    <li><strong>Return Value:</strong> Returns a <strong>cursor</strong>, which is a pointer to the result set. You then iterate over the cursor to access the documents. Even if only one document matches, it returns a cursor.</li>
+                    <li><strong>Example:</strong> <code>db.users.find({ status: "active" })</code> would return a cursor pointing to all users with an "active" status.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2">`db.collection.findOne(query, projection)`</h3>
+                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                    <li><strong>Purpose:</strong> Retrieves only the <strong>first</strong> document that matches the <code>query</code> criteria.</li>
+                    <li><strong>Return Value:</strong> Returns a <strong>single document</strong> (as a JSON-like object), not a cursor. If no document matches, it returns <code>null</code>.</li>
+                    <li><strong>Example:</strong> <code>db.users.findOne({ userId: 123 })</code> would return the single document for the user with <code>userId</code> 123.</li>
+                </ul>
+            </section>
+
+            <section id="q2" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">2. Difference between ORM and ODM</h2>
+                <p class="text-lg text-gray-700 mb-6">Understanding the difference between Object-Relational Mapping (ORM) and Object-Document Mapping (ODM) is essential for choosing the right library to connect your application to a database. The choice depends entirely on whether you're using a SQL (Relational) or NoSQL (Document) database.</p>
+                
+                <h3 class="text-xl font-semibold mb-2">ORM (Object-Relational Mapping)</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                    <li><strong>Used with:</strong> Relational Databases (SQL) like MySQL, PostgreSQL, etc.</li>
+                    <li><strong>Concept:</strong> Maps data from <strong>tables</strong> and <strong>rows</strong> to <strong>objects</strong> and <strong>classes</strong> in your code.</li>
+                    <li><strong>Example Libraries:</strong> Sequelize (Node.js), SQLAlchemy (Python), Hibernate (Java).</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2">ODM (Object-Document Mapping)</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><strong>Used with:</strong> Document Databases (NoSQL) like MongoDB.</li>
+                    <li><strong>Concept:</strong> Maps data from <strong>collections</strong> and <strong>documents</strong> to <strong>objects</strong> and <strong>classes</strong> in your code.</li>
+                    <li><strong>Example Libraries:</strong> Mongoose (Node.js), MongoEngine (Python).</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-4">Comparison Table</h3>
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ORM (Object-Relational Mapping)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ODM (Object-Document Mapping)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Database Type</td>
+                                <td class="px-6 py-4 text-gray-700">Relational (SQL)</td>
+                                <td class="px-6 py-4 text-gray-700">Document (NoSQL)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Data Model</td>
+                                <td class="px-6 py-4 text-gray-700">Tables, Rows, Columns</td>
+                                <td class="px-6 py-4 text-gray-700">Collections, Documents, Fields</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Mapping</td>
+                                <td class="px-6 py-4 text-gray-700">Maps tables/rows to objects/classes</td>
+                                <td class="px-6 py-4 text-gray-700">Maps collections/documents to objects/classes</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Example DBs</td>
+                                <td class="px-6 py-4 text-gray-700">MySQL, PostgreSQL, SQL Server</td>
+                                <td class="px-6 py-4 text-gray-700">MongoDB, CouchDB</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Example Libs</td>
+                                <td class="px-6 py-4 text-gray-700">Sequelize, SQLAlchemy, Hibernate</td>
+                                <td class="px-6 py-4 text-gray-700">Mongoose, MongoEngine</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="q3" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">3. Why we use NoSQL</h2>
+                <p class="text-lg text-gray-700 mb-6">NoSQL ("Not Only SQL") databases emerged to solve the limitations of traditional SQL databases, especially for modern, large-scale applications. Here are the primary drivers for adopting NoSQL solutions.</p>
+                <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                    <li><strong>Flexible Data Models:</strong> NoSQL databases don't require a predefined schema. This is ideal for unstructured or semi-structured data and allows for rapid development and iteration.</li>
+                    <li><strong>Horizontal Scalability (Scaling Out):</strong> They are designed to scale horizontally by adding more servers, which is often more cost-effective than upgrading a single large server (vertical scaling).</li>
+                    <li><strong>High Performance:</strong> They are often optimized for specific data models and access patterns (like fast key-value lookups), leading to better performance for certain use cases.</li>
+                    <li><strong>Big Data:</strong> Well-suited for handling massive volumes of data and high-velocity read/write operations (e.g., IoT data, social media feeds).</li>
+                    <li><strong>High Availability:</strong> Many NoSQL databases have built-in support for replication and distribution, ensuring the system remains available even if servers fail.</li>
+                </ol>
+            </section>
+
+            <section id="q4" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">4. Why do we use MongoDB?</h2>
+                <p class="text-lg text-gray-700 mb-6">Among NoSQL databases, MongoDB is exceptionally popular. It hits a "sweet spot" by providing the flexibility of NoSQL with the rich query capabilities often associated with SQL databases. Here's why it's a common choice.</p>
+                <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                    <li><strong>Document-Oriented:</strong> It stores data in flexible, JSON-like (BSON) documents. This allows for complex nested structures and arrays in a single record, mapping directly to application objects.</li>
+                    <li><strong>Schema Flexibility:</strong> You can change the structure of documents over time without complex database migrations.</li>
+                    <li><strong>Rich Query Language:</strong> Provides a powerful query language, including ad-hoc queries, indexing, and aggregations.</li>
+                    <li><strong>Scalability & Availability:</strong> It has strong, built-in features for horizontal scaling (<strong>Sharding</strong>) and high availability (<strong>Replication</strong>).</li>
+                    <li><strong>Performance:</strong> Features like indexing, in-memory computing, and the flexible data model contribute to high performance.</li>
+                </ol>
+            </section>
+
+            <section id="q5" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">5. List and explain various features of MongoDB.</h2>
+                <p class="text-lg text-gray-700 mb-6">MongoDB is more than just a simple document store; it's a full-featured database with a rich ecosystem. These core features are what make it a powerful choice for modern applications.</p>
+                <ol class="list-decimal list-inside text-gray-700 space-y-3">
+                    <li><strong>Document-Oriented (BSON):</strong> Stores data in BSON (Binary JSON) documents, supporting nested objects and arrays.</li>
+                    <li><strong>Ad-hoc Queries:</strong> Supports a rich query language to search by field, range, regular expressions, and more.</li>
+                    <li><strong>Indexing:</strong> Supports various types of indexes (single field, compound, text, geospatial) to dramatically improve query performance.</li>
+                    <li><strong>Replication (High Availability):</strong> Uses <strong>replica sets</strong> to provide high availability. A primary node accepts writes, which are replicated to secondary nodes. If the primary fails, a secondary is automatically elected.</li>
+                    <li><strong>Sharding (Horizontal Scalability):</strong> Scales horizontally using <strong>sharding</strong>, which distributes data across multiple servers (shards). This allows the database to handle massive datasets.</li>
+                    <li><strong>Aggregation Framework:</strong> A powerful data processing pipeline for running complex analytics and transformations on your data (e.g., `$match`, `$group`, `$sort`).</li>
+                    <li><strong>GridFS:</strong> A specification for storing and retrieving large files (like images or videos) that exceed the 16MB document size limit.</li>
+                </ol>
+            </section>
+
+            <section id="q6" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">6. Explain how to create users in MongoDB. Also enlist and explain various roles of the users.</h2>
+                <p class="text-lg text-gray-700 mb-6">MongoDB uses Role-Based Access Control (RBAC) to secure your database. You create users within a specific database and assign them roles that grant permissions. This section shows the command for creating a user and explains the most common roles.</p>
+                
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="q6-example">Show Example</button>
+                <div id="q6-example" class="hidden">
+                    <h3 class="text-xl font-semibold mb-2">Create User Syntax</h3>
+                    <pre><code>db.createUser({
+      user: "&lt;username&gt;",
+    { role: "&lt;roleName&gt;", db: "&lt;databaseName&gt;" },
+    // ... other roles
+  ]
+});</code></pre>
+
+                <h3 class="text-xl font-semibold mt-4 mb-2">Create User Example</h3>
+                <p class="text-gray-700 mb-2">This example creates a user <code>myAppUser</code> in the <code>admin</code> database who can read and write to the <code>productionDB</code> database.</p>
+                <pre><code>// 1. Switch to the database where you want to create the user
+use admin
+
+// 2. Create the user
+db.createUser({
+  user: "myAppUser",
+  pwd: passwordPrompt(),
+  roles: [
+    { role: "readWrite", db: "productionDB" }
+  ]
+});</code></pre>
+
+                <h3 class="text-xl font-semibold mt-6 mb-4">Various Roles of Users</h3>
+                
+                <h4 class="text-lg font-semibold mb-2">Database-Specific Roles</h4>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                    <li><strong><code>read</code>:</strong> Allows the user to read all non-system collections in the database.</li>
+                    <li><strong><code>readWrite</code>:</strong> Allows the user to read and write (insert, update, delete) to all non-system collections.</li>
+                    <li><strong><code>dbAdmin</code>:</strong> Provides administrative privileges (e.g., index management) but not user management.</li>
+                    <li><strong><code>userAdmin</code>:</strong> Allows the user to create, delete, and manage users within that database.</li>
+                </ul>
+
+                <h4 class="text-lg font-semibold mb-2">Cluster-Wide (Admin) Roles</h4>
+                <p class="text-gray-700 mb-2">These roles are defined in the <code>admin</code> database and apply cluster-wide.</p>
+                <ul class="list-disc list-inside text-gray-700 space-y-1">
+                    <li><strong><code>readAnyDatabase</code>:</strong> <code>read</code> access to all databases.</li>
+                    <li><strong><code>readWriteAnyDatabase</code>:</strong> <code>readWrite</code> access to all databases.</li>
+                    <li><strong><code>userAdminAnyDatabase</code>:</strong> <code>userAdmin</code> access to all databases.</li>
+                    <li><strong><code>root</code>:</strong> The "superuser" with access to all resources and actions.</li>
+                </ul>
+                </div>
+            </section>
+
+            <section id="q7" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">7. How will you remove the user in MongoDB? Explain.</h2>
+                <p class="text-lg text-gray-700 mb-6">You can remove a user with the <code>db.dropUser()</code> command. You must be connected to the database where the user was originally created (often the <code>admin</code> database or a specific service database) to run this command.</p>
+                
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="q7-example">Show Example</button>
+                <div id="q7-example" class="hidden">
+                    <h3 class="text-xl font-semibold mb-2">Syntax</h3>
+                    <pre><code>db.dropUser("&lt;username&gt;");</code></pre>
+                <pre><code>// 1. Switch to the database where the user is defined
+use admin
+
+// 2. Drop the user
+db.dropUser("myAppUser");</code></pre>
+                    <p class="text-gray-700 mt-4">This command will return <code>true</code> if the user was successfully dropped.</p>
+                </div>
+            </section>
+
+            <section id="q8" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">8. Give various data types used in MongoDB.</h2>
+                <p class="text-lg text-gray-700 mb-6">MongoDB uses BSON (Binary JSON), which extends the standard JSON data types to include additional types useful for database operations. Here are the most common BSON data types.</p>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><strong>String:</strong> UTF-8 string.</li>
+                    <li><strong>Integer:</strong> 32-bit or 64-bit integer.</li>
+                    <li><strong>Double:</strong> 64-bit floating-point number.</li>
+                    <li><strong>Boolean:</strong> <code>true</code> or <code>false</code>.</li>
+                    <li><strong>Object:</strong> An embedded document.</li>
+                    <li><strong>Array:</strong> An array of values.</li>
+                    <li><strong>ObjectId:</strong> A 12-byte unique ID, automatically generated as the <code>_id</code> for documents.</li>
+                    <li><strong>Date:</strong> Stores the date and time as a 64-bit integer (milliseconds since the Unix epoch).</li>
+                    <li><strong>Timestamp:</strong> A 64-bit value used internally for replication and sharding.</li>
+                    <li><strong>Null:</strong> Stores a <code>null</code> value.</li>
+                    <li><strong>Regular Expression:</strong> Stores a regular expression.</li>
+                    <li><strong>Binary Data:</strong> Stores binary data (e.g., a small image).</li>
+                    <li><strong>JavaScript Code:</strong> Stores a string of JavaScript code.</li>
+                </ul>
+            </section>
+
+            <section id="q9" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">9. Write the MongoDB command to create and drop the database.</h2>
+                <p class="text-lg text-gray-700 mb-6">This section explains the commands for database creation and deletion. A key concept in MongoDB is that databases are created implicitly—that is, they aren't actually created until you insert data into them.</p>
+
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="q9-example">Show Example</button>
+                <div id="q9-example" class="hidden">
+                    <h3 class="text-xl font-semibold mb-2">Create Database</h3>
+                    <p class="text-gray-700 mb-2">MongoDB creates a database implicitly. The <code>use</code> command switches to a database, and the database is physically created only when you first insert data (e.g., by inserting a document into a collection).</p>
+
+// 2. Insert data. This action creates the database and the collection.
+db.myCollection.insertOne({ name: "Test" })
+
+// Now, 'myNewDatabase' officially exists.</code></pre>
+
+                <h3 class="text-xl font-semibold mt-6 mb-2">Drop Database</h3>
+                <p class="text-gray-700 mb-2">The <code>db.dropDatabase()</code> command deletes the *current* database you are using. This operation is irreversible and removes all collections and documents within that database.</p>
+                <pre><code>// 1. Make sure you are using the correct database
+use myNewDatabase
+
+// 2. Run the drop command
+db.dropDatabase()</code></pre>
+                </div>
+            </section>
+
+            <section id="q10" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">10. Write the steps to connect Node.js with MongoDB</h2>
+                <p class="text-lg text-gray-700 mb-6">This guide shows how to connect a Node.js application to a MongoDB database using the official <code>mongodb</code> driver from NPM. This is the foundational step for building any Node.js application that relies on MongoDB.</p>
+
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="q10-example">Show Example</button>
+                <div id="q10-example" class="hidden">
+                    <h3 class="text-xl font-semibold mb-2">Step 1: Install the MongoDB Driver</h3>
+                    <p class="text-gray-700 mb-2">Open your terminal in your Node.js project folder and run:</p>
+                <p class="text-gray-700 mb-2">In your JavaScript file (e.g., <code>app.js</code>), use the following code. It imports the <code>MongoClient</code>, defines your connection string (URI), and creates an <code>async</code> function to connect, perform an operation, and then close the connection.</p>
+                <pre><code>// 1. Import the MongoClient
+const { MongoClient } = require('mongodb');
+
+// 2. Define the Connection URI
+// For a local server on the default port:
+const uri = "mongodb://localhost:27017";
+// For MongoDB Atlas, get this string from your cluster's "connect" dialog.
+
+// 3. Create a new MongoClient
+const client = new MongoClient(uri);
+
+// 4. Create an async function to connect and run operations
+async function run() {
+  try {
+    // 5. Connect the client to the server
+    await client.connect();
+    
+    // 6. Select the database
+    const database = client.db("myNewDatabase"); // Specify your database name
+    
+    // 7. Select the collection
+    const collection = database.collection("myCollection"); // Specify your collection name
+
+    // 8. Perform an operation (e.g., find one document)
+    const query = { name: "Test" };
+    const doc = await collection.findOne(query);
+
+    console.log("Connected successfully to server");
+    console.log("Found document:", doc);
+
+  } catch (err) {
+    console.error("An error occurred:", err);
+  } finally {
+    // 9. Ensure the client will close when you finish/error
+    await client.close();
+    console.log("Connection closed.");
+  }
+}
+
+// 10. Call the function
+run().catch(console.dir);</code></pre>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        
+                        history.pushState(null, null, targetId);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.toggle-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.classList.toggle('hidden');
+                        button.textContent = targetElement.classList.contains('hidden') ? 'Show Example' : 'Hide Example';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

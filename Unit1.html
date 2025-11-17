@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive HTML & CSS Fundamentals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutrals (Amber & Gray) -->
+    <!-- Application Structure Plan: Designed a two-column SPA with a sticky side-navigation for the 13 topics and a main content area. This structure is superior to the report's linear list, allowing users to instantly jump to any concept, which fits the user task of learning or reviewing specific topics. Interactivity is added via "Show Example" toggles that reveal code and a live-rendered preview, making the abstract code examples consumable and educational. -->
+    <!-- Visualization & Content Choices: Report Info: 13 Q&A topics. Goal: Learn/Review. Presentation: Sticky side-nav + main content sections. Interactions: (1) Nav: JS smooth-scroll links (Goal: Fast navigation, Justification: Improves on linear scrolling). (2) Code Examples: JS toggle button (Goal: Connect code to visual output, Justification: Far more educational than static code text, Method: JS + HTML/CSS). (3) Comparison Topics: HTML Table (Goal: Direct comparison, Justification: Tables are the optimal tool for this data, Method: HTML + Tailwind). - No charts needed. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f9fafb;
+        }
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+        code {
+            font-family: monospace;
+        }
+        .live-preview {
+            border: 1px dashed #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-amber-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <h1 class="text-2xl font-bold text-amber-700 mb-6">HTML & CSS Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">An interactive guide to 13 fundamental concepts. Click a topic to jump directly.</p>
+            <ul class="space-y-3">
+                <li><a href="#emmet" class="font-medium text-gray-700 hover:text-amber-600">1. Emmet</a></li>
+                <li><a href="#flexbox" class="font-medium text-gray-700 hover:text-amber-600">2. Flexbox</a></li>
+                <li><a href="#table" class="font-medium text-gray-700 hover:text-amber-600">3. Table Tag</a></li>
+                <li><a href="#css-types" class="font-medium text-gray-700 hover:text-amber-600">4. Types of CSS</a></li>
+                <li><a href="#block-inline" class="font-medium text-gray-700 hover:text-amber-600">5. Block vs. Inline</a></li>
+                <li><a href="#margin-padding" class="font-medium text-gray-700 hover:text-amber-600">6. Margin vs. Padding</a></li>
+                <li><a href="#container-empty" class="font-medium text-gray-700 hover:text-amber-600">7. Container vs. Empty Tag</a></li>
+                <li><a href="#p-pre" class="font-medium text-gray-700 hover:text-amber-600">8. p vs. pre</a></li>
+                <li><a href="#bdo-dir" class="font-medium text-gray-700 hover:text-amber-600">9. bdo vs. dir</a></li>
+                <li><a href="#fieldset" class="font-medium text-gray-700 hover:text-amber-600">10. Fieldset & Legend</a></li>
+                <li><a href="#selectors" class="font-medium text-gray-700 hover:text-amber-600">11. CSS Selectors</a></li>
+                <li><a href="#justify-content" class="font-medium text-gray-700 hover:text-amber-600">12. justify-content</a></li>
+                <li><a href="#align-items" class="font-medium text-gray-700 hover:text-amber-600">13. align-items</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <section id="emmet" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">1. Emmet Documentation & Example</h2>
+                <p class="text-lg text-gray-700 mb-4"><strong>Emmet</strong> is a plugin for many popular text editors that significantly speeds up HTML and CSS development. It uses abbreviations (snippets) that are expanded into full, valid code when you press a key (usually <code>Tab</code>).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Emmet Abbreviation:</h3>
+                        <pre><code>ul.nav>li.item*3>a{Item $}</code></pre>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Expanded HTML:</h3>
+                        <pre><code>&lt;ul class="nav"&gt;
+    &lt;li class="item"&gt;&lt;a href=""&gt;Item 1&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="item"&gt;&lt;a href=""&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="item"&gt;&lt;a href=""&gt;Item 3&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="flexbox" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">2. Flexbox</h2>
+                <p class="text-lg text-gray-700 mb-6"><strong>Flexbox</strong> (Flexible Box Layout) is a one-dimensional CSS layout model for arranging items in rows or columns. It makes it easy to align items, distribute space, and reorder content.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="flexbox-example">Show Example</button>
+                <div id="flexbox-example" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Code:</h3>
+                            <pre><code>&lt;!-- HTML --&gt;
+&lt;div class="flex-container"&gt;
+    &lt;div class="item"&gt;Item 1&lt;/div&gt;
+    &lt;div class="item"&gt;Item 2&lt;/div&gt;
+    &lt;div class="item"&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- CSS --&gt;
+&lt;style&gt;
+.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    height: 200px;
+    border: 1px solid #ccc;
+}
+.item {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+}
+&lt;/style&gt;</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Live Preview:</h3>
+                            <div class="live-preview">
+                                <div style="display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; height: 200px; border: 1px solid #ccc;">
+                                    <div style="background-color: #007bff; color: white; padding: 20px; margin: 10px; border-radius: 5px;">Item 1</div>
+                                    <div style="background-color: #007bff; color: white; padding: 20px; margin: 10px; border-radius: 5px;">Item 2</div>
+                                    <div style="background-color: #007bff; color: white; padding: 20px; margin: 10px; border-radius: 5px;">Item 3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="table" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">3. Table Tag</h2>
+                <p class="text-lg text-gray-700 mb-4">The <code>&lt;table&gt;</code> tag is used to display data in a grid of rows and columns.</p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><code>&lt;table&gt;</code>: The wrapper for the entire table.</li>
+                    <li><code>&lt;tr&gt;</code>: (Table Row) Defines a row.</li>
+                    <li><code>&lt;th&gt;</code>: (Table Header) Defines a header cell. Text is bold and centered by default.</li>
+                    <li><code>&lt;td&gt;</code>: (Table Data) Defines a data cell.</li>
+                </ul>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="table-example">Show Example</button>
+                <div id="table-example" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Code:</h3>
+                            <pre><code>&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;First Name&lt;/th&gt;
+      &lt;th&gt;Last Name&lt;/th&gt;
+      &lt;th&gt;Age&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;John&lt;/td&gt;
+      &lt;td&gt;Doe&lt;/td&gt;
+      &lt;td&gt;30&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Jane&lt;/td&gt;
+      &lt;td&gt;Smith&lt;/td&gt;
+      &lt;td&gt;25&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Live Preview:</h3>
+                            <div class="live-preview table-wrapper">
+                                <table border="1" class="w-full">
+                                  <thead class="bg-gray-100">
+                                    <tr>
+                                      <th class="p-2 border border-gray-300">First Name</th>
+                                      <th class="p-2 border border-gray-300">Last Name</th>
+                                      <th class="p-2 border border-gray-300">Age</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td class="p-2 border border-gray-300">John</td>
+                                      <td class="p-2 border border-gray-300">Doe</td>
+                                      <td class="p-2 border border-gray-300">30</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="p-2 border border-gray-300">Jane</td>
+                                      <td class="p-2 border border-gray-300">Smith</td>
+                                      <td class="p-2 border border-gray-300">25</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="css-types" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">4. Different Types of CSS</h2>
+                <p class="text-lg text-gray-700 mb-4">There are three ways to add CSS to an HTML document:</p>
+                <ol class="list-decimal list-inside text-gray-700 mb-6 space-y-2">
+                    <li><strong>Inline CSS:</strong> Using the <code>style</code> attribute directly on an HTML element.</li>
+                    <li><strong>Internal CSS:</strong> Using a <code>&lt;style&gt;</code> tag within the <code>&lt;head&gt;</code> section of the HTML.</li>
+                    <li><strong>External CSS:</strong> Linking to a separate <code>.css</code> file using a <code>&lt;link&gt;</code> tag in the <code>&lt;head&gt;</code>.</li>
+                </ol>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="css-example">Show Example</button>
+                <div id="css-example" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Code:</h3>
+                            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Types of CSS&lt;/title&gt;
+
+    &lt;!-- 3. External CSS (links to styles.css) --&gt;
+    &lt;link rel="stylesheet" href="styles.css"&gt;
+    &lt;!-- styles.css contains:
+         body { background-color: #f4f4f4; } 
+    --&gt;
+
+    &lt;!-- 2. Internal CSS --&gt;
+    &lt;style&gt;
+        h2 {
+            color: green;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- 1. Inline CSS --&gt;
+    &lt;p style="color: blue; font-size: 18px;"&gt;
+        This uses Inline CSS.
+    &lt;/p&gt;
+
+    &lt;h2&gt;This uses Internal CSS&lt;/h2&gt;
+
+    &lt;p&gt;Page background is from External CSS.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Live Preview:</h3>
+                            <div class="live-preview" style="background-color: #f4f4f4; padding: 1.5rem; border-radius: 0.5rem;">
+                                <p style="color: blue; font-size: 18px;">
+                                    This uses Inline CSS.
+                                </p>
+                                <h2 style="color: green;">This uses Internal CSS</h2>
+                                <p>Page background is from External CSS.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="block-inline" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">5. Differentiate: Block vs. Inline</h2>
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Block-level Element</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inline-level Element</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">New Line</td>
+                                <td class="px-6 py-4 text-gray-700">Always starts on a new line.</td>
+                                <td class="px-6 py-4 text-gray-700">Stays on the same line (in the "flow" of text).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Width</td>
+                                <td class="px-6 py-4 text-gray-700">Takes up the full width available by default.</td>
+                                <td class="px-6 py-4 text-gray-700">Takes up only as much width as its content needs.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Height/Width</td>
+                                <td class="px-6 py-4 text-gray-700">You can explicitly set <code>width</code> and <code>height</code>.</td>
+                                <td class="px-6 py-4 text-gray-700"><code>width</code> and <code>height</code> properties have no effect.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Margin/Padding</td>
+                                <td class="px-6 py-4 text-gray-700">All <code>margin</code> and <code>padding</code> are respected.</td>
+                                <td class="px-6 py-4 text-gray-700">Only horizontal <code>margin</code>/<code>padding</code> are respected. Vertical ones do not affect layout.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Examples</td>
+                                <td class="px-6 py-4 text-gray-700"><code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code>, <code>&lt;ul&gt;</code></td>
+                                <td class="px-6 py-4 text-gray-700"><code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;img&gt;</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="margin-padding" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">6. Differentiate: Margin vs. Padding</h2>
+                <p class="text-lg text-gray-700 mb-6">Both create space, but in different places relative to the element's border.</p>
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Margin</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Padding</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Location</td>
+                                <td class="px-6 py-4 text-gray-700">Space <strong>OUTSIDE</strong> an element's border.</td>
+                                <td class="px-6 py-4 text-gray-700">Space <strong>INSIDE</strong> an element's border (between content and border).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Purpose</td>
+                                <td class="px-6 py-4 text-gray-700">Creates space <em>between</em> elements (pushes other elements away).</td>
+                                <td class="px-6 py-4 text-gray-700">Creates space <em>within</em> an element (gives content "breathing room").</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Background</td>
+                                <td class="px-6 py-4 text-gray-700">Always transparent. Shows the parent's background.</td>
+                                <td class="px-6 py-4 text-gray-700">Shows the background color/image of the element itself.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Collapse</td>
+                                <td class="px-6 py-4 text-gray-700">Vertical margins can "collapse" (smaller margin is ignored).</td>
+                                <td class="px-6 py-4 text-gray-700">Padding never collapses.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="container-empty" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">7. Differentiate: Container vs. Empty Tag</h2>
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Container Tag</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empty Tag (Void Element)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Structure</td>
+                                <td class="px-6 py-4 text-gray-700">Has both an opening tag (<code>&lt;tag&gt;</code>) and a closing tag (<code>&lt;/tag&gt;</code>).</td>
+                                <td class="px-6 py-4 text-gray-700">Is a single, self-closing tag (e.g., <code>&lt;tag&gt;</code> or <code>&lt;tag /&gt;</code>).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Content</td>
+                                <td class="px-6 py-4 text-gray-700">Designed to hold content (text or other tags) between the tags.</td>
+                                <td class="px-6 py-4 text-gray-700">Cannot hold any content.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Purpose</td>
+                                <td class="px-6 py-4 text-gray-700">Defines a block or section of content.</td>
+                                <td class="px-6 py-4 text-gray-700">Inserts a specific item (line break, image, horizontal rule).</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Examples</td>
+                                <td class="px-6 py-4 text-gray-700"><code>&lt;div&gt;...&lt;/div&gt;</code>, <code>&lt;p&gt;...&lt;/p&gt;</code></td>
+                                <td class="px-6 py-4 text-gray-700"><code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;input&gt;</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="p-pre" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">8. Differentiate: <code>&lt;p&gt;</code> vs. <code>&lt;pre&gt;</code></h2>
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><code>&lt;p&gt;</code> (Paragraph)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><code>&lt;pre&gt;</code> (Preformatted)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Whitespace</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Collapses whitespace.</strong> Multiple spaces, tabs, and newlines are treated as a single space.</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Preserves whitespace.</strong> Renders all spaces, tabs, and newlines exactly as written.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Font</td>
+                                <td class="px-6 py-4 text-gray-700">Renders in the page's default proportional font (like Arial).</td>
+                                <td class="px-6 py-4 text-gray-700">Renders in a monospace font (like Courier) by default.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Use Case</td>
+                                <td class="px-6 py-4 text-gray-700">Standard paragraphs of text.</td>
+                                <td class="px-6 py-4 text-gray-700">Displaying code snippets, poetry, or text where spacing is vital.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="bdo-dir" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">9. Differentiate: <code>&lt;bdo&gt;</code> vs. <code>&lt;dir&gt;</code></h2>
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tag</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><code>&lt;bdo&gt;</code> (Bi-Directional Override)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><code>&lt;dir&gt;</code> (Directory)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Purpose</td>
+                                <td class="px-6 py-4 text-gray-700">Explicitly overrides the text direction (e.g., for right-to-left languages).</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>DEPRECATED (Obsolete).</strong> Was for a directory listing.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Status</td>
+                                <td class="px-6 py-4 text-gray-700">A valid HTML tag for internationalization (i18n).</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Do not use.</strong> Removed from HTML5.</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Usage</td>
+                                <td class="px-6 py-4 text-gray-700"><code>This is &lt;bdo dir="rtl"&gt;reversed&lt;/bdo&gt;.</code></td>
+                                <td class="px-6 py-4 text-gray-700">(N/A - Do not use)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Alternative</td>
+                                <td class="px-6 py-4 text-gray-700">(N/A)</td>
+                                <td class="px-6 py-4 text-gray-700">Use <code>&lt;ul&gt;</code> (unordered list) for all lists.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="fieldset" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">10. Fieldset & Legend</h2>
+                <p class="text-lg text-gray-700 mb-6">The <code>&lt;fieldset&gt;</code> tag groups related elements in a form, and <code>&lt;legend&gt;</code> provides a caption for that group. This is great for accessibility and organization.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="fieldset-example">Show Example</button>
+                <div id="fieldset-example" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Code:</h3>
+                            <pre><code>&lt;form&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Personal Information&lt;/legend&gt;
+    &lt;label for="fname"&gt;First Name:&lt;/label&gt;
+    &lt;input type="text" id="fname" name="fname"&gt;
+    &lt;br&gt;&lt;br&gt;
+    &lt;label for="lname"&gt;Last Name:&lt;/label&gt;
+    &lt;input type="text" id="lname" name="lname"&gt;
+  &lt;/fieldset&gt;
+  &lt;br&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Preferences&lt;/legend&gt;
+    &lt;input type="checkbox" id="news" name="news"&gt;
+    &lt;label for="news"&gt;Subscribe&lt;/label&gt;
+  &lt;/fieldset&gt;
+&lt;/form&gt;</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Live Preview:</h3>
+                            <div class="live-preview">
+                                <form>
+                                  <fieldset class="border border-gray-300 p-4 rounded-md">
+                                    <legend class="font-medium px-2">Personal Information</legend>
+                                    <label for="fname-demo">First Name:</label>
+                                    <input type="text" id="fname-demo" name="fname" class="border border-gray-300 rounded-md p-1">
+                                    <br><br>
+                                    <label for="lname-demo">Last Name:</label>
+                                    <input type="text" id="lname-demo" name="lname" class="border border-gray-300 rounded-md p-1">
+                                  </fieldset>
+                                  <br>
+                                  <fieldset class="border border-gray-300 p-4 rounded-md">
+                                    <legend class="font-medium px-2">Preferences</legend>
+                                    <input type="checkbox" id="news-demo" name="news">
+                                    <label for="news-demo">Subscribe to newsletter</label>
+                                  </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="selectors" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">11. CSS Selectors</h2>
+                <p class="text-lg text-gray-700 mb-6">This example shows the most common CSS selectors in action.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="selectors-example">Show Example</button>
+                <div id="selectors-example" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Code:</h3>
+                            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;CSS Selectors&lt;/title&gt;
+    &lt;style&gt;
+        /* 1. Element Selector (all &lt;p&gt;) */
+        p { font-family: Arial; }
+
+        /* 2. Class Selector (.highlight) */
+        .highlight { background-color: yellow; }
+
+        /* 3. ID Selector (#main-title) */
+        #main-title { color: #007bff; }
+
+        /* 4. Attribute Selector */
+        input[type="text"] { border: 2px solid blue; }
+
+        /* 5. Descendant Combinator */
+        ul li { color: green; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1 id="main-title"&gt;Styled by ID&lt;/h1&gt;
+    &lt;p&gt;Styled by Element selector.&lt;/p&gt;
+    &lt;p class="highlight"&gt;Styled by Class selector.&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;li&gt;Styled by Descendant.&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;input type="text" placeholder="Styled by Attribute"&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Live Preview:</h3>
+                            <div class="live-preview">
+                                <h1 id="main-title-demo" style="color: #007bff;">Styled by ID</h1>
+                                <p style="font-family: Arial;">Styled by Element selector.</p>
+                                <p class="highlight-demo" style="background-color: yellow; font-family: Arial;">Styled by Class selector.</p>
+                                <ul>
+                                    <li style="color: green; font-family: Arial;">Styled by Descendant.</li>
+                                </ul>
+                                <input type="text" placeholder="Styled by Attribute" style="border: 2px solid blue; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="justify-content" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">12. justify-content</h2>
+                <p class="text-lg text-gray-700 mb-6"><code>justify-content</code> aligns flex items along the <strong>main axis</strong> (horizontally, by default).</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="justify-example">Show Example</button>
+                <div id="justify-example" class="hidden">
+                    <div class="space-y-4">
+                        <h3 class="font-semibold"><code>flex-start</code> (default)</h3>
+                        <div class="live-preview" style="display: flex; justify-content: flex-start; background-color: #eee; border: 1px solid #ccc; height: 100px;">
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">1</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">2</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">3</div>
+                        </div>
+                        
+                        <h3 class="font-semibold"><code>flex-end</code></h3>
+                        <div class="live-preview" style="display: flex; justify-content: flex-end; background-color: #eee; border: 1px solid #ccc; height: 100px;">
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">1</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">2</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>center</code></h3>
+                        <div class="live-preview" style="display: flex; justify-content: center; background-color: #eee; border: 1px solid #ccc; height: 100px;">
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">1</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">2</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>space-between</code></h3>
+                        <div class="live-preview" style="display: flex; justify-content: space-between; background-color: #eee; border: 1px solid #ccc; height: 100px;">
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">1</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">2</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>space-around</code></h3>
+                        <div class="live-preview" style="display: flex; justify-content: space-around; background-color: #eee; border: 1px solid #ccc; height: 100px;">
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">1</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">2</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>space-evenly</code></h3>
+                        <div class="live-preview" style="display: flex; justify-content: space-evenly; background-color: #eee; border: 1px solid #ccc; height: 100px;">
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">1</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">2</div>
+                            <div style="background-color: #3498db; color: white; padding: 20px; margin: 5px; border-radius: 5px;">3</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="align-items" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">13. align-items</h2>
+                <p class="text-lg text-gray-700 mb-6"><code>align-items</code> aligns flex items along the <strong>cross axis</strong> (vertically, by default).</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="align-example">Show Example</button>
+                <div id="align-example" class="hidden">
+                    <div class="space-y-4">
+
+                        <h3 class="font-semibold"><code>stretch</code> (default)</h3>
+                        <div class="live-preview" style="display: flex; align-items: stretch; background-color: #eee; border: 1px solid #ccc; height: 150px;">
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">1</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">2</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">3</div>
+                        </div>
+                        
+                        <h3 class="font-semibold"><code>flex-start</code></h3>
+                        <div class="live-preview" style="display: flex; align-items: flex-start; background-color: #eee; border: 1px solid #ccc; height: 150px;">
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">1</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">2</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>flex-end</code></h3>
+                        <div class="live-preview" style="display: flex; align-items: flex-end; background-color: #eee; border: 1px solid #ccc; height: 150px;">
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">1</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">2</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>center</code></h3>
+                        <div class="live-preview" style="display: flex; align-items: center; background-color: #eee; border: 1px solid #ccc; height: 150px;">
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">1</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">2</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px;">3</div>
+                        </div>
+
+                        <h3 class="font-semibold"><code>baseline</code></h3>
+                        <div class="live-preview" style="display: flex; align-items: baseline; background-color: #eee; border: 1px solid #ccc; height: 150px;">
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px; font-size: 14px;">1</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 30px 10px; margin: 5px; border-radius: 5px; width: 60px; font-size: 24px;">2</div>
+                            <div style="background-color: #e74c3c; color: white; padding: 10px; margin: 5px; border-radius: 5px; width: 60px; font-size: 14px;">3</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        
+                        history.pushState(null, null, targetId);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.toggle-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.classList.toggle('hidden');
+                        button.textContent = targetElement.classList.contains('hidden') ? 'Show Example' : 'Hide Example';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

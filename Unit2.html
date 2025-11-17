@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive JavaScript Unit II Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutrals (Amber & Gray) -->
+    <!-- Application Structure Plan: Re-architected to match Unit1.html. This is a two-column SPA with a sticky side-navigation for all 23 topics and a main, single-page scrollable content area. This structure is superior to the previous panel-switching system for a study guide, allowing users to scroll through all content or jump directly to a topic. Interactivity is now handled by "Show Example" toggles, which is a simpler and more direct interaction than the previous tabbed system. -->
+    <!-- Visualization & Content Choices: Report Info: 23 JS Q&A topics. Goal: Learn/Review. Presentation: Sticky side-nav + main content sections. Interactions: (1) Nav: JS smooth-scroll links (Goal: Fast navigation). (2) Code Examples: JS toggle button (Goal: Connect concept to code, Justification: A simple toggle is more user-friendly than the previous tab system, Method: JS + HTML). (3) Comparison Topics: HTML Table (Goal: Direct comparison, Method: HTML + Tailwind). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f9fafb;
+        }
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+        }
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+        .live-preview {
+            border: 1px dashed #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body class="bg-amber-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <h1 class="text-2xl font-bold text-amber-700 mb-6">JS Unit II Study Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">An interactive guide to 23 JavaScript concepts. Click a topic to jump directly.</p>
+            <ul class="space-y-3">
+                <li><a href="#topic-home" class="font-medium text-gray-700 hover:text-amber-600">Welcome</a></li>
+                <li><a href="#topic-1" class="font-medium text-gray-700 hover:text-amber-600">1. Dynamic Typing</a></li>
+                <li><a href="#topic-4" class="font-medium text-gray-700 hover:text-amber-600">2. Hoisting</a></li>
+                <li><a href="#topic-13" class="font-medium text-gray-700 hover:text-amber-600">3. Var Scope</a></li>
+                <li><a href="#topic-7" class="font-medium text-gray-700 hover:text-amber-600">4. var, let, const</a></li>
+                <li><a href="#topic-12" class="font-medium text-gray-700 hover:text-amber-600">5. Primitive vs Non-Primitive</a></li>
+                <li><a href="#topic-14" class="font-medium text-gray-700 hover:text-amber-600">6. First-Class Functions</a></li>
+                <li><a href="#topic-2" class="font-medium text-gray-700 hover:text-amber-600">7. Short Circuiting</a></li>
+                <li><a href="#topic-3" class="font-medium text-gray-700 hover:text-amber-600">8. Bitwise Operators</a></li>
+                <li><a href="#topic-18" class="font-medium text-gray-700 hover:text-amber-600">9. Bitwise Output</a></li>
+                <li><a href="#topic-8" class="font-medium text-gray-700 hover:text-amber-600">10. Strict vs Loose Equality</a></li>
+                <li><a href="#topic-9" class="font-medium text-gray-700 hover:text-amber-600">11. break vs continue</a></li>
+                <li><a href="#topic-5" class="font-medium text-gray-700 hover:text-amber-600">12. Writing Functions</a></li>
+                <li><a href="#topic-6" class="font-medium text-gray-700 hover:text-amber-600">13. Object Cloning</a></li>
+                <li><a href="#topic-10" class="font-medium text-gray-700 hover:text-amber-600">14. push() vs pop()</a></li>
+                <li><a href="#topic-11" class="font-medium text-gray-700 hover:text-amber-600">15. shift() vs unshift()</a></li>
+                <li><a href="#topic-15" class="font-medium text-gray-700 hover:text-amber-600">16. Error Handling</a></li>
+                <li><a href="#topic-16" class="font-medium text-gray-700 hover:text-amber-600">17. String Methods</a></li>
+                <li><a href="#topic-17" class="font-medium text-gray-700 hover:text-amber-600">18. Array Methods</a></li>
+                <li><a href="#topic-23" class="font-medium text-gray-700 hover:text-amber-600">19. Math Functions</a></li>
+                <li><a href="#topic-22" class="font-medium text-gray-700 hover:text-amber-600">20. filter() Program</a></li>
+                <li><a href="#topic-19" class="font-medium text-gray-700 hover:text-amber-600">21. Odd or Even</a></li>
+                <li><a href="#topic-20" class="font-medium text-gray-700 hover:text-amber-600">22. Positive/Negative/Zero</a></li>
+                <li><a href="#topic-21" class="font-medium text-gray-700 hover:text-amber-600">23. Table of 9</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <section id="topic-home" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h1 class="text-3xl font-bold text-amber-800 mb-4">Welcome to Your Interactive JS Guide</h1>
+                <p class="text-lg text-gray-700 mb-4">
+                    This web page transforms your JavaScript study guide into an interactive experience, matching the look and feel of your Unit 1 guide. The original document was difficult to navigate, but this version uses a sticky side-menu and a single-page layout.
+                </p>
+                <p class="text-lg text-gray-700 mb-4">
+                    All 23 topics are organized in the navigation menu on the left. Click any topic to instantly scroll to its explanation and code examples. Use the "Show Example" button to reveal the code for each topic.
+                </p>
+            </section>
+
+            <section id="topic-1" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">1. JavaScript: Dynamically Typed Language</h2>
+                <p class="text-lg text-gray-700 mb-6">A dynamically typed language checks the data type of a variable at runtime (when the code is running) rather than at compile time (when you write it). In JavaScript, you can assign a variable one type (like a number) and then reassign it a different type (like a string) without any errors.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-1">Show Example</button>
+                <div id="example-1" class="hidden">
+<pre><code class="language-js">// No type is declared for the variable 'x'
+let x = 100;
+console.log(typeof x); // Output: "number"
+
+// We can immediately assign a different type to the same variable
+x = "Hello, world!";
+console.log(typeof x); // Output: "string"
+
+x = true;
+console.log(typeof x); // Output: "boolean"</code></pre>
+                </div>
+            </section>
+            
+            <section id="topic-2" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">2. Short Circuiting in JavaScript</h2>
+                <p class="text-lg text-gray-700 mb-4">Short-circuiting is a behavior of logical operators (`&&` - AND, `||` - OR).</p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><strong>`&&` (AND):</strong> If the first operand is `false`, the entire expression *must* be `false`, so JavaScript doesn't bother to evaluate the second operand.</li>
+                    <li><strong>`||` (OR):</strong> If the first operand is `true`, the entire expression *must* be `true`, so JavaScript doesn't bother to evaluate the second operand.</li>
+                </ul>
+                <p class="text-lg text-gray-700 mb-6">This is often used to set default values or conditionally run functions.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-2">Show Example</button>
+                <div id="example-2" class="hidden">
+<pre><code class="language-js">// 1. Short-circuit with && (AND)
+let age = 25;
+// The function only runs if the first condition (age > 18) is true
+(age > 18) && console.log("You are an adult."); // Output: "You are an adult."
+
+let isMember = false;
+// The function never runs because the first condition is false
+isMember && console.log("Welcome, member!"); // No output
+
+// 2. Short-circuit with || (OR)
+let userName = null;
+let defaultName = "Guest";
+// If userName is null (a 'falsy' value), the expression uses defaultName
+let greeting = "Welcome, " + (userName || defaultName);
+console.log(greeting); // Output: "Welcome, Guest"</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-3" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">3. Bitwise Operators (Any Three)</h2>
+                <p class="text-lg text-gray-700 mb-4">Bitwise operators treat their operands as 32-bit binary numbers (sequences of 0s and 1s) and perform operations on them bit by bit.</p>
+                <p class="text-lg text-gray-700 mb-6">Let's use `a = 5` (binary `0101`) and `b = 2` (binary `0010`).</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-3">Show Examples</button>
+                <div id="example-3" class="hidden">
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2 text-lg">1. `&` (AND)</h3>
+                            <p class="text-gray-700 mb-2">Sets a bit to 1 only if *both* corresponding bits are 1.</p>
+<pre><code class="language-js">//   0101  (5)
+// & 0010  (2)
+//   ----
+//   0000  (0)
+console.log(5 & 2); // Output: 0</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2 text-lg">2. `|` (OR)</h3>
+                            <p class="text-gray-700 mb-2">Sets a bit to 1 if *either* of the corresponding bits is 1.</p>
+<pre><code class="language-js">//   0101  (5)
+// | 0010  (2)
+//   ----
+//   0111  (7)
+console.log(5 | 2); // Output: 7</code></pre>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2 text-lg">3. `^` (XOR - Exclusive OR)</h3>
+                            <p class="text-gray-700 mb-2">Sets a bit to 1 if the corresponding bits are *different*.</p>
+<pre><code class="language-js">//   0101  (5)
+// ^ 0010  (2)
+//   ----
+//   0111  (7)
+console.log(5 ^ 2); // Output: 7</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="topic-4" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">4. Variable/Function Hoisting</h2>
+                <p class="text-lg text-gray-700 mb-4">Hoisting is a JavaScript mechanism where variable and function *declarations* are moved to the top of their scope (global, or function) before code execution.</p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><strong>`var` variables:</strong> Are hoisted and initialized with a value of `undefined`.</li>
+                    <li><strong>`let` and `const` variables:</strong> Are hoisted, but *not* initialized. Accessing them before declaration results in a `ReferenceError`. This gap is called the "Temporal Dead Zone."</li>
+                    <li><strong>Function declarations:</strong> Are fully hoisted, meaning you can call a function before it's defined in the code.</li>
+                </ul>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-4">Show Example</button>
+                <div id="example-4" class="hidden">
+<pre><code class="language-js">// 1. var hoisting
+console.log(myVar); // Output: undefined (hoisted and initialized)
+var myVar = 10;
+console.log(myVar); // Output: 10
+
+// 2. Function hoisting
+sayHello(); // Output: "Hello!"
+function sayHello() {
+  console.log("Hello!");
+}
+
+// 3. let hoisting (Temporal Dead Zone)
+// console.log(myLet); // ReferenceError: Cannot access 'myLet' before initialization
+let myLet = 20;
+console.log(myLet); // Output: 20</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-5" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">5. Different Ways of Writing Functions</h2>
+                <p class="text-lg text-gray-700 mb-6">There are several ways to define functions in JavaScript, each with different behaviors regarding hoisting and syntax.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-5">Show Example</button>
+                <div id="example-5" class="hidden">
+<pre><code class="language-js">// 1. Function Declaration
+// Hoisted, can be called before it's defined.
+function add(a, b) {
+  return a + b;
+}
+console.log("Declaration:", add(2, 3));
+
+// 2. Function Expression
+// Not hoisted. Assigns an anonymous function to a variable.
+const subtract = function(a, b) {
+  return a - b;
+};
+console.log("Expression:", subtract(10, 5));
+
+// 3. Arrow Function (ES6)
+// Concise syntax. `this` behavior is different (lexical).
+const multiply = (a, b) => {
+  return a * b;
+};
+// Or even shorter for single-line returns:
+const divide = (a, b) => a / b;
+
+console.log("Arrow (multiply):", multiply(4, 5));
+console.log("Arrow (divide):", divide(20, 4));
+
+// 4. Immediately Invoked Function Expression (IIFE)
+// A function that runs as soon as it's defined.
+(function() {
+  console.log("IIFE: I ran immediately!");
+})();</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-6" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">6. Different Ways of Object Cloning</h2>
+                <p class="text-lg text-gray-700 mb-4">Cloning means creating a new object with the same properties as an existing object.</p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><strong>Shallow Clone:</strong> Copies only the top-level properties. If a property is an object or array, the *reference* is copied, not the object itself. Modifying the nested object in the clone will also modify it in the original.</li>
+                    <li><strong>Deep Clone:</strong> Copies everything, including nested objects and arrays, so the clone is completely independent of the original.</li>
+                </ul>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-6">Show Example</button>
+                <div id="example-6" class="hidden">
+<pre><code class="language-js">const original = {
+  name: "Alice",
+  age: 30,
+  address: {
+    city: "New York"
+  }
+};
+
+// 1. Shallow Clone: Spread Syntax (...)
+const shallowClone1 = { ...original };
+shallowClone1.address.city = "Boston"; // This changes the original object too!
+console.log("Original city after shallow clone:", original.address.city); // Output: "Boston"
+
+// 2. Shallow Clone: Object.assign()
+const shallowClone2 = Object.assign({}, original);
+// This would also change the original, just like above.
+
+// Resetting original for the next example
+original.address.city = "New York";
+
+// 3. Deep Clone: structuredClone() (Modern & Best Way)
+// This is the new, standard, recommended way.
+const deepClone1 = structuredClone(original);
+deepClone1.address.city = "Chicago";
+console.log("Original city after deep clone:", original.address.city); // Output: "New York" (UNCHANGED)
+
+// 4. Deep Clone: JSON.parse/stringify (Old Way)
+// Works, but has limitations (loses functions, Dates, undefined).
+const deepClone2 = JSON.parse(JSON.stringify(original));
+deepClone2.address.city = "Miami";
+console.log("Original city after JSON clone:", original.address.city); // Output: "New York" (UNCHANGED)</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-7" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">7. Differentiate between var, let and const</h2>
+                <p class="text-lg text-gray-700 mb-4">`var`, `let`, and `const` are all used to declare variables, but they differ in scope, hoisting, and re-assignability.</p>
+                <div class="table-wrapper mb-6">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">`var`</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">`let`</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">`const`</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Scope</td>
+                                <td class="px-6 py-4 text-gray-700">Function-scoped or Global-scoped</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Block-scoped</strong> (`{ }`)</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Block-scoped</strong> (`{ }`)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Hoisting</td>
+                                <td class="px-6 py-4 text-gray-700">Hoisted and initialized to `undefined`</td>
+                                <td class="px-6 py-4 text-gray-700">Hoisted, but not initialized (Temporal Dead Zone)</td>
+                                <td class="px-6 py-4 text-gray-700">Hoisted, but not initialized (Temporal Dead Zone)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Can be Re-assigned?</td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Yes</strong></td>
+                                <td class="px-6 py-4 text-gray-700"><strong>Yes</strong></td>
+                                <td class="px-6 py-4 text-gray-700"><strong>No</strong> (Constant reference)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Can be Re-declared?</td>
+                                <td class="px-6 py-4 text-gray-700">Yes (in the same scope)</td>
+                                <td class="px-6 py-4 text-gray-700">No (in the same scope)</td>
+                                <td class="px-6 py-4 text-gray-700">No (in the same scope)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-7">Show Example</button>
+                <div id="example-7" class="hidden">
+<pre><code class="language-js">// Scope Example
+if (true) {
+  var myVar = 10; // Function/Global scoped
+  let myLet = 20; // Block scoped
+  const myConst = 30; // Block scoped
+}
+console.log("var:", myVar);   // Output: 10 (leaks out of the block)
+// console.log("let:", myLet); // ReferenceError: myLet is not defined
+// console.log("const:", myConst); // ReferenceError: myConst is not defined
+
+// Re-assignment Example
+let age = 30;
+age = 31; // OK
+
+const year = 2024;
+// year = 2025; // TypeError: Assignment to constant variable.</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-8" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">8. Differentiate between strict and loose equality</h2>
+                <ul class="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                    <li><strong>`==` (Loose Equality):</strong> Compares two values for equality *after* performing type coercion (converting them to a common type). This can lead to unexpected results.</li>
+                    <li><strong>`===` (Strict Equality):</strong> Compares two values for equality *without* type coercion. It checks if both the value and the type are the same.</li>
+                </ul>
+                <p class="text-lg text-gray-700 mb-6 p-4 bg-amber-100 border-l-4 border-amber-500 rounded">
+                    <strong>Rule of thumb:</strong> Always use `===` unless you have a specific reason to use `==`.
+                </p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-8">Show Example</button>
+                <div id="example-8" class="hidden">
+<pre><code class="language-js">console.log("5 == '5'", 5 == "5");   // Output: true (string '5' is coerced to number 5)
+console.log("5 === '5'", 5 === "5"); // Output: false (number is not a string)
+
+console.log("0 == false", 0 == false);   // Output: true (false is coerced to 0)
+console.log("0 === false", 0 === false); // Output: false (number is not a boolean)
+
+console.log("null == undefined", null == undefined);   // Output: true (a special case)
+console.log("null === undefined", null === undefined); // Output: false (different types)</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-9" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">9. Differentiate between break and continue</h2>
+                <p class="text-lg text-gray-700 mb-4">Both `break` and `continue` are used inside loops to alter their flow.</p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><strong>`break`:** **Exits the loop entirely.** It stops the loop immediately and execution continues *after* the loop.</li>
+                    <li><strong>`continue`:** **Skips the current iteration.** It stops the current iteration and jumps to the *next* iteration of the loop.</li>
+                </ul>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-9">Show Example</button>
+                <div id="example-9" class="hidden">
+<pre><code class="language-js">console.log("--- Using break ---");
+// Loop from 0 to 5. Stop the whole loop when i is 3.
+for (let i = 0; i <= 5; i++) {
+  if (i === 3) {
+    break; // Exit the loop
+  }
+  console.log(i);
+}
+// Output: 0, 1, 2
+
+console.log("--- Using continue ---");
+// Loop from 0 to 5. Skip the iteration when i is 3.
+for (let i = 0; i <= 5; i++) {
+  if (i === 3) {
+    continue; // Skip this iteration
+  }
+  console.log(i);
+}
+// Output: 0, 1, 2, 4, 5</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-10" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">10. Differentiate between push() and pop()</h2>
+                <p class="text-lg text-gray-700 mb-6">Both are `Array` methods that work on the **end** of an array.</p>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="font-semibold text-gray-900 text-xl mb-2">`push(item1, ...)`</h3>
+                        <p class="text-gray-700">Adds one or more elements to the end of the array. It *mutates* (changes) the original array and *returns* the new length.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="font-semibold text-gray-900 text-xl mb-2">`pop()`</h3>
+                        <p class="text-gray-700">Removes the *last* element from the end of the array. It *mutates* the original array and *returns* the element that was removed.</p>
+                    </div>
+                </div>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-10">Show Example</button>
+                <div id="example-10" class="hidden">
+<pre><code class="language-js">let fruits = ["apple", "banana"];
+
+// push()
+let newLength = fruits.push("orange");
+console.log(fruits);    // Output: ["apple", "banana", "orange"]
+console.log(newLength); // Output: 3
+
+// pop()
+let removedFruit = fruits.pop();
+console.log(fruits);      // Output: ["apple", "banana"]
+console.log(removedFruit); // Output: "orange"</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-11" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">11. Differentiate between shift() and unshift()</h2>
+                <p class="text-lg text-gray-700 mb-6">Both are `Array` methods that work on the **beginning** of an array.</p>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="font-semibold text-gray-900 text-xl mb-2">`unshift(item1, ...)`</h3>
+                        <p class="text-gray-700">Adds one or more elements to the beginning of the array. It *mutates* the original array and *returns* the new length.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="font-semibold text-gray-900 text-xl mb-2">`shift()`</h3>
+                        <p class="text-gray-700">Removes the *first* element from the beginning of the array. It *mutates* the original array and *returns* the element that was removed.</p>
+                    </div>
+                </div>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-11">Show Example</button>
+                <div id="example-11" class="hidden">
+<pre><code class="language-js">let colors = ["red", "green"];
+
+// unshift()
+let newLength = colors.unshift("blue");
+console.log(colors);    // Output: ["blue", "red", "green"]
+console.log(newLength); // Output: 3
+
+// shift()
+let removedColor = colors.shift();
+console.log(colors);      // Output: ["red", "green"]
+console.log(removedColor); // Output: "blue"</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-12" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">12. Differentiate between primitive and non-primitive</h2>
+                <p class="text-lg text-gray-700 mb-6">This is a core concept about how data is stored and handled in JavaScript.</p>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="font-semibold text-gray-900 text-xl mb-2">Primitive Types</h3>
+                        <p class="text-gray-700 mb-2">Includes: `string`, `number`, `boolean`, `null`, `undefined`, `symbol`, `bigint`.</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>They are <strong>immutable</strong> (cannot be changed).</li>
+                            <li>They are stored and passed by <strong>value</strong> (a *copy* is made).</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h3 class="font-semibold text-gray-900 text-xl mb-2">Non-Primitive Types</h3>
+                        <p class="text-gray-700 mb-2">Includes: `Object`, `Array`, `Function`.</p>
+                        <ul class="list-disc list-inside text-gray-700 space-y-1">
+                            <li>They are <strong>mutable</strong> (can be changed).</li>
+                            <li>They are stored and passed by <strong>reference</strong> (a *memory address* is copied).</li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-12">Show Example</button>
+                <div id="example-12" class="hidden">
+<pre><code class="language-js">// Primitive (pass-by-value)
+let a = 10;
+let b = a; // A copy of the value 10 is made
+b = 20;    // This changes 'b', but not 'a'
+console.log("a:", a); // Output: 10
+console.log("b:", b); // Output: 20
+
+// Non-Primitive (pass-by-reference)
+let objA = { name: "Alice" };
+let objB = objA; // A copy of the reference (memory address) is made
+objB.name = "Bob"; // This changes the object that BOTH variables point to
+console.log("objA.name:", objA.name); // Output: "Bob"
+console.log("objB.name:", objB.name); // Output: "Bob"</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-13" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">13. “var is function scoped or globally scoped”</h2>
+                <p class="text-lg text-gray-700 mb-4">This statement is correct. Unlike `let` and `const` which are block-scoped (`{}`), `var` declarations are scoped to the nearest **function** they are in. If a `var` is declared outside any function, it is scoped to the **global** object (`window` in a browser).</p>
+                <p class="text-lg text-gray-700 mb-6">This means `var` "leaks out" of blocks like `if`, `for`, or `while`.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-13">Show Example</button>
+                <div id="example-13" class="hidden">
+<pre><code class="language-js">var globalVar = "I'm global"; // Global scope
+
+function testScope() {
+  var functionVar = "I'm in a function"; // Function scope
+
+  if (true) {
+    var blockVar = "I'm in a block"; // Still function-scoped!
+    console.log(blockVar); // Output: "I'm in a block"
+  }
+
+  console.log(blockVar); // Output: "I'm in a block" (It "leaked" out of the if-block)
+}
+
+testScope();
+
+console.log(globalVar); // Output: "I'm global"
+// console.log(functionVar); // ReferenceError: functionVar is not defined
+// console.log(blockVar);    // ReferenceError: blockVar is not defined</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-14" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">14. “Functions are first-class citizens”</h2>
+                <p class="text-lg text-gray-700 mb-4">This means that functions in JavaScript are treated like any other value (like numbers, strings, or objects). They can be:</p>
+                <ol class="list-decimal list-inside text-gray-700 mb-6 space-y-1">
+                    <li>Assigned to variables.</li>
+                    <li>Passed as arguments to other functions (callbacks).</li>
+                    <li>Returned as values from other functions.</li>
+                </ol>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-14">Show Example</button>
+                <div id="example-14" class="hidden">
+<pre><code class="language-js">// 1. Assigned to a variable
+const sayHi = function() {
+  console.log("Hi!");
+};
+sayHi(); // Output: "Hi!"
+
+// 2. Passed as an argument (callback)
+function doOperation(a, b, operation) {
+  // 'operation' is a function
+  return operation(a, b);
+}
+function add(x, y) {
+  return x + y;
+}
+console.log("Passed as argument:", doOperation(5, 3, add)); // Output: 8
+
+// 3. Returned from another function
+function createGreeter(greeting) {
+  // This function returns a new function
+  return function(name) {
+    console.log(greeting + ", " + name + "!");
+  };
+}
+const greetInSpanish = createGreeter("Hola");
+const greetInFrench = createGreeter("Bonjour");
+
+greetInSpanish("Maria"); // Output: "Hola, Maria!"
+greetInFrench("Pierre"); // Output: "Bonjour, Pierre!"</code></pre>
+                </div>
+            </section>
+            
+            <section id="topic-15" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">15. Error Handling (try, catch, finally)</h2>
+                <p class="text-lg text-gray-700 mb-4">JavaScript provides the `try...catch...finally` block to handle runtime errors gracefully without crashing the program.</p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-1">
+                    <li><strong>`try`:** Contains the code that might throw an error.</li>
+                    <li><strong>`catch (error)`:** This block executes *only if* an error is thrown in the `try` block.</li>
+                    <li><strong>`finally`:** This block executes *always*, whether an error was thrown or not. It's used for cleanup (e.g., closing connections).</li>
+                </ul>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-15">Show Example</button>
+                <div id="example-15" class="hidden">
+<pre><code class="language-js">function parseJSON(jsonString) {
+  try {
+    // Try to parse the string
+    let data = JSON.parse(jsonString);
+    console.log("Parse successful:", data);
+    return data;
+  } catch (error) {
+    // This runs if JSON.parse fails (e.g., invalid JSON)
+    console.error("An error occurred:", error.message);
+    return null; // Handle the error by returning null
+  } finally {
+    // This runs NO MATTER WHAT (success or failure)
+    console.log("JSON parse attempt finished.");
+  }
+}
+
+console.log("--- Attempting valid JSON ---");
+parseJSON('{"name": "Alice"}');
+// Output:
+// Parse successful: { name: 'Alice' }
+// JSON parse attempt finished.
+
+console.log("--- Attempting invalid JSON ---");
+parseJSON('{name: "Bob"}'); // Invalid (keys need quotes)
+// Output:
+// An error occurred: Unexpected token n in JSON at position 1
+// JSON parse attempt finished.</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-16" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">16. Any Five String Functions (Methods)</h2>
+                <p class="text-lg text-gray-700 mb-6">Strings in JavaScript have many built-in methods. Remember, strings are immutable, so these methods return a *new* string.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-16">Show Example</button>
+                <div id="example-16" class="hidden">
+<pre><code class="language-js">let myString = "  JavaScript is Fun!  ";
+
+// 1. .toUpperCase() - Converts to uppercase
+console.log("toUpperCase:", myString.toUpperCase());
+// Output: "  JAVASCRIPT IS FUN!  "
+
+// 2. .toLowerCase() - Converts to lowercase
+console.log("toLowerCase:", myString.toLowerCase());
+// Output: "  javascript is fun!  "
+
+// 3. .trim() - Removes whitespace from both ends
+console.log("trim:", myString.trim());
+// Output: "JavaScript is Fun!"
+
+// 4. .slice(startIndex, endIndex) - Extracts a part of the string
+// 'endIndex' is not included.
+console.log("slice:", myString.trim().slice(0, 10));
+// Output: "JavaScript"
+
+// 5. .replace(searchValue, newValue) - Replaces the first match
+console.log("replace:", myString.trim().replace("Fun", "Awesome"));
+// Output: "JavaScript is Awesome!"</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-17" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">17. Any Five Array Functions (Methods)</h2>
+                <p class="text-lg text-gray-700 mb-6">These are powerful methods for iterating and transforming arrays.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-17">Show Example</button>
+                <div id="example-17" class="hidden">
+<pre><code class="language-js">let numbers = [1, 2, 3, 4, 5];
+
+// 1. .forEach(callback) - Executes a function for each element
+console.log("--- forEach ---");
+numbers.forEach((num) => {
+  console.log(num * 2);
+});
+// Output: 2, 4, 6, 8, 10
+
+// 2. .map(callback) - Creates a NEW array by transforming each element
+const doubled = numbers.map((num) => {
+  return num * 2;
+});
+console.log("map:", doubled); // Output: [2, 4, 6, 8, 10]
+
+// 3. .filter(callback) - Creates a NEW array with elements that pass a test
+const evens = numbers.filter((num) => {
+  return num % 2 === 0; // The test
+});
+console.log("filter:", evens); // Output: [2, 4]
+
+// 4. .reduce(callback, initialValue) - Reduces the array to a single value
+const sum = numbers.reduce((accumulator, currentValue) => {
+  return accumulator + currentValue;
+}, 0); // 0 is the starting value for accumulator
+console.log("reduce (sum):", sum); // Output: 15
+
+// 5. .find(callback) - Returns the FIRST element that passes a test
+const firstEven = numbers.find((num) => {
+  return num % 2 === 0;
+});
+console.log("find:", firstEven); // Output: 2</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-18" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">18. Write the output of the statement</h2>
+                <p class="text-lg text-gray-700 mb-6">These are the bitwise operators from question 3, showing their direct output.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-18">Show Code & Output</button>
+                <div id="example-18" class="hidden">
+<pre><code class="language-js">// 2 (0010) & 5 (0101)
+//   0010
+// & 0101
+//   ----
+//   0000 (which is 0)
+console.log(2 & 5); // Output: 0
+
+// 2 (0010) | 5 (0101)
+//   0010
+// | 0101
+//   ----
+//   0111 (which is 7)
+console.log(2 | 5); // Output: 7
+
+// 2 (0010) ^ 5 (0101)
+//   0010
+// ^ 0101
+//   ----
+//   0111 (which is 7)
+console.log(2 ^ 5); // Output: 7
+
+// 2 (0010) ^ 2 (0010)
+//   0010
+// ^ 0010
+//   ----
+//   0000 (which is 0)
+console.log(2 ^ 2); // Output: 0</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-19" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">19. Program to find whether the number is odd or even</h2>
+                <p class="text-lg text-gray-700 mb-6">We use the modulo (remainder) operator `%`. A number is even if `number % 2` is 0.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-19">Show Program</button>
+                <div id="example-19" class="hidden">
+<pre><code class="language-js">function checkOddEven(number) {
+  if (number % 2 === 0) {
+    console.log(number + " is even.");
+  } else {
+    console.log(number + " is odd.");
+  }
+}
+
+checkOddEven(10); // Output: 10 is even.
+checkOddEven(7);  // Output: 7 is odd.
+checkOddEven(0);  // Output: 0 is even.</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-20" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">20. Program to find positive, negative or zero</h2>
+                <p class="text-lg text-gray-700 mb-6">We use `if`, `else if`, and `else` to check the value.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-20">Show Program</button>
+                <div id="example-20" class="hidden">
+<pre><code class="language-js">function checkNumber(number) {
+  if (number > 0) {
+    console.log(number + " is positive.");
+  } else if (number < 0) {
+    console.log(number + " is negative.");
+  } else {
+    console.log(number + " is zero.");
+  }
+}
+
+checkNumber(50);  // Output: 50 is positive.
+checkNumber(-13); // Output: -13 is negative.
+checkNumber(0);   // Output: 0 is zero.</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-21" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">21. Program to print a table of 9</h2>
+                <p class="text-lg text-gray-700 mb-6">We use a `for` loop to iterate from 1 to 10 and print the product.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-21">Show Program</button>
+                <div id="example-21" class="hidden">
+<pre><code class="language-js">function printTable(number) {
+  console.log(`--- Multiplication Table of ${number} ---`);
+  for (let i = 1; i <= 10; i++) {
+    let result = number * i;
+    console.log(`${number} x ${i} = ${result}`);
+  }
+}
+
+printTable(9);
+// Output:
+// --- Multiplication Table of 9 ---
+// 9 x 1 = 9
+// 9 x 2 = 18
+// 9 x 3 = 27
+// 9 x 4 = 36
+// 9 x 5 = 45
+// 9 x 6 = 54
+// 9 x 7 = 63
+// 9 x 8 = 72
+// 9 x 9 = 81
+// 9 x 10 = 90</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-22" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">22. Program using filter() for even numbers</h2>
+                <p class="text-lg text-gray-700 mb-6">This combines an array with the `.filter()` method. The filter method creates a new array, including only the elements where the callback function returns `true`.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-22">Show Program</button>
+                <div id="example-22" class="hidden">
+<pre><code class="language-js">const numbersArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// The filter method creates a new array
+// It includes only the elements where the callback function returns 'true'
+const evenNumbers = numbersArray.filter((num) => {
+  // num % 2 === 0 is the test. It's true for even numbers.
+  return num % 2 === 0;
+});
+
+console.log("Original array:", numbersArray);
+console.log("Even numbers:", evenNumbers); // Output: [2, 4, 6, 8, 10]</code></pre>
+                </div>
+            </section>
+
+            <section id="topic-23" class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">23. Any five math functions with an example</h2>
+                <p class="text-lg text-gray-700 mb-6">JavaScript's built-in `Math` object provides properties and methods for mathematical operations.</p>
+                <button class="toggle-btn bg-amber-600 text-white font-medium py-2 px-4 rounded-md hover:bg-amber-700 transition-colors mb-4" data-target="example-23">Show Example</button>
+                <div id="example-23" class="hidden">
+<pre><code class="language-js">// 1. Math.random() - Returns a random number between 0 (inclusive) and 1 (exclusive)
+console.log("random:", Math.random()); // e.g., 0.4539...
+
+// To get a random integer in a range (e.g., 1 to 10):
+let randomInt = Math.floor(Math.random() * 10) + 1;
+console.log("Random 1-10:", randomInt);
+
+// 2. Math.floor() - Rounds a number DOWN to the nearest integer
+console.log("floor(5.8):", Math.floor(5.8)); // Output: 5
+
+// 3. Math.ceil() - Rounds a number UP to the nearest integer
+console.log("ceil(5.1):", Math.ceil(5.1)); // Output: 6
+
+// 4. Math.max() - Returns the largest of the given numbers
+console.log("max(10, 20, 5):", Math.max(10, 20, 5)); // Output: 20
+
+// 5. Math.pow(base, exponent) - Returns the base to the power of the exponent
+console.log("pow(2, 3):", Math.pow(2, 3)); // Output: 8 (2 * 2 * 2)</code></pre>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        history.pushState(null, null, targetId);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.toggle-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.classList.toggle('hidden');
+                        button.textContent = targetElement.classList.contains('hidden') ? 'Show Example' : 'Hide Example';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

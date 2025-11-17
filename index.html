@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCA Study Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .subject-card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .subject-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .units-list {
+            list-style: none;
+        }
+
+        .units-list li {
+            margin-bottom: 10px;
+        }
+
+        .units-list a {
+            display: block;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .units-list a:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .placeholder {
+            background: #f0f0f0;
+            color: #999;
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 MCA Study Portal</h1>
+            <p>Your comprehensive resource hub for MCA courses</p>
+        </header>
+
+        <div class="subjects-grid">
+            <!-- Full Stack Section -->
+            <div class="subject-card">
+                <h2>🌐 Full Stack Development</h2>
+                <p>Master web development from front-end to back-end with comprehensive study materials.</p>
+                <ul class="units-list">
+                    <li><a href="Unit1.html">Unit 1</a></li>
+                    <li><a href="Unit2.html">Unit 2</a></li>
+                    <li><a href="Unit3.html">Unit 3</a></li>
+                    <!-- <li><a href="Unit3extra.html">Unit 3 Extra</a></li> -->
+                    <li><a href="Unit4.html">Unit 4 & 5</a></li>
+                    <!-- <li><a href="Unit4extra.html">Unit 4 Extra</a></li> -->
+                </ul>
+            </div>
+
+            <!-- AI & ML Section -->
+            <div class="subject-card">
+                <h2>🤖 AI &amp; ML</h2>
+                <p>Explore Artificial Intelligence and Machine Learning concepts, algorithms, and applications.</p>
+                <div class="placeholder">
+                    Content coming soon...
+                </div>
+            </div>
+
+            <!-- Algorithm & Design Section -->
+            <div class="subject-card">
+                <h2>⚡ Algorithm &amp; Design (ADA)</h2>
+                <p>Deep dive into algorithm design, analysis, and optimization techniques.</p>
+                <div class="placeholder">
+                    Content coming soon...
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 MCA Study Portal | Happy Learning! 🎓</p>
+        </footer>
+    </div>
+</body>
+</html>
