@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit IV: Expert Systems & Soft Computing</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Accordion Transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            max-height: 12000px; /* Large height for MCQs */
+            opacity: 1;
+        }
+        .rotate-icon { transition: transform 0.3s ease; }
+        .accordion-btn.active .rotate-icon { transform: rotate(180deg); }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Tab Button Active State */
+        .tab-btn.active-tab {
+            background-color: #ea580c; /* Orange-600 */
+            color: white;
+            border-color: #ea580c;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-50 flex items-center justify-between px-4">
+        <span class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <i data-lucide="zap" class="text-orange-500 w-5 h-5"></i>
+            Unit IV: Expert Systems
+        </span>
+        <button id="mobile-menu-btn" class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+            <i data-lucide="menu" id="menu-icon"></i>
+        </button>
+    </div>
+
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden transition-opacity opacity-0"></div>
+
+    <div class="flex min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed top-0 left-0 h-full bg-slate-900 text-white z-40 transition-transform duration-300 ease-in-out w-64 -translate-x-full lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 flex flex-col">
+            <div class="p-6 border-b border-slate-800 mt-16 lg:mt-0">
+                <a href="../index.html" class="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 text-sm mb-4 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Home</span>
+                </a>
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="zap" class="text-orange-400"></i>
+                    <h1 class="text-xl font-bold">Soft Computing</h1>
+                </div>
+                <p class="text-slate-400 text-sm">Unit IV Study Guide</p>
+            </div>
+
+            <nav class="p-4 space-y-2 overflow-y-auto flex-1 custom-scroll">
+                <button onclick="scrollToSection('es-intro')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="es-intro">
+                    <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Intro to Expert Systems</span>
+                </button>
+                
+                <button onclick="scrollToSection('rule-based')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="rule-based">
+                    <i data-lucide="git-merge" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Rule-Based Arch</span>
+                </button>
+
+                <button onclick="scrollToSection('non-prod')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="non-prod">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Other Architectures</span>
+                </button>
+
+                <button onclick="scrollToSection('fuzzy')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="fuzzy">
+                    <i data-lucide="cloud-drizzle" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Fuzzy Logic</span>
+                </button>
+
+                <button onclick="scrollToSection('ann-ga')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="ann-ga">
+                    <i data-lucide="dna" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">ANN & Genetic Algo</span>
+                </button>
+
+                 <button onclick="scrollToSection('pattern')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="pattern">
+                    <i data-lucide="scan-face" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Pattern Recognition</span>
+                </button>
+
+                <!-- MCQ Button -->
+                <button onclick="scrollToSection('mcq')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white mt-4 border-t border-slate-800 pt-4" data-target="mcq">
+                    <i data-lucide="list-checks" class="w-4 h-4 text-green-400"></i>
+                    <span class="font-medium text-sm">All 100 MCQs</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 lg:p-8 lg:max-w-4xl mx-auto w-full mt-16 lg:mt-0">
+
+            <!-- 1. Intro to Expert Systems -->
+            <div id="es-intro" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left active">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">1. Intro to Expert Systems</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content active">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-2">Definition</h3>
+                            <p class="text-sm">A computer system designed to emulate the decision-making ability of a human expert. It solves complex problems in a narrow domain.</p>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-3">Key Components</h3>
+                            <ul class="grid gap-3 sm:grid-cols-2 text-sm">
+                                <li class="p-3 border rounded bg-white shadow-sm">
+                                    <strong class="block text-orange-700">Knowledge Base (KB)</strong>
+                                    Repository of facts and rules.
+                                </li>
+                                <li class="p-3 border rounded bg-white shadow-sm">
+                                    <strong class="block text-orange-700">Inference Engine</strong>
+                                    The "brain" that applies rules to facts to derive conclusions.
+                                </li>
+                                <li class="p-3 border rounded bg-white shadow-sm">
+                                    <strong class="block text-orange-700">User Interface</strong>
+                                    Communication channel for input/output.
+                                </li>
+                                <li class="p-3 border rounded bg-white shadow-sm">
+                                    <strong class="block text-orange-700">Explanation Module</strong>
+                                    Explains "Why" and "How" a conclusion was reached.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">Famous Examples</h3>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">MYCIN (Bacteria)</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">DENDRAL (Chemistry)</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded">PROSPECTOR (Minerals)</span>
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded">XCON/R1 (Computer Config)</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Rule-Based Architecture -->
+            <div id="rule-based" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <i data-lucide="git-merge" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">2. Rule-Based Architecture</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <div class="flex items-center justify-center bg-slate-100 p-4 rounded-lg">
+                            <div class="text-center text-sm font-mono text-slate-700">
+                                Match <i data-lucide="arrow-right" class="inline w-4 h-4"></i> Resolve <i data-lucide="arrow-right" class="inline w-4 h-4"></i> Act
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r">
+                                <h4 class="font-bold text-blue-800 text-sm mb-1">Forward Chaining</h4>
+                                <p class="text-xs"><strong>Data-Driven:</strong> Starts with facts, fires rules to reach a goal. Used for planning/monitoring.</p>
+                            </div>
+                            <div class="p-4 border-l-4 border-green-500 bg-green-50 rounded-r">
+                                <h4 class="font-bold text-green-800 text-sm mb-1">Backward Chaining</h4>
+                                <p class="text-xs"><strong>Goal-Driven:</strong> Starts with hypothesis, works backward to find facts. Used for diagnosis.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Other Architectures -->
+            <div id="non-prod" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <i data-lucide="layers" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">3. Non-Production Architectures</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-4">
+                        
+                        <div class="bg-white border p-3 rounded-lg hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-slate-800 text-sm">Frame-Based Systems</h4>
+                            <p class="text-xs mt-1">Organizes knowledge into "Frames" (like objects/classes) with slots for attributes. Supports inheritance.</p>
+                        </div>
+
+                        <div class="bg-white border p-3 rounded-lg hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-slate-800 text-sm">Blackboard Systems</h4>
+                            <p class="text-xs mt-1">Collaborative architecture where independent "knowledge sources" write to a shared global memory (Blackboard).</p>
+                        </div>
+
+                        <div class="bg-white border p-3 rounded-lg hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-slate-800 text-sm">Case-Based Reasoning (CBR)</h4>
+                            <p class="text-xs mt-1">Solves new problems by retrieving/adapting solutions from similar past cases. Mimics analogical reasoning.</p>
+                        </div>
+
+                         <div class="bg-white border p-3 rounded-lg hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-slate-800 text-sm">Expert System Shells</h4>
+                            <p class="text-xs mt-1">Frameworks without a KB (e.g., EMYCIN, CLIPS). Provides the skeleton for rapid development.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Fuzzy Logic -->
+            <div id="fuzzy" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <i data-lucide="cloud-drizzle" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">4. Fuzzy Logic</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        <p class="text-sm">Deals with approximate reasoning (vagueness) rather than exact binary logic.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div class="p-3 border rounded bg-slate-50">
+                                <strong class="block text-slate-800 text-sm">Crisp Set</strong>
+                                <span class="text-xs block mt-1">0 or 1 (Binary)</span>
+                                <span class="text-xs text-slate-400">"Tall" or "Not Tall"</span>
+                            </div>
+                            <div class="p-3 border rounded bg-slate-50">
+                                <strong class="block text-slate-800 text-sm">Fuzzy Set</strong>
+                                <span class="text-xs block mt-1">Degree [0, 1]</span>
+                                <span class="text-xs text-slate-400">"0.8 Tall"</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-orange-50 p-3 rounded border border-orange-100 text-xs">
+                            <strong>Linguistic Variables:</strong> Words like "High", "Medium", "Low" used as values.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. ANN & Genetic Algorithms -->
+            <div id="ann-ga" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <i data-lucide="dna" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">5. ANN & Genetic Algorithms</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">Artificial Neural Networks (ANN)</h3>
+                                                        <p class="text-sm mb-2">Computational models inspired by the human brain.</p>
+                            <ul class="list-disc ml-4 text-xs space-y-1">
+                                <li><strong>Layers:</strong> Input, Hidden (Deep Learning), Output.</li>
+                                <li><strong>Backpropagation:</strong> Algorithm to adjust weights by propagating error backward.</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">Genetic Algorithms (GA)</h3>
+                            <p class="text-sm mb-2">Optimization technique inspired by Darwinian evolution.</p>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono">
+                                <span class="bg-green-100 px-2 py-1 rounded">Initialization</span>
+                                <span class="bg-green-100 px-2 py-1 rounded">Fitness</span>
+                                <span class="bg-green-100 px-2 py-1 rounded">Selection</span>
+                                <span class="bg-green-100 px-2 py-1 rounded">Crossover</span>
+                                <span class="bg-green-100 px-2 py-1 rounded">Mutation</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Pattern Recognition -->
+            <div id="pattern" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <i data-lucide="scan-face" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">6. Pattern Recognition</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-4">
+                        <p class="text-sm">Automated process of classifying data into categories based on regularities.</p>
+                        
+                        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                            <div class="bg-white border p-3 rounded">
+                                <strong>Supervised:</strong> Trained on labeled data (Input → Output). E.g., Spam Detection.
+                            </div>
+                            <div class="bg-white border p-3 rounded">
+                                <strong>Unsupervised:</strong> Unlabeled data. Finds hidden structures (Clustering). E.g., Customer Segmentation.
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-100 p-3 rounded text-xs font-mono">
+                            Process: Data Acquisition <i data-lucide="arrow-right" class="inline w-3 h-3"></i> Feature Extraction <i data-lucide="arrow-right" class="inline w-3 h-3"></i> Classification
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. All 100 MCQs -->
+            <div id="mcq" class="section mb-20 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-green-100 text-green-600 rounded-lg">
+                            <i data-lucide="list-checks" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">Practice MCQs (1-100)</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-0 border-t border-gray-100 text-slate-600 bg-slate-50">
+                        
+                        <!-- Topic Filter Sub-nav -->
+                        <div class="sticky top-0 bg-white z-10 p-4 shadow-sm border-b border-gray-200 overflow-x-auto">
+                            <div class="flex gap-2 whitespace-nowrap">
+                                <button onclick="filterMCQs('all')" class="tab-btn active-tab px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    All (100)
+                                </button>
+                                <button onclick="filterMCQs('topic1')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Intro (1-12)
+                                </button>
+                                <button onclick="filterMCQs('topic2')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Rule-Based (13-24)
+                                </button>
+                                <button onclick="filterMCQs('topic3')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Architectures (25-36)
+                                </button>
+                                <button onclick="filterMCQs('topic4')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Shells (37-48)
+                                </button>
+                                <button onclick="filterMCQs('topic5')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Fuzzy (49-61)
+                                </button>
+                                <button onclick="filterMCQs('topic6')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    ANN (62-74)
+                                </button>
+                                <button onclick="filterMCQs('topic7')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    GA (75-87)
+                                </button>
+                                <button onclick="filterMCQs('topic8')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Pattern (88-100)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Questions Container -->
+                        <div id="mcq-list-container" class="space-y-4 p-6">
+                            <div class="text-center py-10 text-slate-500">Loading 100 Questions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Scroll to Top -->
+        <button id="scrollTopBtn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 p-3 bg-orange-600 text-white rounded-full shadow-lg hover:bg-orange-700 transition-all duration-300 z-40 translate-y-16 opacity-0">
+            <i data-lucide="arrow-up" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ---------------------------------------------------------
+        // FULL 100 MCQ DATA (UNIT IV)
+        // ---------------------------------------------------------
+        const mcqData = [
+            // 1. Intro & Applications
+            { id: 1, q: "Primary goal of an Expert System?", opts: ["a) Replace all workers", "b) Emulate decision-making of human expert", "c) Perform calculations", "d) Store unrelated facts"], a: "b", topic: "topic1" },
+            { id: 2, q: "Component storing domain-specific facts/rules?", opts: ["a) Inference Engine", "b) UI", "c) Knowledge Base", "d) Explanation Module"], a: "c", topic: "topic1" },
+            { id: 3, q: "The 'brain' applying rules to facts?", opts: ["a) KB", "b) Inference Engine", "c) UI", "d) Justifier"], a: "b", topic: "topic1" },
+            { id: 4, q: "Module explaining how conclusion was reached?", opts: ["a) Inference Engine", "b) Knowledge Acquisition", "c) Explanation Module", "d) Working Memory"], a: "c", topic: "topic1" },
+            { id: 5, q: "MYCIN was designed for:", opts: ["a) Mineral exploration", "b) Diagnosing bacterial infections", "c) Configuring computers", "d) Chess"], a: "b", topic: "topic1" },
+            { id: 6, q: "Expert system for chemical analysis/mass spectrometry:", opts: ["a) DENDRAL", "b) MYCIN", "c) PROSPECTOR", "d) XCON"], a: "a", topic: "topic1" },
+            { id: 7, q: "R1/XCON is example of:", opts: ["a) Diagnosis", "b) Prediction", "c) Design/Configuration", "d) Control"], a: "c", topic: "topic1" },
+            { id: 8, q: "PROSPECTOR is used for:", opts: ["a) Medical", "b) Mineral exploration", "c) Weather", "d) Stock market"], a: "b", topic: "topic1" },
+            { id: 9, q: "Heuristics are best described as:", opts: ["a) Mathematical laws", "b) Rules of thumb", "c) Database queries", "d) Hardware specs"], a: "b", topic: "topic1" },
+            { id: 10, q: "Raw data about specific problem instance stored as:", opts: ["a) Rules", "b) Facts", "c) Algorithms", "d) Heuristics"], a: "b", topic: "topic1" },
+            { id: 11, q: "Who interacts with Knowledge Acquisition Module?", opts: ["a) End User", "b) Knowledge Engineer/Expert", "c) Inference Engine", "d) OS"], a: "b", topic: "topic1" },
+            { id: 12, q: "'Why' explanation typically explains:", opts: ["a) Why system is running", "b) Why specific info is requested", "c) User's reason", "d) Why system built"], a: "b", topic: "topic1" },
+
+            // 2. Rule-Based Architecture
+            { id: 13, q: "Rule-based systems also known as:", opts: ["a) Frame systems", "b) Production systems", "c) Neural systems", "d) Genetic systems"], a: "b", topic: "topic2" },
+            { id: 14, q: "Component acting as global database (temp storage):", opts: ["a) Rule Base", "b) Working Memory", "c) UI", "d) Explanation"], a: "b", topic: "topic2" },
+            { id: 15, q: "Cycle executed by Inference Engine:", opts: ["a) Input-Process-Output", "b) Fetch-Decode-Execute", "c) Match-Resolve-Act", "d) Search-Sort-Select"], a: "c", topic: "topic2" },
+            { id: 16, q: "Set of satisfied rules is called:", opts: ["a) Solution set", "b) Conflict set", "c) Working set", "d) Rule set"], a: "b", topic: "topic2" },
+            { id: 17, q: "Selecting one rule to fire is:", opts: ["a) Conflict Resolution", "b) Rule Selection", "c) Fact Matching", "d) Priority"], a: "a", topic: "topic2" },
+            { id: 18, q: "Forward Chaining is also:", opts: ["a) Goal-driven", "b) Data-driven", "c) Object-oriented", "d) Random"], a: "b", topic: "topic2" },
+            { id: 19, q: "Backward Chaining starts with:", opts: ["a) Facts", "b) Hypothesis/Goal", "c) Random rule", "d) Empty memory"], a: "b", topic: "topic2" },
+            { id: 20, q: "Best suited for diagnosis:", opts: ["a) Forward", "b) Backward", "c) Random", "d) Circular"], a: "b", topic: "topic2" },
+            { id: 21, q: "Best for planning/design (goal not predefined):", opts: ["a) Forward", "b) Backward", "c) Reverse", "d) Hypothetical"], a: "a", topic: "topic2" },
+            { id: 22, q: "'IF' part of rule is:", opts: ["a) Consequent", "b) Action", "c) Premise/Antecedent", "d) Conclusion"], a: "c", topic: "topic2" },
+            { id: 23, q: "'THEN' part of rule is:", opts: ["a) Premise", "b) Condition", "c) Consequent/Action", "d) Input"], a: "c", topic: "topic2" },
+            { id: 24, q: "Match-Resolve-Act is characteristic of:", opts: ["a) Neural Networks", "b) Production Systems", "c) Genetic Algorithms", "d) Fuzzy"], a: "b", topic: "topic2" },
+
+            // 3. Non-Production Architectures
+            { id: 25, q: "Architecture organizing knowledge into 'frames':", opts: ["a) Semantic Nets", "b) Frame-Based", "c) Blackboard", "d) Rule-Based"], a: "b", topic: "topic3" },
+            { id: 26, q: "In Frame-Based, a 'slot' represents:", opts: ["a) Rule", "b) Attribute/Value", "c) Method", "d) Link"], a: "b", topic: "topic3" },
+            { id: 27, q: "Feature allowing sharing properties in Frames:", opts: ["a) Linearity", "b) Inheritance", "c) Randomness", "d) Backprop"], a: "b", topic: "topic3" },
+            { id: 28, q: "Semantic Networks represent knowledge as:", opts: ["a) Table", "b) Graph", "c) List", "d) Matrix"], a: "b", topic: "topic3" },
+            { id: 29, q: "In Semantic Net, arcs represent:", opts: ["a) Objects", "b) Concepts", "c) Relationships", "d) Values"], a: "c", topic: "topic3" },
+            { id: 30, q: "Blackboard Systems characterized by:", opts: ["a) Single expert", "b) Cooperative independent sources sharing memory", "c) Linear", "d) No shared memory"], a: "b", topic: "topic3" },
+            { id: 31, q: "Shared global memory in Blackboard System:", opts: ["a) Whiteboard", "b) Blackboard", "c) Greenboard", "d) Dashboard"], a: "b", topic: "topic3" },
+            { id: 32, q: "Case-Based Reasoning (CBR) solves by:", opts: ["a) Creating new rules", "b) Retrieving/adapting past solutions", "c) Guessing", "d) Asking user"], a: "b", topic: "topic3" },
+            { id: 33, q: "CBR mimics which process?", opts: ["a) Analogical reasoning", "b) Deductive logic", "c) Visual perception", "d) Reflex"], a: "a", topic: "topic3" },
+            { id: 34, q: "'Inheritance' in frames:", opts: ["a) Parent takes from child", "b) Child takes from parent", "c) All share same", "d) Data lost"], a: "b", topic: "topic3" },
+            { id: 35, q: "'Demon' in frame-based systems:", opts: ["a) Virus", "b) Procedure triggered by slot access", "c) Visual icon", "d) Error"], a: "b", topic: "topic3" },
+            { id: 36, q: "HEARSAY-II (speech understanding) is example of:", opts: ["a) Frame-Based", "b) Blackboard", "c) CBR", "d) Semantic Net"], a: "b", topic: "topic3" },
+
+            // 4. Expert System Shells
+            { id: 37, q: "What is an Expert System Shell?", opts: ["a) Finished system", "b) ES without knowledge base", "c) Hardware case", "d) Rule database"], a: "b", topic: "topic4" },
+            { id: 38, q: "Main purpose of a Shell:", opts: ["a) Replace expert", "b) Facilitate rapid development", "c) Increase speed", "d) Create graphics"], a: "b", topic: "topic4" },
+            { id: 39, q: "Component typically included in Shell:", opts: ["a) Specific rules", "b) Inference Engine", "c) Medical data", "d) Final solution"], a: "b", topic: "topic4" },
+            { id: 40, q: "EMYCIN stands for:", opts: ["a) Electronic MYCIN", "b) Empty MYCIN", "c) Expert MYCIN", "d) Enterprise MYCIN"], a: "b", topic: "topic4" },
+            { id: 41, q: "Shell eliminates need to:", opts: ["a) Interview experts", "b) Code inference engine from scratch", "c) Test system", "d) Define problem"], a: "b", topic: "topic4" },
+            { id: 42, q: "Shell acts as a:", opts: ["a) Skeleton/Framework", "b) Final Product", "c) Virus Scanner", "d) Data Miner"], a: "a", topic: "topic4" },
+            { id: 43, q: "CLIPS stands for:", opts: ["a) Common Logic...", "b) C Language Integrated Production System", "c) Computer Learning...", "d) Code Language..."], a: "b", topic: "topic4" },
+            { id: 44, q: "Shells reduce:", opts: ["a) Performance", "b) Development time and cost", "c) Understanding", "d) Storage"], a: "b", topic: "topic4" },
+            { id: 45, q: "EMYCIN derived from:", opts: ["a) DENDRAL", "b) MYCIN", "c) PROSPECTOR", "d) R1"], a: "b", topic: "topic4" },
+            { id: 46, q: "Can shell be used for different domains?", opts: ["a) No", "b) Yes, by changing KB", "c) Medical only", "d) Hardcoded"], a: "b", topic: "topic4" },
+            { id: 47, q: "Tool in shell to put knowledge in:", opts: ["a) Inference Engine", "b) Knowledge Acquisition Tool", "c) Working Memory", "d) Justifier"], a: "b", topic: "topic4" },
+            { id: 48, q: "Empty Knowledge Base characteristic of:", opts: ["a) Completed ES", "b) ES Shell", "c) Neural Network", "d) Database"], a: "b", topic: "topic4" },
+
+            // 5. Fuzzy Sets & Logic
+            { id: 49, q: "Who introduced Fuzzy Sets?", opts: ["a) Turing", "b) Lotfi Zadeh", "c) McCarthy", "d) Minsky"], a: "b", topic: "topic5" },
+            { id: 50, q: "In classical (Crisp) set, membership is:", opts: ["a) 0 or 1", "b) Between 0 and 1", "c) Infinite", "d) Unknown"], a: "a", topic: "topic5" },
+            { id: 51, q: "In Fuzzy set, membership is:", opts: ["a) Exactly 0", "b) Exactly 1", "c) Degree between 0 and 1", "d) 0.5"], a: "c", topic: "topic5" },
+            { id: 52, q: "Fuzzy Logic deals with:", opts: ["a) Exact reasoning", "b) Approximate reasoning", "c) Binary logic", "d) Fixed data"], a: "b", topic: "topic5" },
+            { id: 53, q: "'Tall', 'Hot', 'Fast' are examples of:", opts: ["a) Crisp values", "b) Linguistic variables", "c) Constants", "d) Boolean"], a: "b", topic: "topic5" },
+            { id: 54, q: "If person is 0.8 'Tall', this represents:", opts: ["a) Height", "b) Degree of membership", "c) Probability", "d) Error"], a: "b", topic: "topic5" },
+            { id: 55, q: "Fuzzy rules typically take form:", opts: ["a) IF-THEN with linguistic vars", "b) DO-WHILE", "c) Equations", "d) SQL"], a: "a", topic: "topic5" },
+            { id: 56, q: "Converting crisp input to fuzzy:", opts: ["a) Defuzzification", "b) Fuzzification", "c) Inference", "d) Deduction"], a: "b", topic: "topic5" },
+            { id: 57, q: "Converting fuzzy output to crisp:", opts: ["a) Fuzzification", "b) Defuzzification", "c) Induction", "d) Conjunction"], a: "b", topic: "topic5" },
+            { id: 58, q: "ABS and Washing Machines often use:", opts: ["a) Genetic Algo", "b) Fuzzy Logic", "c) Semantic Nets", "d) Shells"], a: "b", topic: "topic5" },
+            { id: 59, q: "Shape of membership function often:", opts: ["a) Triangular/Trapezoidal", "b) Circle", "c) Line", "d) Square"], a: "a", topic: "topic5" },
+            { id: 60, q: "'Singleton' in fuzzy logic:", opts: ["a) Set with one element", "b) Fuzzy set with single spike", "c) Rule with one condition", "d) Error"], a: "b", topic: "topic5" },
+            { id: 61, q: "Logic allowing 'partial truth':", opts: ["a) Boolean", "b) Fuzzy", "c) Binary", "d) Aristotelian"], a: "b", topic: "topic5" },
+
+            // 6. Neural Networks (ANN)
+            { id: 62, q: "ANN stands for:", opts: ["a) Artificial Neural Node", "b) Artificial Neural Network", "c) Automated...", "d) Advanced..."], a: "b", topic: "topic6" },
+            { id: 63, q: "ANNs inspired by:", opts: ["a) Liver", "b) Biological nervous system", "c) Roots", "d) Circuits"], a: "b", topic: "topic6" },
+            { id: 64, q: "Fundamental processing unit in ANN:", opts: ["a) Pixel", "b) Neuron/Node", "c) Switch", "d) Gate"], a: "b", topic: "topic6" },
+            { id: 65, q: "Layer receiving raw data:", opts: ["a) Hidden", "b) Output", "c) Input", "d) Processing"], a: "c", topic: "topic6" },
+            { id: 66, q: "Layers between input and output:", opts: ["a) Middle", "b) Hidden", "c) Secret", "d) Inner"], a: "b", topic: "topic6" },
+            { id: 67, q: "'Deep Learning' refers to ANNs with:", opts: ["a) No hidden", "b) Many hidden layers", "c) One input", "d) Small data"], a: "b", topic: "topic6" },
+            { id: 68, q: "Adjusting weights to minimize error:", opts: ["a) Programming", "b) Training/Learning", "c) Compiling", "d) Decoding"], a: "b", topic: "topic6" },
+            { id: 69, q: "Backpropagation algorithm is for:", opts: ["a) Creating data", "b) Training (Error prop)", "c) Sorting", "d) Searching"], a: "b", topic: "topic6" },
+            { id: 70, q: "Neural network learns from:", opts: ["a) Rules", "b) Examples/Data", "c) Chance", "d) Algorithms"], a: "b", topic: "topic6" },
+            { id: 71, q: "Feedforward network flow:", opts: ["a) Loop", "b) Input to Output (one direction)", "c) Random", "d) Backwards"], a: "b", topic: "topic6" },
+            { id: 72, q: "Supervised learning requires:", opts: ["a) Input only", "b) Input and Labels", "c) No data", "d) Camera"], a: "b", topic: "topic6" },
+            { id: 73, q: "Difference between actual and desired output:", opts: ["a) Weight", "b) Error", "c) Bias", "d) Input"], a: "b", topic: "topic6" },
+            { id: 74, q: "Single neuron model sometimes called:", opts: ["a) Perceptron", "b) Proton", "c) Photon", "d) Polygon"], a: "a", topic: "topic6" },
+
+            // 7. Genetic Algorithms (GA)
+            { id: 75, q: "GAs inspired by:", opts: ["a) Neural biology", "b) Darwinian evolution", "c) Gravity", "d) Chemistry"], a: "b", topic: "topic7" },
+            { id: 76, q: "Set of candidate solutions:", opts: ["a) Family", "b) Population", "c) Herd", "d) Group"], a: "b", topic: "topic7" },
+            { id: 77, q: "Function evaluating solution:", opts: ["a) Cost", "b) Fitness function", "c) Logic", "d) Print"], a: "b", topic: "topic7" },
+            { id: 78, q: "Selection based on:", opts: ["a) Age", "b) Fitness", "c) Size", "d) Color"], a: "b", topic: "topic7" },
+            { id: 79, q: "Crossover (Recombination) is:", opts: ["a) Deleting", "b) Combining parts of two parents", "c) Changing bit", "d) Stopping"], a: "b", topic: "topic7" },
+            { id: 80, q: "Mutation is:", opts: ["a) Combining", "b) Randomly altering small part", "c) Selecting", "d) Encoding"], a: "b", topic: "topic7" },
+            { id: 81, q: "Mutation helps to:", opts: ["a) Maintain diversity/prevent local optima", "b) Speed up", "c) Fix errors", "d) Sort"], a: "a", topic: "topic7" },
+            { id: 82, q: "'Survival of the fittest' principle of:", opts: ["a) Neural Nets", "b) Genetic Algorithms", "c) ES", "d) Fuzzy"], a: "b", topic: "topic7" },
+            { id: 83, q: "GAs are type of:", opts: ["a) Evolutionary Algorithm", "b) Deterministic", "c) Sorting", "d) Database"], a: "a", topic: "topic7" },
+            { id: 84, q: "Operator mimicking sexual reproduction:", opts: ["a) Mutation", "b) Crossover", "c) Selection", "d) Encoding"], a: "b", topic: "topic7" },
+            { id: 85, q: "Operator ensuring good traits passed down:", opts: ["a) Selection", "b) Deletion", "c) Randomization", "d) Formatting"], a: "a", topic: "topic7" },
+            { id: 86, q: "When does GA stop?", opts: ["a) Never", "b) When termination condition met", "c) Power out", "d) 1 iteration"], a: "b", topic: "topic7" },
+            { id: 87, q: "Elitism in GA:", opts: ["a) Rich selected", "b) Best individuals copied to next gen", "c) Removing best", "d) Fancy fonts"], a: "b", topic: "topic7" },
+
+            // 8. Pattern Recognition
+            { id: 88, q: "Pattern Recognition defined as:", opts: ["a) Creating patterns", "b) Recognizing regularities to classify data", "c) Drawing", "d) Deleting"], a: "b", topic: "topic8" },
+            { id: 89, q: "Goal is to assign a:", opts: ["a) Number", "b) Label or Class", "c) Date", "d) Price"], a: "b", topic: "topic8" },
+            { id: 90, q: "Supervised Classification uses:", opts: ["a) Unlabeled", "b) Labeled data", "c) No data", "d) Random"], a: "b", topic: "topic8" },
+            { id: 91, q: "Unsupervised Classification also known as:", opts: ["a) Classification", "b) Clustering", "c) Labeling", "d) Training"], a: "b", topic: "topic8" },
+            { id: 92, q: "Clustering involves:", opts: ["a) Predicting", "b) Discovering hidden structures", "c) Memorizing", "d) Deleting"], a: "b", topic: "topic8" },
+            { id: 93, q: "Feature Extraction involves:", opts: ["a) Collecting", "b) Transforming raw data to attributes", "c) Assigning label", "d) Deleting"], a: "b", topic: "topic8" },
+            { id: 94, q: "OCR stands for:", opts: ["a) Optical Character Recognition", "b) Open Computer...", "c) Only Character...", "d) Optical Code..."], a: "a", topic: "topic8" },
+            { id: 95, q: "Sequence of steps:", opts: ["a) Class->Extract->Acquire", "b) Data Acquisition -> Feature Extraction -> Classification", "c) Extract->Acquire->Class", "d) Class->Acquire->Extract"], a: "b", topic: "topic8" },
+            { id: 96, q: "In supervised learning, predict label of:", opts: ["a) Seen", "b) Unseen/New inputs", "c) Deleted", "d) Old"], a: "b", topic: "topic8" },
+            { id: 97, q: "Raw data often needs to be:", opts: ["a) Deleted", "b) Pre-processed", "c) Ignored", "d) Hidden"], a: "b", topic: "topic8" },
+            { id: 98, q: "'Classifier' is:", opts: ["a) Person", "b) Algorithm mapping features to label", "c) Folder", "d) Database"], a: "b", topic: "topic8" },
+            { id: 99, q: "Training set used to:", opts: ["a) Test", "b) Build the model", "c) Crash", "d) Store"], a: "b", topic: "topic8" },
+            { id: 100, q: "Test set used to:", opts: ["a) Train", "b) Evaluate performance", "c) Delete", "d) Create"], a: "b", topic: "topic8" }
+        ];
+
+        // ---------------------------------------------------------
+        // RENDER FUNCTION
+        // ---------------------------------------------------------
+        function renderMCQs(filterTopic = 'all') {
+            const listContainer = document.getElementById('mcq-list-container');
+            listContainer.innerHTML = '';
+
+            // Update Tab Buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if (btn.onclick.toString().includes(filterTopic)) {
+                    btn.classList.add('active-tab');
+                    btn.classList.remove('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                } else {
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                }
+            });
+
+            const filteredData = filterTopic === 'all' 
+                ? mcqData 
+                : mcqData.filter(item => item.topic === filterTopic);
+
+            filteredData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow';
+                div.innerHTML = `
+                    <div class="flex gap-3">
+                        <span class="font-bold text-slate-400 shrink-0 w-8 text-right">${item.id}.</span>
+                        <div class="w-full">
+                            <p class="font-medium text-slate-800 mb-2">${item.q}</p>
+                            <div class="space-y-1 mb-3">
+                                ${item.opts.map(opt => `<div class="text-sm text-slate-600">${opt}</div>`).join('')}
+                            </div>
+                            <details class="group">
+                                <summary class="text-xs font-bold text-orange-600 cursor-pointer hover:text-orange-800 select-none list-none flex items-center gap-1">
+                                    <span>Show Answer</span>
+                                    <i data-lucide="chevron-down" class="w-3 h-3 transition-transform group-open:rotate-180"></i>
+                                </summary>
+                                <div class="mt-2 p-2 bg-green-50 text-green-800 text-sm rounded font-medium border border-green-100 inline-block">
+                                    Correct Answer: ${item.a}
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+            
+            lucide.createIcons();
+        }
+
+        window.filterMCQs = renderMCQs;
+
+        // Sidebar Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+
+        // Accordion Logic
+        const accBtns = document.querySelectorAll('.accordion-btn');
+        accBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+
+        // Scroll Logic
+        function scrollToSection(id) {
+            if (window.innerWidth < 1024 && isMenuOpen) toggleMenu();
+            const sectionContent = document.querySelector(`#${id} .accordion-content`);
+            const sectionBtn = document.querySelector(`#${id} .accordion-btn`);
+            if (sectionContent && !sectionContent.classList.contains('active')) {
+                sectionContent.classList.add('active');
+                sectionBtn.classList.add('active');
+            }
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if(item.dataset.target === id) {
+                    item.classList.add('bg-orange-600', 'text-white', 'shadow-lg', 'shadow-orange-900/50');
+                    item.classList.remove('text-slate-400', 'hover:bg-slate-800');
+                } else {
+                    item.classList.remove('bg-orange-600', 'text-white', 'shadow-lg', 'shadow-orange-900/50');
+                    item.classList.add('text-slate-400', 'hover:bg-slate-800');
+                }
+            });
+            
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = 80;
+                const elementRect = element.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: elementRect - offset, behavior: 'smooth' });
+            }
+        }
+        window.scrollToSection = scrollToSection;
+
+        // Scroll to Top
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollBtn.classList.remove('translate-y-16', 'opacity-0');
+                scrollBtn.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                scrollBtn.classList.add('translate-y-16', 'opacity-0');
+                scrollBtn.classList.remove('translate-y-0', 'opacity-100');
+            }
+        });
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMCQs('all');
+            const initialNav = document.querySelector('.nav-item[data-target="es-intro"]');
+            if(initialNav) {
+                initialNav.classList.add('bg-orange-600', 'text-white', 'shadow-lg', 'shadow-orange-900/50');
+                initialNav.classList.remove('text-slate-400');
+            }
+        });
+
+    </script>
+</body>
+</html>

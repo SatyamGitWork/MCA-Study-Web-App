@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Search Strategies - Unit II</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Accordion Transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            max-height: 8000px; /* Large height for long MCQ lists */
+            opacity: 1;
+        }
+        .rotate-icon { transition: transform 0.3s ease; }
+        .accordion-btn.active .rotate-icon { transform: rotate(180deg); }
+        
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+        /* Tab Button Active State */
+        .tab-btn.active-tab {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-50 flex items-center justify-between px-4">
+        <span class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <i data-lucide="brain" class="text-blue-500 w-5 h-5"></i>
+            AI Notes
+        </span>
+        <button id="mobile-menu-btn" class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+            <i data-lucide="menu" id="menu-icon"></i>
+        </button>
+    </div>
+
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden transition-opacity opacity-0"></div>
+
+    <div class="flex min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed top-0 left-0 h-full bg-slate-900 text-white z-40 transition-transform duration-300 ease-in-out w-64 -translate-x-full lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 flex flex-col">
+            <div class="p-6 border-b border-slate-800 mt-16 lg:mt-0">
+                <a href="../index.html" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm mb-4 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Home</span>
+                </a>
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="brain" class="text-blue-400"></i>
+                    <h1 class="text-xl font-bold">AI Strategies</h1>
+                </div>
+                <p class="text-slate-400 text-sm">Unit II Study Guide</p>
+            </div>
+
+            <nav class="p-4 space-y-2 overflow-y-auto sidebar-scroll flex-1">
+                <button onclick="scrollToSection('control')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="control">
+                    <i data-lucide="cpu" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Control Strategies</span>
+                </button>
+                
+                <button onclick="scrollToSection('overview')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="overview">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Search Overview</span>
+                </button>
+
+                <button onclick="scrollToSection('path')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="path">
+                    <i data-lucide="git-branch" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Finding a Path</span>
+                </button>
+
+                <button onclick="scrollToSection('best-path')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="best-path">
+                    <i data-lucide="target" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Best Path (A*)</span>
+                </button>
+
+                <button onclick="scrollToSection('games')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="games">
+                    <i data-lucide="trophy" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Game Playing</span>
+                </button>
+
+                <button onclick="scrollToSection('mcq')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white mt-4 border-t border-slate-800 pt-4" data-target="mcq">
+                    <i data-lucide="list-checks" class="w-4 h-4 text-green-400"></i>
+                    <span class="font-medium text-sm">Practice MCQs</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 lg:p-8 lg:max-w-4xl mx-auto w-full mt-16 lg:mt-0">
+
+            <!-- 1. Control Strategies -->
+            <div id="control" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left active">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">1. Control Strategies</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content active">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed">
+                        <p class="mb-4">
+                            A control strategy is the logic used to select rules and track those already applied. 
+                            In production systems, we often lack immediate knowledge to pick the best rule, necessitating search processes.
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-blue-500 bg-blue-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Definition</h3>
+                                <div class="text-sm md:text-base">
+                                    <strong>Irrevocable Strategy</strong>
+                                    <ul class="list-disc ml-4 space-y-1 mt-2">
+                                        <li>An applicable rule is selected and applied irrevocably.</li>
+                                        <li>No provision to reconsider later (no "undo").</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-blue-500 bg-blue-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Definition</h3>
+                                <div class="text-sm md:text-base">
+                                    <strong>Tentative Strategy</strong>
+                                    <p class="mb-2 mt-1">Allows returning later if a solution isn't found.</p>
+                                    <ul class="list-disc ml-4 space-y-1 text-sm">
+                                        <li><strong>Backtracking:</strong> Revert to a previous point if difficulty is encountered.</li>
+                                        <li><strong>Graph Search:</strong> Tracks multiple rule sequences simultaneously.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Search Overview -->
+            <div id="overview" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">2. Search Strategies Overview</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-3">
+                        <div class="flex items-start gap-3 p-3 bg-white border rounded-lg">
+                            <div class="bg-blue-100 p-2 rounded-full text-blue-600 mt-1"><i data-lucide="git-branch" class="w-4 h-4"></i></div>
+                            <div>
+                                <h4 class="font-bold">Finding a Path</h4>
+                                <p class="text-sm text-slate-600">Focuses on finding <em>any</em> satisfactory path to a solution. Examples: DFS, BFS.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-white border rounded-lg">
+                            <div class="bg-emerald-100 p-2 rounded-full text-emerald-600 mt-1"><i data-lucide="target" class="w-4 h-4"></i></div>
+                            <div>
+                                <h4 class="font-bold">Finding the Best Path</h4>
+                                <p class="text-sm text-slate-600">Focuses on finding the <em>optimal</em> path (least cost). Examples: A*, Branch & Bound.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-white border rounded-lg">
+                            <div class="bg-purple-100 p-2 rounded-full text-purple-600 mt-1"><i data-lucide="trophy" class="w-4 h-4"></i></div>
+                            <div>
+                                <h4 class="font-bold">Game Playing</h4>
+                                <p class="text-sm text-slate-600">Involves adversaries (opponents). Examples: Minimax.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Finding a Path -->
+            <div id="path" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="git-branch" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">3. Finding a Path (Alternatives)</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        <!-- DFS -->
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">A. Depth-First Search (DFS)</h3>
+                            <p class="mb-2 text-sm">Dives deep into the tree, picking one alternative at each level.</p>
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-emerald-500 bg-emerald-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Algorithm Logic</h3>
+                                <div class="text-sm font-mono text-slate-700">
+                                    1. Form queue with root.<br>
+                                    2. While queue not empty:<br>
+                                    &nbsp;&nbsp; - If first is goal, Stop.<br>
+                                    &nbsp;&nbsp; - Remove first, add children to <span class="font-bold text-emerald-700">FRONT</span> (Stack).
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hill Climbing -->
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">B. Hill Climbing</h3>
+                            <p class="mb-2 text-sm">DFS attached to a "Quality Measurement". Uses heuristics to order choices.</p>
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-emerald-500 bg-emerald-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Algorithm Logic</h3>
+                                <div class="text-sm">Similar to DFS, but sorts children by estimated remaining distance before adding to the front.</div>
+                            </div>
+                            <div class="mt-3 grid md:grid-cols-2 gap-3">
+                                <div class="bg-rose-50 p-3 rounded border border-rose-100">
+                                    <h4 class="font-bold text-rose-700 text-sm">Problem: Local Maximum</h4>
+                                    <p class="text-xs text-slate-600">A state better than neighbors but not the global peak.</p>
+                                </div>
+                                <div class="bg-rose-50 p-3 rounded border border-rose-100">
+                                    <h4 class="font-bold text-rose-700 text-sm">Problem: Plateau</h4>
+                                    <p class="text-xs text-slate-600">A flat area where neighbors have the same value.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- BFS -->
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">C. Breadth-First Search (BFS)</h3>
+                            <p class="mb-2 text-sm">Explores level-by-level.</p>
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-emerald-500 bg-emerald-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Algorithm Logic</h3>
+                                <div class="text-sm">
+                                    Remove first element, add children to the <strong>BACK</strong> of the queue.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Best Path (A*) -->
+            <div id="best-path" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="target" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">4. Finding the Best Path</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        <div class="bg-slate-100 p-4 rounded-lg">
+                            <h3 class="font-bold text-slate-800">A. British Museum Search</h3>
+                            <p class="text-sm text-slate-600">Finds ALL possible paths and selects the best. Only feasible for tiny trees.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">B. Branch and Bound</h3>
+                            <p class="text-sm text-slate-600 mb-3">Handles multiple partial paths. The shortest path is expanded.</p>
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-emerald-500 bg-emerald-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Logic</h3>
+                                <div class="text-sm">Sort the queue by <strong>accumulated cost</strong>. First path to goal is optimal.</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                C. A* Search (A-Star)
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Important</span>
+                            </h3>
+                            <p class="text-sm text-slate-600 mb-3">Combines Branch & Bound with heuristic estimate.</p>
+                            <div class="bg-slate-800 text-white p-4 rounded-lg text-center mb-4 font-mono shadow-inner text-lg">
+                                f(n) = g(n) + h(n)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Game Playing -->
+            <div id="games" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="trophy" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">6. Game Playing</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">A. Minimax Search</h3>
+                            <p class="text-sm text-slate-600 mb-2">For two-player adversarial games.</p>
+                            <div class="flex gap-4 mb-3">
+                                <div class="flex-1 bg-blue-50 p-3 rounded text-center border border-blue-100">
+                                    <strong class="block text-blue-700">MAX</strong>
+                                    <span class="text-xs">Maximizes score</span>
+                                </div>
+                                <div class="flex-1 bg-red-50 p-3 rounded text-center border border-red-100">
+                                    <strong class="block text-red-700">MIN</strong>
+                                    <span class="text-xs">Minimizes score</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">B. Alpha-Beta Pruning</h3>
+                            <p class="text-sm text-slate-600 mb-3">Optimization for Minimax.</p>
+                            <div class="p-4 rounded-r-lg mb-4 border-l-4 border-emerald-500 bg-emerald-50">
+                                <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase tracking-wide opacity-80">Pruning Logic</h3>
+                                <ul class="list-none space-y-2 text-sm">
+                                    <li><strong>Alpha (α):</strong> Best value MAX can guarantee.</li>
+                                    <li><strong>Beta (β):</strong> Best value MIN can guarantee.</li>
+                                    <li class="font-mono bg-slate-800 text-white p-2 rounded text-center mt-2">Stop if α ≥ β</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. All MCQs (Filtered) -->
+            <div id="mcq" class="section mb-20 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-green-100 text-green-600 rounded-lg">
+                            <i data-lucide="list-checks" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">7. Practice MCQs (1-100)</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-0 border-t border-gray-100 text-slate-600 bg-slate-50">
+                        
+                        <!-- Topic Filter Sub-nav -->
+                        <div class="sticky top-0 bg-white z-10 p-4 shadow-sm border-b border-gray-200 overflow-x-auto">
+                            <div class="flex gap-2 whitespace-nowrap">
+                                <button onclick="filterMCQs('all')" class="tab-btn active-tab px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    All (100)
+                                </button>
+                                <button onclick="filterMCQs('topic1')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Control (1-25)
+                                </button>
+                                <button onclick="filterMCQs('topic2')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Alternatives (26-50)
+                                </button>
+                                <button onclick="filterMCQs('topic3')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Best Path (51-75)
+                                </button>
+                                <button onclick="filterMCQs('topic4')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Games (76-100)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Questions Container -->
+                        <div id="mcq-list-container" class="space-y-4 p-6">
+                            <div class="text-center py-10 text-slate-500">Loading Questions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Scroll to Top -->
+        <button id="scrollTopBtn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 z-40 translate-y-16 opacity-0">
+            <i data-lucide="arrow-up" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ---------------------------------------------------------
+        // FULL 100 MCQ DATA
+        // ---------------------------------------------------------
+        const mcqData = [
+            // Topic 1: Control Strategies
+            { id: 1, q: "What constitutes a control strategy in AI production systems?", opts: ["A. Hardware used", "B. Logic for selecting rules", "C. Database of facts", "D. Programming language"], a: "B", topic: "topic1" },
+            { id: 2, q: "Why are search processes often necessary in production systems?", opts: ["A. Rules are deterministic", "B. Lack of info to pick best rule immediately", "C. Empty database", "D. Faster than direct application"], a: "B", topic: "topic1" },
+            { id: 3, q: "Which of the following is a major type of control strategy?", opts: ["A. Recursive Control", "B. Irrevocable Control", "C. Random Control", "D. Linear Control"], a: "B", topic: "topic1" },
+            { id: 4, q: "In Irrevocable Control Strategy, what happens after a rule is selected?", opts: ["A. Applied tentatively", "B. Applied without reconsideration", "C. Stored in queue", "D. Compared with others"], a: "B", topic: "topic1" },
+            { id: 5, q: "Which feature is NOT present in Irrevocable Control Strategy?", opts: ["A. Immediate application", "B. No reconsideration", "C. Backtracking", "D. Selection of rule"], a: "C", topic: "topic1" },
+            { id: 6, q: "What defines a Tentative Control Strategy?", opts: ["A. Rules never applied", "B. Provision to return later", "C. Stops on error", "D. Random selection"], a: "B", topic: "topic1" },
+            { id: 7, q: "Which is a type of Tentative Control Strategy?", opts: ["A. Forward Chaining", "B. Backtracking", "C. Irrevocable Search", "D. Linear Sequencing"], a: "B", topic: "topic1" },
+            { id: 8, q: "In Backtracking, what is established before applying a rule?", opts: ["A. Termination condition", "B. Heuristic function", "C. Backtracking point", "D. Goal state"], a: "C", topic: "topic1" },
+            { id: 9, q: "When does Backtracking revert to a previous point?", opts: ["A. After every step", "B. When computation encounters difficulty", "C. When goal is found", "D. Queue is empty"], a: "B", topic: "topic1" },
+            { id: 10, q: "What characterizes Graph Search Control?", opts: ["A. Tracks multiple rule sequences simultaneously", "B. Explores one path only", "C. Uses stack only", "D. Deletes graph"], a: "A", topic: "topic1" },
+            { id: 11, q: "Graph Search Control uses which structures?", opts: ["A. Arrays only", "B. Graph structures and searching procedures", "C. Heuristics only", "D. Randomized lists"], a: "B", topic: "topic1" },
+            { id: 12, q: "Which strategy allows trying an alternative if a dead end is reached?", opts: ["A. Irrevocable", "B. Tentative Control", "C. Static Control", "D. Deterministic"], a: "B", topic: "topic1" },
+            { id: 13, q: "The process of selecting rules can be characterized as:", opts: ["A. A search process", "B. Sorting algorithm", "C. Database query", "D. Compilation"], a: "A", topic: "topic1" },
+            { id: 14, q: "Which allows trying alternatives if a chosen rule fails?", opts: ["A. Irrevocable", "B. Deterministic", "C. Tentative Control", "D. Static"], a: "C", topic: "topic1" },
+            { id: 15, q: "Which is NOT a type of Tentative strategy mentioned?", opts: ["A. Backtracking", "B. Graph Search", "C. Hill Climbing (as control category)", "D. Beam Search"], a: "C", topic: "topic1" },
+            { id: 16, q: "Efficient control strategies typically require:", opts: ["A. Zero knowledge", "B. Enough knowledge to select good rules", "C. Complete map", "D. User intervention"], a: "B", topic: "topic1" },
+            { id: 17, q: "In AI, 'irrevocably' means:", opts: ["A. With caution", "B. Cannot be changed or recovered", "C. With backup", "D. Temporarily"], a: "B", topic: "topic1" },
+            { id: 18, q: "Difference between Backtracking and Graph Search?", opts: ["A. Backtracking is irrevocable", "B. Backtracking follows one path; Graph Search tracks multiple", "C. Backtracking uses heuristics", "D. No difference"], a: "B", topic: "topic1" },
+            { id: 19, q: "Main challenge addressed by control strategies in Step 4?", opts: ["A. Defining goal", "B. Selecting appropriate rule", "C. Updating DB", "D. Output"], a: "B", topic: "topic1" },
+            { id: 20, q: "Which strategy resembles 'burning bridges'?", opts: ["A. Backtracking", "B. Irrevocable Control", "C. Graph Search", "D. A*"], a: "B", topic: "topic1" },
+            { id: 21, q: "Tentative strategies are essential when:", opts: ["A. Path known", "B. Perfect info", "C. Not enough info to guarantee best rule", "D. Linear space"], a: "C", topic: "topic1" },
+            { id: 22, q: "State reverts in Backtracking when:", opts: ["A. Solution found", "B. Difficulty encountered", "C. User request", "D. Time limit"], a: "B", topic: "topic1" },
+            { id: 23, q: "Graph Search Control is a subset of:", opts: ["A. Irrevocable", "B. Tentative strategies", "C. Random", "D. Linear"], a: "B", topic: "topic1" },
+            { id: 24, q: "Which requires more memory?", opts: ["A. Irrevocable", "B. Graph Search Control", "C. Random Walk", "D. Deterministic"], a: "B", topic: "topic1" },
+            { id: 25, q: "A 'Backtracking point' serves as a:", opts: ["A. Goal", "B. Dead end", "C. Restore point/checkpoint", "D. Termination"], a: "C", topic: "topic1" },
+
+            // Topic 2: Exploring Alternatives
+            { id: 26, q: "Which search dives deep, ignoring alternatives until necessary?", opts: ["A. BFS", "B. DFS", "C. A*", "D. British Museum"], a: "B", topic: "topic2" },
+            { id: 27, q: "In DFS, children are added to:", opts: ["A. Back of queue", "B. Front of queue", "C. Priority list", "D. Discarded"], a: "B", topic: "topic2" },
+            { id: 28, q: "When does DFS restart at nearest ancestor?", opts: ["A. Queue full", "B. Downward motion impossible", "C. Goal reached", "D. Every 5 steps"], a: "B", topic: "topic2" },
+            { id: 29, q: "Hill Climbing is DFS attached to:", opts: ["A. Random number", "B. 'Quality Measurement' (Heuristic)", "C. Quantity", "D. Backward chaining"], a: "B", topic: "topic2" },
+            { id: 30, q: "How does Hill Climbing order children?", opts: ["A. Alphabetically", "B. By estimated remaining distance", "C. Randomly", "D. By time"], a: "B", topic: "topic2" },
+            { id: 31, q: "What is a 'Local Maximum'?", opts: ["A. Global best", "B. State better than neighbors but not best overall", "C. Worst state", "D. Start state"], a: "B", topic: "topic2" },
+            { id: 32, q: "What is a 'Plateau'?", opts: ["A. Sharp peak", "B. Flat area where neighbors have same value", "C. Valley", "D. Goal"], a: "B", topic: "topic2" },
+            { id: 33, q: "Why is a Plateau problematic?", opts: ["A. Values too high", "B. Impossible to determine best direction", "C. Too much memory", "D. Infinite loop"], a: "B", topic: "topic2" },
+            { id: 34, q: "BFS looks for goal among all nodes at a level before:", opts: ["A. Checking heuristic", "B. Moving to next level", "C. Checking root", "D. Calculating cost"], a: "B", topic: "topic2" },
+            { id: 35, q: "In BFS, children are added to:", opts: ["A. Front of queue", "B. Back of queue", "C. Stack", "D. Sorted list"], a: "B", topic: "topic2" },
+            { id: 36, q: "Disadvantage of BFS?", opts: ["A. Never finds solution", "B. Wasteful if path is deep (searches wide)", "C. Local maxima", "D. Incomplete"], a: "B", topic: "topic2" },
+            { id: 37, q: "Beam Search limits search by:", opts: ["A. Ignoring goal", "B. Moving downward only from best W nodes", "C. Using stack", "D. Deleting nodes"], a: "B", topic: "topic2" },
+            { id: 38, q: "In Beam Search W=2, how many nodes expanded at level 1?", opts: ["A. All", "B. 1", "C. 2 most promising", "D. 4"], a: "C", topic: "topic2" },
+            { id: 39, q: "Advantage of Beam Search over BFS?", opts: ["A. Optimality", "B. Manageable node count (memory)", "C. Explores entire tree", "D. No heuristics"], a: "B", topic: "topic2" },
+            { id: 40, q: "In Best-First Search, forward motion is from:", opts: ["A. Deepest", "B. Shallowest", "C. Best open node anywhere in tree", "D. Newest"], a: "C", topic: "topic2" },
+            { id: 41, q: "How is queue managed in Best-First?", opts: ["A. FIFO", "B. LIFO", "C. Sorted by estimated remaining distance", "D. Random"], a: "C", topic: "topic2" },
+            { id: 42, q: "Strategy acting like DFS but sorting children by heuristic?", opts: ["A. BFS", "B. Hill Climbing", "C. Beam Search", "D. British Museum"], a: "B", topic: "topic2" },
+            { id: 43, q: "Strategy to guarantee shallowest solution (unweighted)?", opts: ["A. DFS", "B. BFS", "C. Hill Climbing", "D. Beam"], a: "B", topic: "topic2" },
+            { id: 44, q: "If forward motion blocked in Hill Climbing, search must:", opts: ["A. Stop", "B. Backtrack", "C. Jump to goal", "D. Switch to BFS"], a: "B", topic: "topic2" },
+            { id: 45, q: "Straight-line distance is an example of:", opts: ["A. Control strategy", "B. Heuristic measure", "C. Irrevocable rule", "D. Cost function"], a: "B", topic: "topic2" },
+            { id: 46, q: "Structure used to maintain nodes in these algorithms?", opts: ["A. Matrix", "B. Queue (or list)", "C. Table", "D. String"], a: "B", topic: "topic2" },
+            { id: 47, q: "Restarting at nearest ancestor implies:", opts: ["A. Forward tracking", "B. Backtracking", "C. Random jumping", "D. Termination"], a: "B", topic: "topic2" },
+            { id: 48, q: "Which is 'Parallel BFS with width limit'?", opts: ["A. DFS", "B. Beam Search", "C. Hill Climbing", "D. A*"], a: "B", topic: "topic2" },
+            { id: 49, q: "Best-First differs from Hill Climbing because:", opts: ["A. Never backtracks", "B. Can jump to most promising node anywhere", "C. No memory", "D. Only neighbors"], a: "B", topic: "topic2" },
+            { id: 50, q: "If Hill Climbing heuristic is perfect, search becomes:", opts: ["A. Random walk", "B. Direct navigation to goal", "C. Exhaustive", "D. Slower than BFS"], a: "B", topic: "topic2" },
+
+            // Topic 3: Finding Best Path
+            { id: 51, q: "British Museum Search finds:", opts: ["A. First path", "B. All possible paths and selects best", "C. Random path", "D. Shortest via heuristic"], a: "B", topic: "topic3" },
+            { id: 52, q: "British Museum feasible only for:", opts: ["A. Complex trees", "B. Small trees (exhaustive)", "C. Heuristics", "D. Large trees"], a: "B", topic: "topic3" },
+            { id: 53, q: "Branch and Bound handles multiple:", opts: ["A. Goals", "B. Incomplete paths contending for consideration", "C. Adversaries", "D. Heuristics"], a: "B", topic: "topic3" },
+            { id: 54, q: "In Branch and Bound, which path is extended?", opts: ["A. Longest", "B. Shortest (accumulated cost)", "C. Highest heuristic", "D. Newest"], a: "B", topic: "topic3" },
+            { id: 55, q: "Branch and Bound queue sorted by:", opts: ["A. Accumulated cost so far", "B. Est. remaining", "C. LIFO", "D. FIFO"], a: "A", topic: "topic3" },
+            { id: 56, q: "Branch and Bound guarantees optimality because:", opts: ["A. Uses heuristic", "B. Explores all", "C. Shortest path always chosen for extension", "D. Depth limit"], a: "C", topic: "topic3" },
+            { id: 57, q: "A* combines Branch & Bound with:", opts: ["A. DFS", "B. Heuristic estimate of remaining distance", "C. Random", "D. Iterative Deepening"], a: "B", topic: "topic3" },
+            { id: 58, q: "Formula for A*?", opts: ["A. f=g-h", "B. f=h", "C. f(n) = g(n) + h(n)", "D. f=g*h"], a: "C", topic: "topic3" },
+            { id: 59, q: "In A*, g(n) represents:", opts: ["A. Est. distance", "B. Cost accumulated so far", "C. Total cost", "D. Heuristic"], a: "B", topic: "topic3" },
+            { id: 60, q: "In A*, h(n) represents:", opts: ["A. Cost so far", "B. Tree height", "C. Heuristic estimate of remaining distance", "D. Nodes visited"], a: "C", topic: "topic3" },
+            { id: 61, q: "For A* optimality, h(n) must be:", opts: ["A. > Actual", "B. Zero", "C. Admissible (lower bound)", "D. Random"], a: "C", topic: "topic3" },
+            { id: 62, q: "In A*, if two paths reach common node, keep:", opts: ["A. Both", "B. One with minimum cost", "C. First found", "D. Last found"], a: "B", topic: "topic3" },
+            { id: 63, q: "Dynamic Programming in A* refers to:", opts: ["A. Keeping best path to common node", "B. Changing heuristics", "C. Coding in C++", "D. Restarting"], a: "A", topic: "topic3" },
+            { id: 64, q: "Best for finding optimal path in large graph with heuristics?", opts: ["A. British Museum", "B. DFS", "C. A*", "D. Hill Climbing"], a: "C", topic: "topic3" },
+            { id: 65, q: "AO* is designed for:", opts: ["A. Simple graphs", "B. AND-OR graphs", "C. Cyclic graphs", "D. Disconnected"], a: "B", topic: "topic3" },
+            { id: 66, q: "In AND-OR graph, OR node represents:", opts: ["A. Decomposition", "B. Choice (solve one branch)", "C. Dead end", "D. Goal"], a: "B", topic: "topic3" },
+            { id: 67, q: "In AND-OR graph, AND node represents:", opts: ["A. Choice", "B. Decomposition (solve all branches)", "C. Heuristic", "D. Solved state"], a: "B", topic: "topic3" },
+            { id: 68, q: "AO* primarily tracks:", opts: ["A. Visited", "B. Solved status and heuristic cost", "C. Alpha beta", "D. Depth"], a: "B", topic: "topic3" },
+            { id: 69, q: "AO* is a type of:", opts: ["A. BFS", "B. Best-First Search for AND-OR", "C. Uninformed", "D. Random"], a: "B", topic: "topic3" },
+            { id: 70, q: "Algorithm for solving sub-problems A AND B?", opts: ["A. A*", "B. AO*", "C. BFS", "D. Minimax"], a: "B", topic: "topic3" },
+            { id: 71, q: "If h(n) overestimates cost in A*?", opts: ["A. Optimal", "B. Not guaranteed optimal", "C. British Museum", "D. Fails"], a: "B", topic: "topic3" },
+            { id: 72, q: "Branch and Bound is A* where:", opts: ["A. h(n) = 0", "B. g(n) = 0", "C. f = h", "D. W=1"], a: "A", topic: "topic3" },
+            { id: 73, q: "British Museum uses which traversals?", opts: ["A. Random", "B. DFS/BFS (modified to not stop)", "C. A* only", "D. Beam only"], a: "B", topic: "topic3" },
+            { id: 74, q: "Lower bound estimate in A* means:", opts: ["A. Higher than actual", "B. Lower than or equal to actual", "C. Negative", "D. Infinite"], a: "B", topic: "topic3" },
+            { id: 75, q: "Queue in A* is effectively a:", opts: ["A. Stack", "B. Priority Queue", "C. Array", "D. List"], a: "B", topic: "topic3" },
+
+            // Topic 4: Game Playing & AO*
+            { id: 76, q: "Minimax Search is for:", opts: ["A. Single player", "B. Two-player adversarial", "C. Maps", "D. Sorting"], a: "B", topic: "topic4" },
+            { id: 77, q: "MAX tries to:", opts: ["A. Minimize score", "B. Maximize score", "C. Randomize", "D. Help opponent"], a: "B", topic: "topic4" },
+            { id: 78, q: "MIN tries to:", opts: ["A. Maximize MAX's score", "B. Minimize MAX's score", "C. Avoid playing", "D. Increase depth"], a: "B", topic: "topic4" },
+            { id: 79, q: "Where are utility functions applied in Minimax?", opts: ["A. Root", "B. Intermediate", "C. Leaf nodes", "D. Nowhere"], a: "C", topic: "topic4" },
+            { id: 80, q: "How are values passed in Minimax?", opts: ["A. Root to leaves", "B. Leaves up to root", "C. Randomly", "D. Horizontally"], a: "B", topic: "topic4" },
+            { id: 81, q: "Purpose of Alpha-Beta Pruning?", opts: ["A. Change rules", "B. Optimize Minimax by reducing evaluated nodes", "C. Guarantee win", "D. Increase depth"], a: "B", topic: "topic4" },
+            { id: 82, q: "Alpha (α) represents:", opts: ["A. Best MIN value", "B. Best value MAX can guarantee so far", "C. Average", "D. Depth"], a: "B", topic: "topic4" },
+            { id: 83, q: "Beta (β) represents:", opts: ["A. Best MAX value", "B. Best value MIN can guarantee so far", "C. Cost", "D. Branching"], a: "B", topic: "topic4" },
+            { id: 84, q: "Condition for pruning in Alpha-Beta:", opts: ["A. α < β", "B. α ≥ β", "C. α = 0", "D. β = 0"], a: "B", topic: "topic4" },
+            { id: 85, q: "Progressive Deepening is:", opts: ["A. Iterative Deepening DFS", "B. Recursive BFS", "C. Infinite", "D. Static"], a: "A", topic: "topic4" },
+            { id: 86, q: "Progressive Deepening solves:", opts: ["A. Slowness", "B. Memory of BFS & incompleteness of DFS", "C. Minimax complexity", "D. Lack of heuristics"], a: "B", topic: "topic4" },
+            { id: 87, q: "How does Progressive Deepening work?", opts: ["A. Run BFS once", "B. Run DFS with increasing depth limits", "C. Guess depth", "D. Deepest only"], a: "B", topic: "topic4" },
+            { id: 88, q: "Risk of Heuristic Pruning?", opts: ["A. Slower", "B. Might prune winning move (optimality lost)", "C. More memory", "D. Better always"], a: "B", topic: "topic4" },
+            { id: 89, q: "Heuristic Pruning cuts branches based on:", opts: ["A. Proof", "B. 'Likelihood' from heuristics", "C. Alphabet", "D. Random"], a: "B", topic: "topic4" },
+            { id: 90, q: "If α ≥ β, it means:", opts: ["A. Path is best", "B. Path is irrelevant (opponent has better option)", "C. Draw", "D. Zero utility"], a: "B", topic: "topic4" },
+            { id: 91, q: "Minimax assumes opponent plays:", opts: ["A. Randomly", "B. Optimally", "C. Poorly", "D. Cooperatively"], a: "B", topic: "topic4" },
+            { id: 92, q: "In AO*, 'solved' status propagates:", opts: ["A. Down", "B. Up to ancestors", "C. To siblings", "D. Nowhere"], a: "B", topic: "topic4" },
+            { id: 93, q: "Technique combining DFS memory with BFS completeness?", opts: ["A. Hill Climbing", "B. Progressive Deepening", "C. Beam", "D. Best-First"], a: "B", topic: "topic4" },
+            { id: 94, q: "Static evaluation function used when:", opts: ["A. Game over", "B. Depth limit reached", "C. Player quits", "D. Empty tree"], a: "B", topic: "topic4" },
+            { id: 95, q: "Alpha values updated at:", opts: ["A. MIN nodes", "B. MAX nodes", "C. Leaf only", "D. Root only"], a: "B", topic: "topic4" },
+            { id: 96, q: "Beta values updated at:", opts: ["A. MAX nodes", "B. MIN nodes", "C. Leaf only", "D. Root only"], a: "B", topic: "topic4" },
+            { id: 97, q: "Heuristic Pruning useful in complex games because:", opts: ["A. Perfect move", "B. Speeds up search significantly", "C. Easier for humans", "D. No utility needed"], a: "B", topic: "topic4" },
+            { id: 98, q: "Horizon effect addressed by:", opts: ["A. Shallower search", "B. Progressive Deepening / searching deeper", "C. Stop", "D. No heuristics"], a: "B", topic: "topic4" },
+            { id: 99, q: "Minimax: MAX chooses between 10, 5, 20?", opts: ["A. 5", "B. 10", "C. 20", "D. Random"], a: "C", topic: "topic4" },
+            { id: 100, q: "Minimax: MIN chooses between 10, 5, 20?", opts: ["A. 5", "B. 10", "C. 20", "D. Random"], a: "A", topic: "topic4" }
+        ];
+
+        // ---------------------------------------------------------
+        // RENDER FUNCTION
+        // ---------------------------------------------------------
+        function renderMCQs(filterTopic = 'all') {
+            const listContainer = document.getElementById('mcq-list-container');
+            listContainer.innerHTML = '';
+
+            // Update Tab Buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if (btn.onclick.toString().includes(filterTopic)) {
+                    btn.classList.add('active-tab', 'bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.remove('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                } else {
+                    btn.classList.remove('active-tab', 'bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.add('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                }
+            });
+
+            const filteredData = filterTopic === 'all' 
+                ? mcqData 
+                : mcqData.filter(item => item.topic === filterTopic);
+
+            filteredData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow';
+                div.innerHTML = `
+                    <div class="flex gap-3">
+                        <span class="font-bold text-slate-400 shrink-0 w-8 text-right">${item.id}.</span>
+                        <div class="w-full">
+                            <p class="font-medium text-slate-800 mb-2">${item.q}</p>
+                            <div class="space-y-1 mb-3">
+                                ${item.opts.map(opt => `<div class="text-sm text-slate-600">${opt}</div>`).join('')}
+                            </div>
+                            <details class="group">
+                                <summary class="text-xs font-bold text-blue-600 cursor-pointer hover:text-blue-800 select-none list-none flex items-center gap-1">
+                                    <span>Show Answer</span>
+                                    <i data-lucide="chevron-down" class="w-3 h-3 transition-transform group-open:rotate-180"></i>
+                                </summary>
+                                <div class="mt-2 p-2 bg-green-50 text-green-800 text-sm rounded font-medium border border-green-100 inline-block">
+                                    Correct Answer: ${item.a}
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+            
+            // Re-init icons for newly created elements
+            if(typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Expose filter function globally
+        window.filterMCQs = renderMCQs;
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMCQs('all');
+        });
+
+
+        // ---------------------------------------------------------
+        // EXISTING LOGIC (Sidebar, Accordion, etc)
+        // ---------------------------------------------------------
+        
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+
+        // Accordion Logic
+        const accBtns = document.querySelectorAll('.accordion-btn');
+        accBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+
+        // Scroll to Section Logic
+        function scrollToSection(id) {
+            if (window.innerWidth < 1024 && isMenuOpen) toggleMenu();
+            const sectionContent = document.querySelector(`#${id} .accordion-content`);
+            const sectionBtn = document.querySelector(`#${id} .accordion-btn`);
+            if (sectionContent && !sectionContent.classList.contains('active')) {
+                sectionContent.classList.add('active');
+                sectionBtn.classList.add('active');
+            }
+            // Update Active Nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if(item.dataset.target === id) {
+                    item.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-900/50');
+                    item.classList.remove('text-slate-400', 'hover:bg-slate-800');
+                } else {
+                    item.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-900/50');
+                    item.classList.add('text-slate-400', 'hover:bg-slate-800');
+                }
+            });
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = 80;
+                const elementRect = element.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: elementRect - offset, behavior: 'smooth' });
+            }
+        }
+        window.scrollToSection = scrollToSection; // Make global
+
+        // Scroll to Top Logic
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollBtn.classList.remove('translate-y-16', 'opacity-0');
+                scrollBtn.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                scrollBtn.classList.add('translate-y-16', 'opacity-0');
+                scrollBtn.classList.remove('translate-y-0', 'opacity-100');
+            }
+        });
+
+        // Set initial active state
+        const initialNav = document.querySelector('.nav-item[data-target="control"]');
+        if(initialNav) {
+            initialNav.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-900/50');
+            initialNav.classList.remove('text-slate-400');
+        }
+
+    </script>
+</body>
+</html>

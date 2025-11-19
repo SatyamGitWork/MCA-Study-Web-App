@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit V: Machine Learning</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Accordion Transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            max-height: 20000px; /* Huge height for 175 MCQs */
+            opacity: 1;
+        }
+        .rotate-icon { transition: transform 0.3s ease; }
+        .accordion-btn.active .rotate-icon { transform: rotate(180deg); }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Tab Button Active State */
+        .tab-btn.active-tab {
+            background-color: #e11d48; /* Rose-600 */
+            color: white;
+            border-color: #e11d48;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-50 flex items-center justify-between px-4">
+        <span class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <i data-lucide="brain-circuit" class="text-rose-500 w-5 h-5"></i>
+            Unit V: Machine Learning
+        </span>
+        <button id="mobile-menu-btn" class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+            <i data-lucide="menu" id="menu-icon"></i>
+        </button>
+    </div>
+
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden transition-opacity opacity-0"></div>
+
+    <div class="flex min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed top-0 left-0 h-full bg-slate-900 text-white z-40 transition-transform duration-300 ease-in-out w-64 -translate-x-full lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 flex flex-col">
+            <div class="p-6 border-b border-slate-800 mt-16 lg:mt-0">
+                <a href="../index.html" class="inline-flex items-center gap-2 text-rose-400 hover:text-rose-300 text-sm mb-4 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Home</span>
+                </a>
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="brain-circuit" class="text-rose-400"></i>
+                    <h1 class="text-xl font-bold">Machine Learning</h1>
+                </div>
+                <p class="text-slate-400 text-sm">Unit V Study Guide</p>
+            </div>
+
+            <nav class="p-4 space-y-2 overflow-y-auto flex-1 custom-scroll">
+                <button onclick="scrollToSection('intro')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="intro">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Definition & AI/ML/DL</span>
+                </button>
+                
+                <button onclick="scrollToSection('types')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="types">
+                    <i data-lucide="git-branch" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Types of Learning</span>
+                </button>
+
+                <button onclick="scrollToSection('concepts')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="concepts">
+                    <i data-lucide="database" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Key Concepts</span>
+                </button>
+
+                <button onclick="scrollToSection('fitting')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="fitting">
+                    <i data-lucide="activity" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Overfitting & Metrics</span>
+                </button>
+
+                <!-- MCQ Button -->
+                <button onclick="scrollToSection('mcq')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white mt-4 border-t border-slate-800 pt-4" data-target="mcq">
+                    <i data-lucide="list-checks" class="w-4 h-4 text-green-400"></i>
+                    <span class="font-medium text-sm">All 175 MCQs</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 lg:p-8 lg:max-w-4xl mx-auto w-full mt-16 lg:mt-0">
+
+            <!-- 1. Intro & Differences -->
+            <div id="intro" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left active">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-rose-100 text-rose-600 rounded-lg">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">1. Definition & AI vs ML vs DL</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content active">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-2">Machine Learning (ML)</h3>
+                            <p class="text-sm">A subset of AI that focuses on developing systems capable of learning and improving automatically from data without explicit programming.</p>
+                            <div class="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-rose-700">
+                                <span class="bg-rose-50 px-2 py-1 rounded border border-rose-100">Automation</span>
+                                <span class="bg-rose-50 px-2 py-1 rounded border border-rose-100">Data-Driven</span>
+                                <span class="bg-rose-50 px-2 py-1 rounded border border-rose-100">Adaptability</span>
+                                <span class="bg-rose-50 px-2 py-1 rounded border border-rose-100">Personalization</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-3">Hierarchy & Differences</h3>
+                            <div class="space-y-3">
+                                <div class="p-3 border rounded bg-white flex gap-3 items-start">
+                                    <div class="bg-gray-100 p-2 rounded text-gray-600"><i data-lucide="cpu" class="w-4 h-4"></i></div>
+                                    <div>
+                                        <strong class="block text-slate-800 text-sm">AI (Broadest)</strong>
+                                        <span class="text-xs text-slate-500">Creating smart machines mimicking human behavior. (e.g., Robotics, Expert Systems)</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 border rounded bg-white flex gap-3 items-start ml-4 border-l-4 border-l-rose-500">
+                                    <div class="bg-rose-100 p-2 rounded text-rose-600"><i data-lucide="brain-circuit" class="w-4 h-4"></i></div>
+                                    <div>
+                                        <strong class="block text-slate-800 text-sm">ML (Subset of AI)</strong>
+                                        <span class="text-xs text-slate-500">Systems learning from data to make predictions. Moderate data needed. (e.g., Spam Filter)</span>
+                                    </div>
+                                </div>
+                                <div class="p-3 border rounded bg-white flex gap-3 items-start ml-8 border-l-4 border-l-purple-500">
+                                    <div class="bg-purple-100 p-2 rounded text-purple-600"><i data-lucide="layers" class="w-4 h-4"></i></div>
+                                    <div>
+                                        <strong class="block text-slate-800 text-sm">DL (Subset of ML)</strong>
+                                        <span class="text-xs text-slate-500">Multi-layered neural networks. High complexity, needs huge data & GPUs. (e.g., Self-driving cars)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Types of Learning -->
+            <div id="types" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-rose-100 text-rose-600 rounded-lg">
+                            <i data-lucide="git-branch" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">2. Types of Learning</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <!-- Supervised -->
+                            <div class="border rounded-lg p-4 bg-blue-50 border-blue-100">
+                                <h4 class="font-bold text-blue-800 text-sm mb-2">Supervised</h4>
+                                <p class="text-xs mb-2">Learns from <strong>Labeled Data</strong> (Input + Known Output).</p>
+                                <ul class="list-disc ml-4 text-xs text-slate-600">
+                                    <li><strong>Regression:</strong> Continuous output (e.g., Price).</li>
+                                    <li><strong>Classification:</strong> Categories (e.g., Spam/Not Spam).</li>
+                                    <li><i>Algos:</i> Linear Regression, SVM, Decision Trees.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Unsupervised -->
+                            <div class="border rounded-lg p-4 bg-yellow-50 border-yellow-100">
+                                <h4 class="font-bold text-yellow-800 text-sm mb-2">Unsupervised</h4>
+                                <p class="text-xs mb-2">Learns from <strong>Unlabeled Data</strong> (Finding hidden structures).</p>
+                                <ul class="list-disc ml-4 text-xs text-slate-600">
+                                    <li><strong>Clustering:</strong> Grouping (e.g., Customer Segments).</li>
+                                    <li><strong>Dimensionality Reduction:</strong> PCA.</li>
+                                    <li><i>Algos:</i> K-Means, Hierarchical, PCA.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Reinforcement -->
+                            <div class="border rounded-lg p-4 bg-green-50 border-green-100">
+                                <h4 class="font-bold text-green-800 text-sm mb-2">Reinforcement</h4>
+                                <p class="text-xs mb-2">Learning via <strong>Interaction</strong> (Agent, Environment, Reward).</p>
+                                <ul class="list-disc ml-4 text-xs text-slate-600">
+                                    <li><strong>Goal:</strong> Maximize cumulative reward.</li>
+                                    <li><strong>Policy:</strong> Strategy for action.</li>
+                                    <li><i>Apps:</i> Gaming (AlphaGo), Robotics.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Key Concepts -->
+            <div id="concepts" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-rose-100 text-rose-600 rounded-lg">
+                            <i data-lucide="database" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">3. Features, Labels & Datasets</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-4">
+                        
+                        <div class="flex gap-4 text-sm">
+                            <div class="flex-1 bg-white border p-3 rounded">
+                                <strong class="block text-slate-800">Features (X)</strong>
+                                Independent variables/inputs (e.g., Age, Income).
+                            </div>
+                            <div class="flex-1 bg-white border p-3 rounded">
+                                <strong class="block text-slate-800">Labels (Y)</strong>
+                                Dependent variable/outcome (e.g., Has Diabetes).
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 p-3 rounded text-sm">
+                            <strong class="block text-slate-800 mb-1">Data Splitting</strong>
+                            <div class="flex items-center gap-2 text-xs mt-2">
+                                <span class="bg-blue-200 text-blue-800 px-3 py-1 rounded w-3/4 text-center">Training Data (70-80%)<br>Teaches the model</span>
+                                <span class="bg-green-200 text-green-800 px-3 py-1 rounded w-1/4 text-center">Testing (20%)<br>Evaluates</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Overfitting & Metrics -->
+            <div id="fitting" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-rose-100 text-rose-600 rounded-lg">
+                            <i data-lucide="activity" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">4. Fitting & Evaluation</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <!-- Fitting -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-red-50 border border-red-100 p-3 rounded">
+                                <h4 class="font-bold text-red-800 text-sm">Overfitting (High Variance)</h4>
+                                <p class="text-xs mt-1">Good on Training, Bad on Testing.</p>
+                                                                <p class="text-xs mt-1"><strong>Fix:</strong> More data, Simplify model, Regularization.</p>
+                            </div>
+                            <div class="bg-orange-50 border border-orange-100 p-3 rounded">
+                                <h4 class="font-bold text-orange-800 text-sm">Underfitting (High Bias)</h4>
+                                <p class="text-xs mt-1">Bad on Training, Bad on Testing.</p>
+                                                                <p class="text-xs mt-1"><strong>Fix:</strong> Increase complexity, Add features.</p>
+                            </div>
+                        </div>
+
+                        <!-- Metrics -->
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">Evaluation Metrics</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-left border rounded">
+                                    <thead class="bg-slate-100 text-slate-700">
+                                        <tr>
+                                            <th class="p-2 border">Metric</th>
+                                            <th class="p-2 border">Formula</th>
+                                            <th class="p-2 border">Use Case</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-2 font-semibold">Accuracy</td>
+                                            <td class="p-2 font-mono text-xs">(TP+TN)/Total</td>
+                                            <td class="p-2">Balanced data</td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-2 font-semibold">Precision</td>
+                                            <td class="p-2 font-mono text-xs">TP/(TP+FP)</td>
+                                            <td class="p-2">Minimize False Positives (Spam)</td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-2 font-semibold">Recall</td>
+                                            <td class="p-2 font-mono text-xs">TP/(TP+FN)</td>
+                                            <td class="p-2">Minimize False Negatives (Cancer)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 font-semibold">F1 Score</td>
+                                            <td class="p-2 font-mono text-xs">2*(P*R)/(P+R)</td>
+                                            <td class="p-2">Imbalanced data</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. All 175 MCQs -->
+            <div id="mcq" class="section mb-20 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-green-100 text-green-600 rounded-lg">
+                            <i data-lucide="list-checks" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">Practice MCQs (1-175)</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-0 border-t border-gray-100 text-slate-600 bg-slate-50">
+                        
+                        <!-- Topic Filter Sub-nav -->
+                        <div class="sticky top-0 bg-white z-10 p-4 shadow-sm border-b border-gray-200 overflow-x-auto">
+                            <div class="flex gap-2 whitespace-nowrap">
+                                <button onclick="filterMCQs('all')" class="tab-btn active-tab px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    All (175)
+                                </button>
+                                <button onclick="filterMCQs('topic1')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Definition (1-25)
+                                </button>
+                                <button onclick="filterMCQs('topic2')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    AI/ML/DL (26-50)
+                                </button>
+                                <button onclick="filterMCQs('topic3')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Types (51-75)
+                                </button>
+                                <button onclick="filterMCQs('topic4')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Apps (76-100)
+                                </button>
+                                <button onclick="filterMCQs('topic5')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Data (101-125)
+                                </button>
+                                <button onclick="filterMCQs('topic6')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Fitting (126-150)
+                                </button>
+                                <button onclick="filterMCQs('topic7')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Metrics (151-175)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Questions Container -->
+                        <div id="mcq-list-container" class="space-y-4 p-6">
+                            <div class="text-center py-10 text-slate-500">Loading 175 Questions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Scroll to Top -->
+        <button id="scrollTopBtn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 p-3 bg-rose-600 text-white rounded-full shadow-lg hover:bg-rose-700 transition-all duration-300 z-40 translate-y-16 opacity-0">
+            <i data-lucide="arrow-up" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ---------------------------------------------------------
+        // FULL 175 MCQ DATA (UNIT V)
+        // ---------------------------------------------------------
+        const mcqData = [
+            // Topic 1: Definition (1-25)
+            { id: 1, q: "Core definition of Machine Learning?", opts: ["A) Static rules", "B) Subset of AI learning from data without explicit programming", "C) Hardware upgrade", "D) Database"], a: "B", topic: "topic1" },
+            { id: 2, q: "ML gives computers ability to learn from:", opts: ["A) Instructions", "B) Data", "C) Hardware", "D) Cables"], a: "B", topic: "topic1" },
+            { id: 3, q: "NOT a key importance of ML?", opts: ["A) Automation", "B) Personalization", "C) Increasing manual entry", "D) Data-driven decisions"], a: "C", topic: "topic1" },
+            { id: 4, q: "In ML, input Data + Answers gives:", opts: ["A) Rules", "B) Data", "C) Just Rules", "D) Answers"], a: "A", topic: "topic1" },
+            { id: 5, q: "Model improving as more data available refers to:", opts: ["A) Rigidity", "B) Adaptability", "C) Complexity", "D) Overfitting"], a: "B", topic: "topic1" },
+            { id: 6, q: "Netflix/Spotify use ML for:", opts: ["A) Routing", "B) Personalization/Recs", "C) Fees", "D) Storage"], a: "B", topic: "topic1" },
+            { id: 7, q: "Example of Automation via ML?", opts: ["A) Sorting emails", "B) Automatic Spam Filtering", "C) Writing letter", "D) Printing"], a: "B", topic: "topic1" },
+            { id: 8, q: "ML enables decisions based on:", opts: ["A) Gut feelings", "B) Guessing", "C) Data insights", "D) Protocols"], a: "C", topic: "topic1" },
+            { id: 9, q: "'Explicit programming' means:", opts: ["A) Computer writes code", "B) Humans provide step-by-step instructions", "C) Learning from exp", "D) Python only"], a: "B", topic: "topic1" },
+            { id: 10, q: "Industry using ML for Fraud Detection?", opts: ["A) Entertainment", "B) Finance", "C) Agriculture", "D) Construction"], a: "B", topic: "topic1" },
+            { id: 11, q: "'Learning from experience' mimics:", opts: ["A) Calculator", "B) Human learning", "C) Hard drive", "D) Router"], a: "B", topic: "topic1" },
+            { id: 12, q: "Example of ML improving efficiency?", opts: ["A) Route optimization", "B) Paper usage", "C) Slow processing", "D) Manual count"], a: "A", topic: "topic1" },
+            { id: 13, q: "'Data-Driven Decisions' backed by:", opts: ["A) Evidence/Patterns", "B) Loudest person", "C) Coin toss", "D) Defaults"], a: "A", topic: "topic1" },
+            { id: 14, q: "Why ML important for Complex Decisions?", opts: ["A) Avoids them", "B) Processes more variables than humans", "C) Slower", "D) Guesses"], a: "B", topic: "topic1" },
+            { id: 15, q: "'Without being explicitly programmed' refers to:", opts: ["A) No code", "B) Generalizing from examples", "C) Hardware only", "D) Magic"], a: "B", topic: "topic1" },
+            { id: 16, q: "App demonstrating Personalization?", opts: ["A) Weather", "B) Amazon Recs", "C) Traffic lights", "D) Excel"], a: "B", topic: "topic1" },
+            { id: 17, q: "ML is subset of:", opts: ["A) Deep Learning", "B) AI", "C) Big Data", "D) Robotics"], a: "B", topic: "topic1" },
+            { id: 18, q: "Fuel for ML models?", opts: ["A) Electricity", "B) Data", "C) WiFi", "D) HTML"], a: "B", topic: "topic1" },
+            { id: 19, q: "Benefit in customer service?", opts: ["A) Wait times", "B) Chatbots/Automated support", "C) Removing support", "D) Manual only"], a: "B", topic: "topic1" },
+            { id: 20, q: "Continuous improvement driven by:", opts: ["A) Stopping", "B) Feeding new data", "C) Deleting data", "D) Changing lang"], a: "B", topic: "topic1" },
+            { id: 21, q: "Identify patterns and relationships is function of:", opts: ["A) Monitor", "B) ML Algorithms", "C) Keyboard", "D) Printer"], a: "B", topic: "topic1" },
+            { id: 22, q: "Sector using ML for Diagnosis?", opts: ["A) Retail", "B) Healthcare", "C) Automotive", "D) Sports"], a: "B", topic: "topic1" },
+            { id: 23, q: "'Experience' in ML comes as:", opts: ["A) Time", "B) Dataset examples", "C) Updates", "D) Manuals"], a: "B", topic: "topic1" },
+            { id: 24, q: "Why important for Scalability?", opts: ["A) Handles large-scale analysis auto", "B) More humans", "C) Shrinks data", "D) Slows down"], a: "A", topic: "topic1" },
+            { id: 25, q: "Ultimate goal of ML model?", opts: ["A) Memorize", "B) Make accurate predictions on unseen data", "C) Replicate training", "D) Delete"], a: "B", topic: "topic1" },
+
+            // Topic 2: Differences (26-50)
+            { id: 26, q: "Correct hierarchy?", opts: ["A) DL ⊂ ML ⊂ AI", "B) AI ⊂ ML ⊂ DL", "C) ML ⊂ AI ⊂ DL", "D) DL ⊂ AI ⊂ ML"], a: "A", topic: "topic2" },
+            { id: 27, q: "AI defined as:", opts: ["A) Image recog", "B) Broad field mimicking human behavior", "C) Algorithm", "D) Neural network"], a: "B", topic: "topic2" },
+            { id: 28, q: "Deep Learning uses:", opts: ["A) Decision Trees", "B) Multi-layered Neural Networks", "C) Linear Reg", "D) If-Else"], a: "B", topic: "topic2" },
+            { id: 29, q: "Requires MOST computational power?", opts: ["A) AI", "B) ML", "C) Deep Learning", "D) Excel"], a: "C", topic: "topic2" },
+            { id: 30, q: "Requires LARGEST amount of data?", opts: ["A) Expert Systems", "B) Logistic Reg", "C) Deep Learning", "D) K-Means"], a: "C", topic: "topic2" },
+            { id: 31, q: "Traditional ML works best with:", opts: ["A) Moderate data", "B) Billions of images", "C) No data", "D) Video"], a: "A", topic: "topic2" },
+            { id: 32, q: "Feature Extraction in DL is:", opts: ["A) Manual", "B) Automated", "C) Not required", "D) External"], a: "B", topic: "topic2" },
+            { id: 33, q: "Feature Extraction in Traditional ML is:", opts: ["A) Automated", "B) Manual", "C) Impossible", "D) Random"], a: "B", topic: "topic2" },
+            { id: 34, q: "Example of General AI?", opts: ["A) Any intellectual task human can do", "B) Spam filter", "C) Chess bot", "D) Siri"], a: "A", topic: "topic2" },
+            { id: 35, q: "Self-driving cars rely on:", opts: ["A) Rule-based", "B) Deep Learning", "C) Linear Reg", "D) Sheets"], a: "B", topic: "topic2" },
+            { id: 36, q: "Field including Expert Systems/Robotics?", opts: ["A) AI", "B) DL only", "C) NLP only", "D) None"], a: "A", topic: "topic2" },
+            { id: 37, q: "DL structure inspired by:", opts: ["A) Solar system", "B) Human brain", "C) File cabinet", "D) Tree roots"], a: "B", topic: "topic2" },
+            { id: 38, q: "Computationally Least Intensive?", opts: ["A) Training DNN", "B) Simple Rule-based AI", "C) Random Forest", "D) Video"], a: "B", topic: "topic2" },
+            { id: 39, q: "Price prediction (small dataset):", opts: ["A) DL", "B) Traditional ML", "C) Robotics", "D) General AI"], a: "B", topic: "topic2" },
+            { id: 40, q: "AlphaGo utilizes:", opts: ["A) Supervised", "B) Deep Reinforcement Learning", "C) Linear Reg", "D) Manual Rules"], a: "B", topic: "topic2" },
+            { id: 41, q: "Unstructured data (images/audio) best for:", opts: ["A) Decision Trees", "B) Deep Learning", "C) Naive Bayes", "D) Excel"], a: "B", topic: "topic2" },
+            { id: 42, q: "Time to train DL model:", opts: ["A) Short", "B) Longer than ML", "C) Instant", "D) Same"], a: "B", topic: "topic2" },
+            { id: 43, q: "Interpretability of DL:", opts: ["A) White Box", "B) Black Box", "C) Transparent", "D) Simple"], a: "B", topic: "topic2" },
+            { id: 44, q: "Decision Trees/SVM belong to:", opts: ["A) DL", "B) Traditional ML", "C) Rules", "D) Hardware"], a: "B", topic: "topic2" },
+            { id: 45, q: "Performance vs Data Volume:", opts: ["A) DL plateaus", "B) ML increases indefinitely", "C) DL increases with data", "D) ML better on massive"], a: "C", topic: "topic2" },
+            { id: 46, q: "NN with 1-2 hidden layers:", opts: ["A) Deep Learning", "B) Shallow Learning", "C) Expert Sys", "D) Quantum"], a: "B", topic: "topic2" },
+            { id: 47, q: "Requires GPUs/TPUs?", opts: ["A) Decision tree", "B) CNN (DL)", "C) Mean", "D) Sorting"], a: "B", topic: "topic2" },
+            { id: 48, q: "Spam detection historically solved by:", opts: ["A) DRL", "B) Traditional ML (Naive Bayes)", "C) Robotics", "D) Gen AI"], a: "B", topic: "topic2" },
+            { id: 49, q: "Computer Vision stronghold:", opts: ["A) Linear Reg", "B) Deep Learning (CNN)", "C) K-Means", "D) Apriori"], a: "B", topic: "topic2" },
+            { id: 50, q: "AI coined:", opts: ["A) After ML", "B) Before ML", "C) After DL", "D) 2010"], a: "B", topic: "topic2" },
+
+            // Topic 3: Types of Learning (51-75)
+            { id: 51, q: "Supervised Learning uses:", opts: ["A) Unlabeled", "B) Labeled data", "C) No data", "D) Random"], a: "B", topic: "topic3" },
+            { id: 52, q: "Supervised task?", opts: ["A) Grouping articles", "B) Predicting prices", "C) Chess", "D) Market Basket"], a: "B", topic: "topic3" },
+            { id: 53, q: "Unsupervised used for:", opts: ["A) Classification", "B) Clustering", "C) Regression", "D) Prediction"], a: "B", topic: "topic3" },
+            { id: 54, q: "Agent/Environment interaction:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforcement", "D) Semi-supervised"], a: "C", topic: "topic3" },
+            { id: 55, q: "Reinforcement feedback form:", opts: ["A) Labels", "B) Rewards/Penalties", "C) Clusters", "D) Errors"], a: "B", topic: "topic3" },
+            { id: 56, q: "Algorithm for Classification?", opts: ["A) K-Means", "B) Linear Reg", "C) Logistic Regression", "D) Apriori"], a: "C", topic: "topic3" },
+            { id: 57, q: "Algorithm for Clustering?", opts: ["A) Random Forest", "B) K-Means", "C) Decision Tree", "D) SVM"], a: "B", topic: "topic3" },
+            { id: 58, q: "Regression output is:", opts: ["A) Categorical", "B) Continuous", "C) Cluster", "D) Policy"], a: "B", topic: "topic3" },
+            { id: 59, q: "Predicting Yes/No:", opts: ["A) Regression", "B) Classification", "C) Clustering", "D) Reinforcement"], a: "B", topic: "topic3" },
+            { id: 60, q: "Customer segmentation:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforcement", "D) Linear"], a: "B", topic: "topic3" },
+            { id: 61, q: "Training robot to walk:", opts: ["A) Supervised", "B) Reinforcement", "C) Unsupervised", "D) Clustering"], a: "B", topic: "topic3" },
+            { id: 62, q: "Dimensionality Reduction:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforcement", "D) DL"], a: "B", topic: "topic3" },
+            { id: 63, q: "Supervised maps:", opts: ["A) Input to Output", "B) Input to Input", "C) Output to Input", "D) Random"], a: "A", topic: "topic3" },
+            { id: 64, q: "NOT Supervised?", opts: ["A) Decision Tree", "B) Random Forest", "C) K-Means", "D) SVM"], a: "C", topic: "topic3" },
+            { id: 65, q: "Anomaly detection without labels:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforcement", "D) Regression"], a: "B", topic: "topic3" },
+            { id: 66, q: "Policy defines:", opts: ["A) Structure", "B) Agent's strategy", "C) Clustering", "D) Error"], a: "B", topic: "topic3" },
+            { id: 67, q: "Trial and Error:", opts: ["A) Supervised", "B) Reinforcement", "C) Unsupervised", "D) All"], a: "B", topic: "topic3" },
+            { id: 68, q: "Input X but no Y:", opts: ["A) Supervised", "B) Unsupervised", "C) Regression", "D) Classification"], a: "B", topic: "topic3" },
+            { id: 69, q: "Teacher in Supervised:", opts: ["A) Dataset labels", "B) Hardware", "C) Programmer", "D) Internet"], a: "A", topic: "topic3" },
+            { id: 70, q: "Association Rule Learning:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforcement", "D) Regression"], a: "B", topic: "topic3" },
+            { id: 71, q: "Predicting temperature:", opts: ["A) Classification", "B) Regression", "C) Clustering", "D) Policy"], a: "B", topic: "topic3" },
+            { id: 72, q: "Spam vs Ham:", opts: ["A) Regression", "B) Classification", "C) Clustering", "D) Association"], a: "B", topic: "topic3" },
+            { id: 73, q: "Maximizes Cumulative Reward:", opts: ["A) Supervised", "B) Reinforcement", "C) Unsupervised", "D) DL"], a: "B", topic: "topic3" },
+            { id: 74, q: "Self-driving traffic navigation:", opts: ["A) Unsupervised", "B) Reinforcement", "C) Clustering", "D) Linear"], a: "B", topic: "topic3" },
+            { id: 75, q: "Hierarchical Clustering:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforcement", "D) Semi-supervised"], a: "B", topic: "topic3" },
+
+            // Topic 4: Applications (76-100)
+            { id: 76, q: "Stock Market Prediction?", opts: ["A) Healthcare", "B) Finance", "C) Education", "D) Ag"], a: "B", topic: "topic4" },
+            { id: 77, q: "Crop Health Monitoring?", opts: ["A) Finance", "B) Agriculture", "C) Security", "D) Marketing"], a: "B", topic: "topic4" },
+            { id: 78, q: "Intrusion Detection?", opts: ["A) Cyber Security", "B) Agriculture", "C) Education", "D) Manuf"], a: "A", topic: "topic4" },
+            { id: 79, q: "Tumor Detection?", opts: ["A) Finance", "B) Healthcare", "C) Transport", "D) Retail"], a: "B", topic: "topic4" },
+            { id: 80, q: "Credit Scoring?", opts: ["A) Education", "B) Finance", "C) Ag", "D) Gaming"], a: "B", topic: "topic4" },
+            { id: 81, q: "Route Optimization?", opts: ["A) Transportation", "B) Healthcare", "C) Finance", "D) Security"], a: "A", topic: "topic4" },
+            { id: 82, q: "Sentiment Analysis?", opts: ["A) Marketing/Social", "B) Ag", "C) Route", "D) Weather"], a: "A", topic: "topic4" },
+            { id: 83, q: "Automated Grading?", opts: ["A) Finance", "B) Education", "C) Security", "D) Health"], a: "B", topic: "topic4" },
+            { id: 84, q: "Yield Prediction?", opts: ["A) Agriculture", "B) Trading", "C) Security", "D) Drug"], a: "A", topic: "topic4" },
+            { id: 85, q: "Drug Discovery?", opts: ["A) Sell drugs", "B) Predict molecular behavior", "C) Organize", "D) Deliver"], a: "B", topic: "topic4" },
+            { id: 86, q: "Netflix 'Recommended':", opts: ["A) Rec System", "B) Fraud", "C) Security", "D) Grading"], a: "A", topic: "topic4" },
+            { id: 87, q: "Predictive Maintenance:", opts: ["A) Fix before break", "B) Fix after", "C) Ignore", "D) Recycle"], a: "A", topic: "topic4" },
+            { id: 88, q: "Face Unlock:", opts: ["A) Facial Recognition", "B) Voice", "C) Text", "D) Regression"], a: "A", topic: "topic4" },
+            { id: 89, q: "Customer Segmentation:", opts: ["A) Treat same", "B) Target specific", "C) Ignore", "D) Price random"], a: "B", topic: "topic4" },
+            { id: 90, q: "Siri/Google Assistant:", opts: ["A) NLP", "B) Vision", "C) Robotics", "D) Ag"], a: "A", topic: "topic4" },
+            { id: 91, q: "Real-time credit theft:", opts: ["A) Fraud Detection", "B) Spam", "C) Churn", "D) Sentiment"], a: "A", topic: "topic4" },
+            { id: 92, q: "Learning Analytics:", opts: ["A) Doctors", "B) Teachers/Students", "C) Farmers", "D) Drivers"], a: "B", topic: "topic4" },
+            { id: 93, q: "Self-driving vehicles:", opts: ["A) Transport", "B) Finance", "C) Ed", "D) Health"], a: "A", topic: "topic4" },
+            { id: 94, q: "Precision Medicine:", opts: ["A) Same pill", "B) Tailor to genetics", "C) Reduce staff", "D) Price"], a: "B", topic: "topic4" },
+            { id: 95, q: "Churn Prediction:", opts: ["A) Customers leaving", "B) Employees", "C) Stock", "D) Weather"], a: "A", topic: "topic4" },
+            { id: 96, q: "Satellite drought detect:", opts: ["A) Ag", "B) Finance", "C) Retail", "D) Ed"], a: "A", topic: "topic4" },
+            { id: 97, q: "Algorithmic Trading:", opts: ["A) Health", "B) Finance", "C) Security", "D) Sports"], a: "B", topic: "topic4" },
+            { id: 98, q: "Malware signatures:", opts: ["A) Security", "B) Marketing", "C) Transport", "D) Ag"], a: "A", topic: "topic4" },
+            { id: 99, q: "Adaptive Learning:", opts: ["A) Education", "B) Finance", "C) Health", "D) Security"], a: "A", topic: "topic4" },
+            { id: 100, q: "NOT common ML app:", opts: ["A) Earthquakes", "B) Random numbers", "C) Diagnosing", "D) Driving"], a: "B", topic: "topic4" },
+
+            // Topic 5: Data/Features (101-125)
+            { id: 101, q: "Y=f(X), X is:", opts: ["A) Label", "B) Feature", "C) Prediction", "D) Error"], a: "B", topic: "topic5" },
+            { id: 102, q: "Y=f(X), Y is:", opts: ["A) Feature", "B) Label", "C) Dataset", "D) Noise"], a: "B", topic: "topic5" },
+            { id: 103, q: "Example of Feature:", opts: ["A) Price", "B) Sq footage", "C) Sold status", "D) Buyer"], a: "B", topic: "topic5" },
+            { id: 104, q: "Example of Label:", opts: ["A) Age", "B) BP", "C) Insulin", "D) Outcome (Diabetes)"], a: "D", topic: "topic5" },
+            { id: 105, q: "Supervised Dataset must have:", opts: ["A) Features", "B) Labels", "C) Both", "D) Neither"], a: "C", topic: "topic5" },
+            { id: 106, q: "Training Set used to:", opts: ["A) Test", "B) Teach patterns", "C) Validate", "D) Visualize"], a: "B", topic: "topic5" },
+            { id: 107, q: "Testing Set used to:", opts: ["A) Train", "B) Evaluate on unseen", "C) Fix", "D) Add features"], a: "B", topic: "topic5" },
+            { id: 108, q: "Why split data?", opts: ["A) Size", "B) Verify generalization", "C) Confuse", "D) Not needed"], a: "B", topic: "topic5" },
+            { id: 109, q: "Common Split Ratio:", opts: ["A) 10:90", "B) 80:20", "C) 50:50", "D) 100:0"], a: "B", topic: "topic5" },
+            { id: 110, q: "Data leakage:", opts: ["A) Lost data", "B) Test info enters training", "C) Wet computer", "D) Slow"], a: "B", topic: "topic5" },
+            { id: 111, q: "Validation Set used for:", opts: ["A) Final test", "B) Tuning hyperparameters", "C) Same as train", "D) Never"], a: "B", topic: "topic5" },
+            { id: 112, q: "Independent variables:", opts: ["A) Labels", "B) Targets", "C) Features", "D) Preds"], a: "C", topic: "topic5" },
+            { id: 113, q: "Dependent variables:", opts: ["A) Features", "B) Inputs", "C) Labels", "D) Noise"], a: "C", topic: "topic5" },
+            { id: 114, q: "Dataset with no labels:", opts: ["A) Supervised", "B) Unsupervised", "C) Reinforce", "D) Test"], a: "B", topic: "topic5" },
+            { id: 115, q: "Rows represent:", opts: ["A) Features", "B) Instances/Examples", "C) Algos", "D) Labels"], a: "B", topic: "topic5" },
+            { id: 116, q: "Columns represent:", opts: ["A) Instances", "B) Features", "C) Errors", "D) Models"], a: "B", topic: "topic5" },
+            { id: 117, q: "Preprocessing happens:", opts: ["A) After train", "B) Before train", "C) During test", "D) Never"], a: "B", topic: "topic5" },
+            { id: 118, q: "Removing missing values:", opts: ["A) Selection", "B) Cleaning", "C) Eval", "D) Deploy"], a: "B", topic: "topic5" },
+            { id: 119, q: "Noise refers to:", opts: ["A) Sound", "B) Irrelevant/corrupted points", "C) Label", "D) Name"], a: "B", topic: "topic5" },
+            { id: 120, q: "Categorical features need:", opts: ["A) Deletion", "B) Encoding", "C) Ignored", "D) Used as labels"], a: "B", topic: "topic5" },
+            { id: 121, q: "Test Set identical to Training:", opts: ["A) Perfect", "B) Meaningless/Cheating", "C) Fail", "D) 0%"], a: "B", topic: "topic5" },
+            { id: 122, q: "Generalization:", opts: ["A) Training perf", "B) Unseen data perf", "C) Old data", "D) Speed"], a: "B", topic: "topic5" },
+            { id: 123, q: "CSV header usually:", opts: ["A) Data", "B) Feature names", "C) Algo", "D) Nothing"], a: "B", topic: "topic5" },
+            { id: 124, q: "Standardization/Normalization:", opts: ["A) Similar scales", "B) Zero", "C) Remove", "D) Add"], a: "A", topic: "topic5" },
+            { id: 125, q: "Ground Truth:", opts: ["A) Predicted", "B) Actual correct labels", "C) Soil", "D) Error"], a: "B", topic: "topic5" },
+
+            // Topic 6: Overfitting (126-150)
+            { id: 126, q: "Overfitting means:", opts: ["A) Poor train, poor test", "B) Well train, poor test", "C) Well both", "D) Poor train, well test"], a: "B", topic: "topic6" },
+            { id: 127, q: "Underfitting means:", opts: ["A) Well train, poor test", "B) Poor both", "C) Well both", "D) Poor train, well test"], a: "B", topic: "topic6" },
+            { id: 128, q: "High Variance model?", opts: ["A) Underfit", "B) Overfit", "C) Balanced", "D) Linear"], a: "B", topic: "topic6" },
+            { id: 129, q: "High Bias model?", opts: ["A) Underfit", "B) Overfit", "C) Balanced", "D) Complex"], a: "A", topic: "topic6" },
+            { id: 130, q: "Learns 'Noise'?", opts: ["A) Underfitting", "B) Overfitting", "C) Optimal", "D) Robust"], a: "B", topic: "topic6" },
+            { id: 131, q: "Model 'Too Simple'?", opts: ["A) Overfitting", "B) Underfitting", "C) High Acc", "D) Variance"], a: "B", topic: "topic6" },
+            { id: 132, q: "Increasing complexity leads to:", opts: ["A) Underfitting", "B) Overfitting", "C) Low acc", "D) Bias"], a: "B", topic: "topic6" },
+            { id: 133, q: "Regularization cures:", opts: ["A) Underfitting", "B) Overfitting", "C) Missing", "D) Slow"], a: "B", topic: "topic6" },
+            { id: 134, q: "Adding features fixes:", opts: ["A) Overfitting", "B) Underfitting", "C) Variance", "D) Leakage"], a: "B", topic: "topic6" },
+            { id: 135, q: "More training data reduces:", opts: ["A) Underfitting", "B) Overfitting", "C) Bias", "D) Time"], a: "B", topic: "topic6" },
+            { id: 136, q: "Pruning prevents:", opts: ["A) Underfitting", "B) Overfitting", "C) Accuracy", "D) Errors"], a: "B", topic: "topic6" },
+            { id: 137, q: "Cross-Validation used to:", opts: ["A) Prevent overfitting", "B) Increase bias", "C) Reduce time", "D) Create features"], a: "A", topic: "topic6" },
+            { id: 138, q: "Train 99%, Test 60%:", opts: ["A) Underfitting", "B) Overfitting", "C) Good", "D) Bias"], a: "B", topic: "topic6" },
+            { id: 139, q: "Train 50%, Test 50% (solvable task):", opts: ["A) Overfitting", "B) Underfitting", "C) Variance", "D) Excellent"], a: "B", topic: "topic6" },
+            { id: 140, q: "Early Stopping prevents:", opts: ["A) Underfitting", "B) Overfitting", "C) Learning", "D) Loading"], a: "B", topic: "topic6" },
+            { id: 141, q: "Simplifying helps when:", opts: ["A) Underfitting", "B) Overfitting", "C) Accurate", "D) Testing"], a: "B", topic: "topic6" },
+            { id: 142, q: "Too many epochs:", opts: ["A) Underfitting", "B) Overfitting", "C) Generalization", "D) Speed"], a: "B", topic: "topic6" },
+            { id: 143, q: "Low Bias, Low Variance:", opts: ["A) Impossible", "B) Ideal", "C) Overfit", "D) Underfit"], a: "B", topic: "topic6" },
+            { id: 144, q: "Feature Selection reduces:", opts: ["A) Underfitting", "B) Overfitting", "C) Accuracy", "D) Speed"], a: "B", topic: "topic6" },
+            { id: 145, q: "Overfitting Curve:", opts: ["A) Both decrease", "B) Train decr, Val incr", "C) Both incr", "D) Constant"], a: "B", topic: "topic6" },
+            { id: 146, q: "Ensemble methods reduce:", opts: ["A) Underfitting", "B) Overfitting (Variance)", "C) Size", "D) Bias"], a: "B", topic: "topic6" },
+            { id: 147, q: "Sweet Spot:", opts: ["A) High/High", "B) Low/Low", "C) High/Low", "D) Low/High"], a: "B", topic: "topic6" },
+            { id: 148, q: "Dropout is for:", opts: ["A) Regularization", "B) Complexity", "C) Features", "D) Speed"], a: "A", topic: "topic6" },
+            { id: 149, q: "Linear line on curve:", opts: ["A) Overfit", "B) Underfit", "C) Perfect", "D) Crash"], a: "B", topic: "topic6" },
+            { id: 150, q: "Bias-Variance Tradeoff:", opts: ["A) Minimize both easily", "B) Balance needed", "C) Bias good", "D) Variance good"], a: "B", topic: "topic6" },
+
+            // Topic 7: Metrics (151-175)
+            { id: 151, q: "Confusion Matrix displays:", opts: ["A) Confusion", "B) TP, TN, FP, FN", "C) Accuracy", "D) Code"], a: "B", topic: "topic7" },
+            { id: 152, q: "Accuracy:", opts: ["A) (TP+TN)/Total", "B) TP/(TP+FP)", "C) TP/(TP+FN)", "D) TN/Total"], a: "A", topic: "topic7" },
+            { id: 153, q: "Precision:", opts: ["A) Of predicted pos, how many real?", "B) Of real pos, how many found?", "C) Correctness", "D) TN"], a: "A", topic: "topic7" },
+            { id: 154, q: "Recall (Sensitivity):", opts: ["A) Predicted pos correctness", "B) Of real pos, how many found?", "C) Specificity", "D) TN"], a: "B", topic: "topic7" },
+            { id: 155, q: "Precision formula:", opts: ["A) TP/(TP+FP)", "B) TP/(TP+FN)", "C) TN/(TN+FP)", "D) TP/Total"], a: "A", topic: "topic7" },
+            { id: 156, q: "Recall formula:", opts: ["A) TP/(TP+FP)", "B) TP/(TP+FN)", "C) TN/(TN+FP)", "D) TP/Total"], a: "B", topic: "topic7" },
+            { id: 157, q: "Best for Imbalanced Data?", opts: ["A) Accuracy", "B) F1 Score", "C) MSE", "D) Bias"], a: "B", topic: "topic7" },
+            { id: 158, q: "F1 Score is:", opts: ["A) Average", "B) Sum", "C) Harmonic Mean", "D) Diff"], a: "C", topic: "topic7" },
+            { id: 159, q: "Spam - False Positive means:", opts: ["A) Spam as Spam", "B) Important email as Spam (Bad)", "C) Spam as Important", "D) Important as Important"], a: "B", topic: "topic7" },
+            { id: 160, q: "Cancer - False Negative means:", opts: ["A) Healthy as Sick", "B) Sick as Healthy (Dangerous)", "C) Sick as Sick", "D) Healthy as Healthy"], a: "B", topic: "topic7" },
+            { id: 161, q: "Minimize False Negatives (don't miss):", opts: ["A) Precision", "B) Recall", "C) Specificity", "D) Accuracy"], a: "B", topic: "topic7" },
+            { id: 162, q: "Minimize False Positives (don't cry wolf):", opts: ["A) Precision", "B) Recall", "C) Sensitivity", "D) Accuracy"], a: "A", topic: "topic7" },
+            { id: 163, q: "TP stands for:", opts: ["A) True Positive", "B) Total Positive", "C) Test", "D) Time"], a: "A", topic: "topic7" },
+            { id: 164, q: "TN stands for:", opts: ["A) Total Negative", "B) True Negative", "C) Test", "D) Time"], a: "B", topic: "topic7" },
+            { id: 165, q: "Accuracy misleading when:", opts: ["A) Balanced", "B) Highly imbalanced", "C) Clean", "D) Perfect"], a: "B", topic: "topic7" },
+            { id: 166, q: "Perfect F1 Score:", opts: ["A) 0", "B) 0.5", "C) 1.0", "D) 100"], a: "C", topic: "topic7" },
+            { id: 167, q: "Specificity measures:", opts: ["A) TPR", "B) True Negative Rate", "C) Precision", "D) Acc"], a: "B", topic: "topic7" },
+            { id: 168, q: "2*(P*R)/(P+R) is:", opts: ["A) Accuracy", "B) F1 Score", "C) Recall", "D) Precision"], a: "B", topic: "topic7" },
+            { id: 169, q: "99% 'No Fire' dataset, predict 'No Fire' always. Acc?", opts: ["A) 0", "B) 50", "C) 99%", "D) 1"], a: "C", topic: "topic7" },
+            { id: 170, q: "Same model, Recall for 'Fire'?", opts: ["A) 100", "B) 0%", "C) 99", "D) 50"], a: "B", topic: "topic7" },
+            { id: 171, q: "TP + FN =", opts: ["A) Total Actual Positives", "B) Negatives", "C) Predicted Pos", "D) Total"], a: "A", topic: "topic7" },
+            { id: 172, q: "TP + FP =", opts: ["A) Actual Pos", "B) Total Predicted Positives", "C) Pred Neg", "D) Total"], a: "B", topic: "topic7" },
+            { id: 173, q: "Precision 1.0 means:", opts: ["A) Every predicted pos was actual pos", "B) Found all", "C) No negs", "D) Acc 100"], a: "A", topic: "topic7" },
+            { id: 174, q: "Recall 1.0 means:", opts: ["A) Every pred correct", "B) Found every actual positive", "C) No FPs", "D) Perfect"], a: "B", topic: "topic7" },
+            { id: 175, q: "NOT a metric for Classification?", opts: ["A) Accuracy", "B) Precision", "C) MSE", "D) Recall"], a: "C", topic: "topic7" }
+        ];
+
+        // ---------------------------------------------------------
+        // RENDER FUNCTION
+        // ---------------------------------------------------------
+        function renderMCQs(filterTopic = 'all') {
+            const listContainer = document.getElementById('mcq-list-container');
+            listContainer.innerHTML = '';
+
+            // Update Tab Buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if (btn.onclick.toString().includes(filterTopic)) {
+                    btn.classList.add('active-tab', 'bg-rose-600', 'text-white', 'border-rose-600');
+                    btn.classList.remove('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                } else {
+                    btn.classList.remove('active-tab', 'bg-rose-600', 'text-white', 'border-rose-600');
+                    btn.classList.add('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                }
+            });
+
+            const filteredData = filterTopic === 'all' 
+                ? mcqData 
+                : mcqData.filter(item => item.topic === filterTopic);
+
+            filteredData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow';
+                div.innerHTML = `
+                    <div class="flex gap-3">
+                        <span class="font-bold text-slate-400 shrink-0 w-8 text-right">${item.id}.</span>
+                        <div class="w-full">
+                            <p class="font-medium text-slate-800 mb-2">${item.q}</p>
+                            <div class="space-y-1 mb-3">
+                                ${item.opts.map(opt => `<div class="text-sm text-slate-600">${opt}</div>`).join('')}
+                            </div>
+                            <details class="group">
+                                <summary class="text-xs font-bold text-rose-600 cursor-pointer hover:text-rose-800 select-none list-none flex items-center gap-1">
+                                    <span>Show Answer</span>
+                                    <i data-lucide="chevron-down" class="w-3 h-3 transition-transform group-open:rotate-180"></i>
+                                </summary>
+                                <div class="mt-2 p-2 bg-green-50 text-green-800 text-sm rounded font-medium border border-green-100 inline-block">
+                                    Correct Answer: ${item.a}
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+            
+            lucide.createIcons();
+        }
+
+        window.filterMCQs = renderMCQs;
+
+        // Sidebar Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+
+        // Accordion Logic
+        const accBtns = document.querySelectorAll('.accordion-btn');
+        accBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+
+        // Scroll Logic
+        function scrollToSection(id) {
+            if (window.innerWidth < 1024 && isMenuOpen) toggleMenu();
+            const sectionContent = document.querySelector(`#${id} .accordion-content`);
+            const sectionBtn = document.querySelector(`#${id} .accordion-btn`);
+            if (sectionContent && !sectionContent.classList.contains('active')) {
+                sectionContent.classList.add('active');
+                sectionBtn.classList.add('active');
+            }
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if(item.dataset.target === id) {
+                    item.classList.add('bg-rose-600', 'text-white', 'shadow-lg', 'shadow-rose-900/50');
+                    item.classList.remove('text-slate-400', 'hover:bg-slate-800');
+                } else {
+                    item.classList.remove('bg-rose-600', 'text-white', 'shadow-lg', 'shadow-rose-900/50');
+                    item.classList.add('text-slate-400', 'hover:bg-slate-800');
+                }
+            });
+            
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = 80;
+                const elementRect = element.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: elementRect - offset, behavior: 'smooth' });
+            }
+        }
+        window.scrollToSection = scrollToSection;
+
+        // Scroll to Top
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollBtn.classList.remove('translate-y-16', 'opacity-0');
+                scrollBtn.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                scrollBtn.classList.add('translate-y-16', 'opacity-0');
+                scrollBtn.classList.remove('translate-y-0', 'opacity-100');
+            }
+        });
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMCQs('all');
+            const initialNav = document.querySelector('.nav-item[data-target="intro"]');
+            if(initialNav) {
+                initialNav.classList.add('bg-rose-600', 'text-white', 'shadow-lg', 'shadow-rose-900/50');
+                initialNav.classList.remove('text-slate-400');
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit I: AI Overview</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Accordion Transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            max-height: 12000px; /* Increased for long MCQ lists */
+            opacity: 1;
+        }
+        .rotate-icon { transition: transform 0.3s ease; }
+        .accordion-btn.active .rotate-icon { transform: rotate(180deg); }
+        
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* Tab Button Active State */
+        .tab-btn.active-tab {
+            background-color: #4f46e5; /* Indigo-600 */
+            color: white;
+            border-color: #4f46e5;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-50 flex items-center justify-between px-4">
+        <span class="font-bold text-lg text-slate-800 flex items-center gap-2">
+            <i data-lucide="bot" class="text-indigo-500 w-5 h-5"></i>
+            Unit I: Overview
+        </span>
+        <button id="mobile-menu-btn" class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+            <i data-lucide="menu" id="menu-icon"></i>
+        </button>
+    </div>
+
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden transition-opacity opacity-0"></div>
+
+    <div class="flex min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed top-0 left-0 h-full bg-slate-900 text-white z-40 transition-transform duration-300 ease-in-out w-64 -translate-x-full lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 flex flex-col">
+            <div class="p-6 border-b border-slate-800 mt-16 lg:mt-0">
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="bot" class="text-indigo-400"></i>
+                    <h1 class="text-xl font-bold">AI Overview</h1>
+                </div>
+                <p class="text-slate-400 text-sm">Unit I Study Guide</p>
+            </div>
+
+            <nav class="p-4 space-y-2 overflow-y-auto flex-1 custom-scroll">
+                <button onclick="scrollToSection('definitions')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="definitions">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Definitions & Goals</span>
+                </button>
+                
+                <button onclick="scrollToSection('foundations')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="foundations">
+                    <i data-lucide="library" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Foundations</span>
+                </button>
+
+                <button onclick="scrollToSection('history')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="history">
+                    <i data-lucide="history" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">History of AI</span>
+                </button>
+
+                <button onclick="scrollToSection('applications')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="applications">
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Applications</span>
+                </button>
+
+                <button onclick="scrollToSection('systems')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white" data-target="systems">
+                    <i data-lucide="cpu" class="w-4 h-4"></i>
+                    <span class="font-medium text-sm">Production Systems</span>
+                </button>
+
+                <!-- New Practice MCQ Button -->
+                <button onclick="scrollToSection('mcq')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left text-slate-400 hover:bg-slate-800 hover:text-white mt-4 border-t border-slate-800 pt-4" data-target="mcq">
+                    <i data-lucide="list-checks" class="w-4 h-4 text-green-400"></i>
+                    <span class="font-medium text-sm">All 100 MCQs</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 lg:p-8 lg:max-w-4xl mx-auto w-full mt-16 lg:mt-0">
+
+            <!-- 1. Definitions and Goals -->
+            <div id="definitions" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left active">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">1. Definitions & Goals of AI</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content active">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <!-- Definitions Grid -->
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-3">A. Core Definitions</h3>
+                            <div class="grid gap-3 md:grid-cols-2">
+                                <div class="p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r">
+                                    <div class="text-xs font-bold text-blue-600 uppercase">Rich & Knight</div>
+                                    <div class="font-bold text-slate-800 text-sm mb-1">Behavior Focus</div>
+                                    <p class="text-sm">"Study of how to make computers do things at which people are better at the moment."</p>
+                                </div>
+                                <div class="p-3 border-l-4 border-indigo-500 bg-indigo-50 rounded-r">
+                                    <div class="text-xs font-bold text-indigo-600 uppercase">Nilsson</div>
+                                    <div class="font-bold text-slate-800 text-sm mb-1">Ideas Focus</div>
+                                    <p class="text-sm">"Study of ideas that enable computers to be intelligent."</p>
+                                </div>
+                                <div class="p-3 border-l-4 border-purple-500 bg-purple-50 rounded-r">
+                                    <div class="text-xs font-bold text-purple-600 uppercase">McDermot</div>
+                                    <div class="font-bold text-slate-800 text-sm mb-1">Cognition Focus</div>
+                                    <p class="text-sm">"Study of mental faculties through the use of computational models."</p>
+                                </div>
+                                <div class="p-3 border-l-4 border-emerald-500 bg-emerald-50 rounded-r">
+                                    <div class="text-xs font-bold text-emerald-600 uppercase">Buchanan</div>
+                                    <div class="font-bold text-slate-800 text-sm mb-1">Knowledge Focus</div>
+                                    <p class="text-sm">"Representing knowledge using symbols and heuristic methods."</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Goals -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                    <i data-lucide="microscope" class="w-4 h-4 text-slate-500"></i> Scientific Goal
+                                </h3>
+                                <p class="text-sm">Understand the working of the mind in mechanistic terms. <span class="italic block mt-1 text-slate-500">"The mind is what the brain does." - Minsky</span></p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                    <i data-lucide="wrench" class="w-4 h-4 text-slate-500"></i> Engineering Goal
+                                </h3>
+                                <ul class="text-sm list-disc ml-4 space-y-1">
+                                    <li><strong>Autonomy:</strong> Perform without intervention.</li>
+                                    <li><strong>Flexibility:</strong> Handle variability.</li>
+                                    <li><strong>Ease of Use:</strong> Understand intent.</li>
+                                    <li><strong>Learning:</strong> Improve from experience.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Foundations -->
+            <div id="foundations" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
+                            <i data-lucide="library" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">2. Foundations of AI</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed">
+                        <p class="mb-4 text-sm">AI is interdisciplinary, built on:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <div class="p-3 bg-white border rounded shadow-sm">
+                                <div class="text-indigo-600 mb-1"><i data-lucide="scale" class="w-4 h-4"></i></div>
+                                <strong class="text-slate-800 text-sm">Philosophy</strong>
+                                <p class="text-xs text-slate-500 mt-1">Nature of knowledge, reasoning, & mind.</p>
+                            </div>
+                            <div class="p-3 bg-white border rounded shadow-sm">
+                                <div class="text-indigo-600 mb-1"><i data-lucide="sigma" class="w-4 h-4"></i></div>
+                                <strong class="text-slate-800 text-sm">Mathematics</strong>
+                                <p class="text-xs text-slate-500 mt-1">Logic, computation, probability, optimization.</p>
+                            </div>
+                            <div class="p-3 bg-white border rounded shadow-sm">
+                                <div class="text-indigo-600 mb-1"><i data-lucide="brain-circuit" class="w-4 h-4"></i></div>
+                                <strong class="text-slate-800 text-sm">Psychology</strong>
+                                <p class="text-xs text-slate-500 mt-1">Models of human thought and behavior.</p>
+                            </div>
+                            <div class="p-3 bg-white border rounded shadow-sm">
+                                <div class="text-indigo-600 mb-1"><i data-lucide="monitor-smartphone" class="w-4 h-4"></i></div>
+                                <strong class="text-slate-800 text-sm">Computer Eng.</strong>
+                                <p class="text-xs text-slate-500 mt-1">Hardware/Software infrastructure.</p>
+                            </div>
+                            <div class="p-3 bg-white border rounded shadow-sm">
+                                <div class="text-indigo-600 mb-1"><i data-lucide="languages" class="w-4 h-4"></i></div>
+                                <strong class="text-slate-800 text-sm">Linguistics</strong>
+                                <p class="text-xs text-slate-500 mt-1">Language structure for NLP.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. History -->
+            <div id="history" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
+                            <i data-lucide="history" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">3. History of AI</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed">
+                        <div class="space-y-4 border-l-2 border-slate-200 ml-2 pl-4">
+                            <div class="relative">
+                                <span class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-white"></span>
+                                <h4 class="font-bold text-slate-800">Birth of AI</h4>
+                                <p class="text-sm">A.M. Turing & Stored Program Computer.</p>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-slate-300 ring-4 ring-white"></span>
+                                <h4 class="font-bold text-slate-800">c. 1960</h4>
+                                <p class="text-sm"><strong>John McCarthy:</strong> Created LISP, "Advice Taker". Coined "Artificial Intelligence".</p>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-slate-300 ring-4 ring-white"></span>
+                                <h4 class="font-bold text-slate-800">1960s (Optimism)</h4>
+                                <p class="text-sm">First chess program. <strong>ELIZA</strong> (Joseph Weizenbaum) simulated a psychoanalyst.</p>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-slate-300 ring-4 ring-white"></span>
+                                <h4 class="font-bold text-slate-800">1970s-80s (Expert Systems)</h4>
+                                <p class="text-sm">Knowledge-Based Systems. <strong>DENDRAL, MYCIN</strong>. First commercial success: <strong>R1</strong> ($40M/year saved).</p>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute -left-[25px] top-0 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-white"></span>
+                                <h4 class="font-bold text-slate-800">Current State</h4>
+                                <p class="text-sm">Machine Learning, Soft Computing, Data Analytics, Generative AI, Agentic AI.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Applications -->
+            <div id="applications" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
+                            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">4. Applications & Areas</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed">
+                        <ul class="grid sm:grid-cols-2 gap-3 text-sm">
+                            <li class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                                <i data-lucide="eye" class="w-4 h-4 text-indigo-500"></i>
+                                <span><strong>Perception:</strong> Vision, Speech, Touch.</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                                <i data-lucide="message-square" class="w-4 h-4 text-indigo-500"></i>
+                                <span><strong>NLP:</strong> Understanding, Generation, Translation.</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                                <i data-lucide="bot" class="w-4 h-4 text-indigo-500"></i>
+                                <span><strong>Robotics:</strong> Sensing & Acting in real world.</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                                <i data-lucide="map" class="w-4 h-4 text-indigo-500"></i>
+                                <span><strong>Planning:</strong> Action sequences to reach goals.</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                                <i data-lucide="user-check" class="w-4 h-4 text-indigo-500"></i>
+                                <span><strong>Expert Systems:</strong> Emulate human experts.</span>
+                            </li>
+                            <li class="flex items-center gap-2 p-2 bg-slate-50 rounded">
+                                <i data-lucide="gamepad-2" class="w-4 h-4 text-indigo-500"></i>
+                                <span><strong>Core:</strong> ML, Theorem Proving, Game Playing.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Production Systems -->
+            <div id="systems" class="section mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">5. Production Systems & Agents</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-5 border-t border-gray-100 text-slate-600 leading-relaxed space-y-6">
+                        
+                        <!-- Characteristics -->
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">A. AI Program Characteristics</h3>
+                            <div class="flex flex-wrap gap-2 text-xs font-mono text-indigo-700">
+                                <span class="bg-indigo-50 px-2 py-1 rounded">Symbolic Reasoning</span>
+                                <span class="bg-indigo-50 px-2 py-1 rounded">Knowledge</span>
+                                <span class="bg-indigo-50 px-2 py-1 rounded">Search</span>
+                                <span class="bg-indigo-50 px-2 py-1 rounded">Flexible Control</span>
+                            </div>
+                        </div>
+
+                        <!-- Production System -->
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-3">B. The AI Production System</h3>
+                            <div class="p-4 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 mb-4">
+                                <h4 class="font-bold text-slate-800 text-sm mb-2">Three Major Elements</h4>
+                                <ol class="list-decimal ml-4 space-y-1 text-sm">
+                                    <li><strong>Global Database:</strong> Central data structure (Matrix, Relational File).</li>
+                                    <li><strong>Production Rules:</strong> Operate on database. (Precondition → Action).</li>
+                                    <li><strong>Control Strategy:</strong> Decides which rule to apply next.</li>
+                                </ol>
+                            </div>
+                            
+                            <!-- 8 Puzzle Example -->
+                            <div class="bg-white border rounded-lg p-4">
+                                <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center gap-2">
+                                    <i data-lucide="grid-3x3" class="w-4 h-4"></i> Illustration: 8-Puzzle
+                                </h4>
+                                <div class="text-sm space-y-2">
+                                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono bg-slate-100 p-2 rounded max-w-[150px] mx-auto mb-2">
+                                        <div class="bg-white p-1 rounded">2</div>
+                                        <div class="bg-white p-1 rounded">8</div>
+                                        <div class="bg-white p-1 rounded">3</div>
+                                        <div class="bg-white p-1 rounded">1</div>
+                                        <div class="bg-white p-1 rounded">6</div>
+                                        <div class="bg-white p-1 rounded">4</div>
+                                        <div class="bg-white p-1 rounded">7</div>
+                                        <div class="bg-slate-200 p-1 rounded"></div>
+                                        <div class="bg-white p-1 rounded">5</div>
+                                    </div>
+                                    <p><strong>Database:</strong> 362,880 possible configurations (9!).</p>
+                                    <p><strong>Rules:</strong> Move blank Left, Up, Right, Down.</p>
+                                    <p><strong>Strategy:</strong> Apply rules until goal state is reached.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Intelligent Agents -->
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2">C. Intelligent Agents</h3>
+                            <div class="p-4 bg-slate-50 rounded border border-slate-200 text-sm">
+                                [Percepts] <i data-lucide="arrow-right" class="inline w-3 h-3 mx-1"></i> <strong>Agent Function</strong> <i data-lucide="arrow-right" class="inline w-3 h-3 mx-1"></i> [Actions]
+                                <p class="mt-2 text-xs text-slate-500">Defined by Russell & Norvig.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. All MCQs (Filtered) -->
+            <div id="mcq" class="section mb-20 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                <button class="accordion-btn w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:bg-slate-50 transition-colors text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-green-100 text-green-600 rounded-lg">
+                            <i data-lucide="list-checks" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800">7. Practice MCQs (1-100)</h2>
+                    </div>
+                    <i data-lucide="chevron-down" class="rotate-icon text-slate-400"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="p-0 border-t border-gray-100 text-slate-600 bg-slate-50">
+                        
+                        <!-- Topic Filter Sub-nav -->
+                        <div class="sticky top-0 bg-white z-10 p-4 shadow-sm border-b border-gray-200 overflow-x-auto">
+                            <div class="flex gap-2 whitespace-nowrap">
+                                <button onclick="filterMCQs('all')" class="tab-btn active-tab px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    All (100)
+                                </button>
+                                <button onclick="filterMCQs('topic1')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Definitions (1-25)
+                                </button>
+                                <button onclick="filterMCQs('topic2')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    History (26-50)
+                                </button>
+                                <button onclick="filterMCQs('topic3')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    Systems (51-75)
+                                </button>
+                                <button onclick="filterMCQs('topic4')" class="tab-btn px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-50">
+                                    General (76-100)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Questions Container -->
+                        <div id="mcq-list-container" class="space-y-4 p-6">
+                            <div class="text-center py-10 text-slate-500">Loading Questions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Scroll to Top Button -->
+        <button id="scrollTopBtn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-6 right-6 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 z-40 translate-y-16 opacity-0">
+            <i data-lucide="arrow-up" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // ---------------------------------------------------------
+        // FULL 100 MCQ DATA (UNIT I)
+        // ---------------------------------------------------------
+        const mcqData = [
+            // Topic 1: Definitions and Core Concepts (1-25)
+            { id: 1, q: "According to Rich & Knight, AI is the study of how to make computers do things at which people are:", opts: ["a) Always better", "b) Equally good", "c) Better at the moment", "d) Less effective"], a: "c", topic: "topic1" },
+            { id: 2, q: "Which definition of AI focuses on 'mental faculties' through computational models?", opts: ["a) Rich & Knight", "b) Buchanan", "c) McDermot", "d) Nilsson"], a: "c", topic: "topic1" },
+            { id: 3, q: "Buchanan's definition emphasizes which methods for problem solving?", opts: ["a) Numerical, algorithmic", "b) Statistical, numerical", "c) Symbolic, nonalgorithmic", "d) Heuristic, numerical"], a: "c", topic: "topic1" },
+            { id: 4, q: "Buchanan's Britannica definition highlights which concept for info processing?", opts: ["a) Statistical methods", "b) Rules of thumb (heuristic methods)", "c) Data mining", "d) Algorithmic computation"], a: "b", topic: "topic1" },
+            { id: 5, q: "Minsky's scientific goal is to understand the mind in what terms?", opts: ["a) Psychological", "b) Mechanistic", "c) Philosophical", "d) Computational"], a: "b", topic: "topic1" },
+            { id: 6, q: "Minsky stated: 'The mind is what the ___ does.'", opts: ["a) Computer", "b) Soul", "c) Brain", "d) System"], a: "c", topic: "topic1" },
+            { id: 7, q: "Which is NOT listed as a requirement for AI as an engineering goal?", opts: ["a) Autonomy", "b) Flexibility", "c) Ease of use", "d) Fixed functionality"], a: "d", topic: "topic1" },
+            { id: 8, q: "Autonomy means the ability to perform tasks without:", opts: ["a) Internet", "b) Large databases", "c) Human intervention or monitoring", "d) Symbolic reasoning"], a: "c", topic: "topic1" },
+            { id: 9, q: "Ability to deal with variability in the environment is known as:", opts: ["a) Autonomy", "b) Flexibility", "c) Symbolic Reasoning", "d) Common sense"], a: "b", topic: "topic1" },
+            { id: 10, q: "Symbolic Reasoning reasons about objects and relationships rather than just:", opts: ["a) Algorithmic methods", "b) Numerical calculations", "c) Control strategies", "d) Preconditions"], a: "b", topic: "topic1" },
+            { id: 11, q: "Storing general principles for reasoning about novel situations is:", opts: ["a) Search", "b) Flexible Control", "c) Knowledge", "d) Symbolic Reasoning"], a: "c", topic: "topic1" },
+            { id: 12, q: "The 'weak method' for finding a solution when no direct method exists is:", opts: ["a) Knowledge", "b) Heuristics", "c) Search", "d) Flexible Control"], a: "c", topic: "topic1" },
+            { id: 13, q: "Main problem associated with the search method in AI?", opts: ["a) Database complexity", "b) Rule restriction", "c) Combinatorial explosion of possibilities", "d) Lack of symbolic representation"], a: "c", topic: "topic1" },
+            { id: 14, q: "Which characteristic allows processing direction to change by modifying facts?", opts: ["a) Symbolic Reasoning", "b) Knowledge", "c) Search", "d) Flexible Control"], a: "d", topic: "topic1" },
+            { id: 15, q: "According to Rich & Knight, people are generally better than computers at:", opts: ["a) Repetitive operations", "b) Numerical computation", "c) Information storage", "d) Generating new ideas"], a: "d", topic: "topic1" },
+            { id: 16, q: "Which area deals with NLU, Speech Understanding, and Generation?", opts: ["a) Perception", "b) Robotics", "c) Expert Systems", "d) Natural Language Processing (NLP)"], a: "d", topic: "topic1" },
+            { id: 17, q: "Which area focuses on creating sequences of actions to achieve goals?", opts: ["a) Game Playing", "b) Theorem Proving", "c) Planning", "d) Machine Learning"], a: "c", topic: "topic1" },
+            { id: 18, q: "Machine vision and Touch sensation fall under which area?", opts: ["a) Robotics", "b) NLP", "c) Perception", "d) Expert Systems"], a: "c", topic: "topic1" },
+            { id: 19, q: "Current emphasis in AI is shifting from research to:", opts: ["a) Symbolic mathematics", "b) Theorem proving", "c) Implementation", "d) Numerical computation"], a: "c", topic: "topic1" },
+            { id: 20, q: "Which recent technology is part of the current state of the art?", opts: ["a) Stored Program Computer", "b) Eliza Program", "c) Generative AI", "d) DENDRAL"], a: "c", topic: "topic1" },
+            { id: 21, q: "Understanding user intent from limited instructions falls under:", opts: ["a) Autonomy", "b) Flexibility", "c) Ease of Use", "d) Learning"], a: "c", topic: "topic1" },
+            { id: 22, q: "AI is study of agents that receive percepts and perform:", opts: ["a) Calculations", "b) Actions", "c) Search", "d) Numerical computation"], a: "b", topic: "topic1" },
+            { id: 23, q: "Intelligent Agent maps sequences of what to actions?", opts: ["a) Rules", "b) Databases", "c) Percepts", "d) Systems"], a: "c", topic: "topic1" },
+            { id: 24, q: "Which field provides formal tools (Logic, probability) for AI?", opts: ["a) Psychology", "b) Linguistics", "c) Mathematics", "d) Computer Engineering"], a: "c", topic: "topic1" },
+            { id: 25, q: "Study of human thought informing AI models comes from:", opts: ["a) Philosophy", "b) Psychology", "c) Linguistics", "d) Mathematics"], a: "b", topic: "topic1" },
+
+            // Topic 2: Foundations and History of AI (26-50)
+            { id: 26, q: "Discipline dealing with nature of knowledge, reasoning, and mind?", opts: ["a) Psychology", "b) Mathematics", "c) Philosophy", "d) Linguistics"], a: "c", topic: "topic2" },
+            { id: 27, q: "Concept that programs could be stored as data is credited to:", opts: ["a) John McCarthy", "b) Marvin Minsky", "c) A.M. Turing", "d) Joseph Weizenbaum"], a: "c", topic: "topic2" },
+            { id: 28, q: "Birth of AI credit goes to Turing for invention of:", opts: ["a) Differential Analyzer", "b) Turing Test", "c) Stored Program Computer", "d) LISP language"], a: "c", topic: "topic2" },
+            { id: 29, q: "First AI language created around 1960?", opts: ["a) FORTRAN", "b) Prolog", "c) LISP", "d) Python"], a: "c", topic: "topic2" },
+            { id: 30, q: "Who created LISP?", opts: ["a) Marvin Minsky", "b) John McCarthy", "c) A.M. Turing", "d) Rich & Knight"], a: "b", topic: "topic2" },
+            { id: 31, q: "McCarthy published 'Programs with Common Sense' (Advice Taker) in:", opts: ["a) 1950", "b) 1958", "c) 1961", "d) 1964"], a: "b", topic: "topic2" },
+            { id: 32, q: "Term 'Artificial Intelligence' is generally credited to:", opts: ["a) John McCarthy", "b) A.M. Turing", "c) Marvin Minsky", "d) Rich & Knight"], a: "a", topic: "topic2" },
+            { id: 33, q: "Minsky wrote 'Steps towards Artificial Intelligence' in:", opts: ["a) 1958", "b) 1961", "c) 1963", "d) 1964"], a: "b", topic: "topic2" },
+            { id: 34, q: "AI Lab at Stanford started by Minsky in:", opts: ["a) 1961", "b) 1963", "c) 1964", "d) 1970"], a: "b", topic: "topic2" },
+            { id: 35, q: "1960s in AI history is described as a period of:", opts: ["a) Uncertainty", "b) Skepticism", "c) Full optimism", "d) Limited development"], a: "c", topic: "topic2" },
+            { id: 36, q: "Program by Weizenbaum (1964) acting like a psychoanalyst:", opts: ["a) MYCIN", "b) DENDRAL", "c) R1", "d) Eliza Program"], a: "d", topic: "topic2" },
+            { id: 37, q: "Eliza Program's passive echoing style is characteristic of:", opts: ["a) Freudian", "b) Cognitive Behavioral", "c) Rogerian", "d) Behavioral"], a: "c", topic: "topic2" },
+            { id: 38, q: "1970-1980 saw popularity of what systems?", opts: ["a) Symbolic Reasoning", "b) Algorithmic Control", "c) Knowledge-based systems", "d) Neural Network"], a: "c", topic: "topic2" },
+            { id: 39, q: "DENDRAL and MYCIN are examples of:", opts: ["a) Machine Learning", "b) NLP", "c) Game Playing", "d) Expert Systems"], a: "d", topic: "topic2" },
+            { id: 40, q: "First successful expert system at Digital Equipment Corp?", opts: ["a) MYCIN", "b) DENDRAL", "c) Eliza", "d) R1"], a: "d", topic: "topic2" },
+            { id: 41, q: "What task did R1 perform?", opts: ["a) Diagnosing blood diseases", "b) Analyzing molecular structures", "c) Configuring new computer systems", "d) Acting as psychoanalyst"], a: "c", topic: "topic2" },
+            { id: 42, q: "R1 was saving how much money/year by 1986?", opts: ["a) $4 Million", "b) $10 Million", "c) $40 Million", "d) $100 Million"], a: "c", topic: "topic2" },
+            { id: 43, q: "Foundation focusing on language structure?", opts: ["a) Philosophy", "b) Psychology", "c) Linguistics", "d) Computer Engineering"], a: "c", topic: "topic2" },
+            { id: 44, q: "Foundation providing hardware/software infrastructure?", opts: ["a) Mathematics", "b) Linguistics", "c) Psychology", "d) Computer Engineering"], a: "d", topic: "topic2" },
+            { id: 45, q: "Soft Computing is listed as:", opts: ["a) Historical approach", "b) Recent technology", "c) Foundational discipline", "d) Element of Production System"], a: "b", topic: "topic2" },
+            { id: 46, q: "Autonomous/Fuzzy control are examples of AI doing what:", opts: ["a) In 1960s", "b) In 1970s", "c) Today", "d) In 1950s"], a: "c", topic: "topic2" },
+            { id: 47, q: "AI capable of self-directed decision making/action?", opts: ["a) Generative AI", "b) Soft Computing", "c) Agentic AI", "d) Data Mining"], a: "c", topic: "topic2" },
+            { id: 48, q: "Combinatorics explosion is a challenge for:", opts: ["a) Knowledge representation", "b) Flexible control", "c) Search", "d) Symbolic reasoning"], a: "c", topic: "topic2" },
+            { id: 49, q: "Who emphasized programs needing to 'use common sense'?", opts: ["a) Turing", "b) McCarthy", "c) Weizenbaum", "d) Minsky"], a: "b", topic: "topic2" },
+            { id: 50, q: "Concept that AI addresses problems where people are better is by:", opts: ["a) Nilsson", "b) Buchanan", "c) Rich & Knight", "d) McDermot"], a: "c", topic: "topic2" },
+
+            // Topic 3: AI Production System (51-75)
+            { id: 51, q: "AI Production System is a generalization of:", opts: ["a) Symbolic reasoning", "b) Search algorithm", "c) Computational formalism of an AI system", "d) Intelligent Agent"], a: "c", topic: "topic3" },
+            { id: 52, q: "Structure of AI system easily understood via:", opts: ["a) Intelligent Agent", "b) Expert System", "c) AI Production System", "d) Knowledge-Based System"], a: "c", topic: "topic3" },
+            { id: 53, q: "Which is NOT a major element of AI production system?", opts: ["a) Global Database", "b) Production Rules", "c) Control Strategy", "d) Percepts Sequence"], a: "d", topic: "topic3" },
+            { id: 54, q: "Global Database is:", opts: ["a) Set of rules", "b) Algorithm", "c) Central data structure", "d) Precondition checker"], a: "c", topic: "topic3" },
+            { id: 55, q: "Global Database can be a matrix or a large:", opts: ["a) Rule set", "b) Relational indexed file", "c) Termination condition", "d) Search tree"], a: "b", topic: "topic3" },
+            { id: 56, q: "Production Rules operate on:", opts: ["a) Control Strategy", "b) Percepts", "c) Global Database", "d) Termination condition"], a: "c", topic: "topic3" },
+            { id: 57, q: "Each rule has a ____ that must be satisfied.", opts: ["a) Consequence", "b) Precondition", "c) Global State", "d) Action"], a: "b", topic: "topic3" },
+            { id: 58, q: "Effect of applying a rule?", opts: ["a) Stops computation", "b) Selects next rule", "c) Changes the database", "d) Checks goal"], a: "c", topic: "topic3" },
+            { id: 59, q: "Control Strategy chooses which ____ rule to apply.", opts: ["a) Numeric", "b) Heuristic", "c) Applicable", "d) Symbolic"], a: "c", topic: "topic3" },
+            { id: 60, q: "Control System ceases when:", opts: ["a) Rules exhausted", "b) Termination condition satisfied", "c) Data normalized", "d) Max depth reached"], a: "b", topic: "topic3" },
+            { id: 61, q: "Initial database assigned to variable:", opts: ["a) RULE", "b) DATA", "c) R", "d) INITIAL"], a: "b", topic: "topic3" },
+            { id: 62, q: "Main loop continues until DATA satisfies:", opts: ["a) Goal Rule", "b) Termination Condition", "c) Application Rule", "d) Precondition"], a: "b", topic: "topic3" },
+            { id: 63, q: "8-Puzzle illustrates:", opts: ["a) NLP", "b) Machine Vision", "c) AI Production System", "d) Expert System Design"], a: "c", topic: "topic3" },
+            { id: 64, q: "Global Database in 8-Puzzle?", opts: ["a) Move sequence", "b) Four rules", "c) All possible configurations", "d) Termination condition"], a: "c", topic: "topic3" },
+            { id: 65, q: "How many states in 8-Puzzle?", opts: ["a) 40,320", "b) 9! = 362,880", "c) 72", "d) 8^9"], a: "b", topic: "topic3" },
+            { id: 66, q: "Production Rules specify move of:", opts: ["a) Tile '8'", "b) Random tile", "c) Blank tile", "d) Goal state"], a: "c", topic: "topic3" },
+            { id: 67, q: "Restriction on rules in 8-Puzzle?", opts: ["a) No prime tiles", "b) Cannot be applied in extreme positions", "c) Sequential order", "d) Only up/down"], a: "b", topic: "topic3" },
+            { id: 68, q: "Goal condition forms basis for:", opts: ["a) Global Database", "b) Rule Application", "c) Termination Condition", "d) Control Strategy"], a: "c", topic: "topic3" },
+            { id: 69, q: "Sequence of moves forms:", opts: ["a) Global Database", "b) Precondition", "c) Solution", "d) Control Strategy"], a: "c", topic: "topic3" },
+            { id: 70, q: "Control Strategy in 8-Puzzle is classical:", opts: ["a) Brute-force", "b) Local search", "c) Heuristic search", "d) State space search"], a: "d", topic: "topic3" },
+            { id: 71, q: "Control Strategy tracks rules to form:", opts: ["a) Database changes", "b) Problem solution", "c) Next percept", "d) Next action"], a: "b", topic: "topic3" },
+            { id: 72, q: "Specifying database, rules, and control is:", opts: ["a) Transformation Problem", "b) Configuration Problem", "c) Representation Problem", "d) Algorithmic Problem"], a: "c", topic: "topic3" },
+            { id: 73, q: "If precondition not satisfied, rule:", opts: ["a) Applied anyway", "b) Selected", "c) Cannot be applied", "d) Changes DB"], a: "c", topic: "topic3" },
+            { id: 74, q: "Production System separates:", opts: ["a) Input, Output, Storage", "b) Agent, Environment, Percepts", "c) Data, Operations, and Control", "d) Symbols, Numbers, Heuristics"], a: "c", topic: "topic3" },
+            { id: 75, q: "Production System maps percepts to:", opts: ["a) Databases", "b) Rules", "c) Actions", "d) Goals"], a: "c", topic: "topic3" },
+
+            // Topic 4: General Review (76-100)
+            { id: 76, q: "Use of heuristic methods is characteristic of:", opts: ["a) Comp Eng", "b) Psychology", "c) AI", "d) Linguistics"], a: "c", topic: "topic4" },
+            { id: 77, q: "Systems emulating human expert decision-making:", opts: ["a) Autonomous", "b) Fuzzy Control", "c) Expert Systems", "d) Agentic AI"], a: "c", topic: "topic4" },
+            { id: 78, q: "Capability to learn from experience:", opts: ["a) Autonomy", "b) Flexibility", "c) Symbolic Reasoning", "d) Learning"], a: "d", topic: "topic4" },
+            { id: 79, q: "Essential for dealing with environment variability:", opts: ["a) Numerical Computation", "b) Repetitive operations", "c) Understanding", "d) Information Storage"], a: "b", topic: "topic4" },
+            { id: 80, q: "Computing system for Autonomous planning:", opts: ["a) Numerical", "b) AI systems", "c) Info storage", "d) Repetitive"], a: "b", topic: "topic4" },
+            { id: 81, q: "Key activity finding patterns in large datasets:", opts: ["a) Symbolic Math", "b) Theorem Proving", "c) Data Mining", "d) Rewiring"], a: "c", topic: "topic4" },
+            { id: 82, q: "Intelligent Agent receiving percepts comes from:", opts: ["a) Production System", "b) DENDRAL", "c) Russell and Norvig", "d) Turing"], a: "c", topic: "topic4" },
+            { id: 83, q: "Problem space of 8-puzzle is:", opts: ["a) Large", "b) Infinite", "c) Small", "d) Unsolvable"], a: "c", topic: "topic4" },
+            { id: 84, q: "First seen as 'complete AI system':", opts: ["a) LISP", "b) Eliza", "c) Advice Taker", "d) R1"], a: "c", topic: "topic4" },
+            { id: 85, q: "Not one of the four rules for 8-Puzzle:", opts: ["a) Move blank left", "b) Move blank up", "c) Move tile '5' to center", "d) Move blank down"], a: "c", topic: "topic4" },
+            { id: 86, q: "Model with global database & operations:", opts: ["a) Knowledge-Based", "b) Expert System", "c) AI Production System", "d) Neural Network"], a: "c", topic: "topic4" },
+            { id: 87, q: "Milestone associated with 1960s:", opts: ["a) Stored Program Computer", "b) R1", "c) First computerized proofs", "d) Generative AI"], a: "c", topic: "topic4" },
+            { id: 88, q: "Machine Translation falls under:", opts: ["a) Perception", "b) Robotics", "c) NLP", "d) Planning"], a: "c", topic: "topic4" },
+            { id: 89, q: "Why early computers had to be rewired:", opts: ["a) Lacked LISP", "b) Too slow", "c) Did not use stored program concept", "d) Too expensive"], a: "c", topic: "topic4" },
+            { id: 90, q: "Use of symbols rather than numbers emphasized by:", opts: ["a) Rich & Knight", "b) Minsky", "c) Buchanan", "d) Turing"], a: "c", topic: "topic4" },
+            { id: 91, q: "Intelligent Agent associated with text by:", opts: ["a) Minsky/McCarthy", "b) Rich/Knight", "c) Russell and Norvig", "d) Weizenbaum"], a: "c", topic: "topic4" },
+            { id: 92, q: "Applicable rule is one whose:", opts: ["a) Action beneficial", "b) Precondition satisfied", "c) Result known", "d) Number lowest"], a: "b", topic: "topic4" },
+            { id: 93, q: "Finding sequence in 8-Puzzle is:", opts: ["a) Blind search", "b) Heuristic search", "c) Local search", "d) State space search"], a: "d", topic: "topic4" },
+            { id: 94, q: "Current tech dealing with Fuzzy control:", opts: ["a) Agentic AI", "b) Generative AI", "c) Data Analytics", "d) Soft Computing"], a: "d", topic: "topic4" },
+            { id: 95, q: "What is transformed by a Rule?", opts: ["a) Control strategy", "b) Goal condition", "c) Problem state", "d) Database size"], a: "c", topic: "topic4" },
+            { id: 96, q: "DENDRAL and MYCIN developed in:", opts: ["a) 1960s", "b) 1970-1980", "c) 1990s", "d) Current"], a: "b", topic: "topic4" },
+            { id: 97, q: "Turing's fundamental idea:", opts: ["a) Turing Test", "b) Advice Taker", "c) Programs could be stored as data", "d) Symbolic reasoning"], a: "c", topic: "topic4" },
+            { id: 98, q: "Which is an area of AI?", opts: ["a) Numerical Computation", "b) Info Storage", "c) Theorem Proving", "d) Repetitive operations"], a: "c", topic: "topic4" },
+            { id: 99, q: "Complexity of vast possibilities termed:", opts: ["a) Flexible Control", "b) Symbolic Limitation", "c) Combinatorial explosion", "d) Algorithmic restriction"], a: "c", topic: "topic4" },
+            { id: 100, q: "R1 operated at:", opts: ["a) IBM", "b) MIT", "c) Stanford", "d) Digital Equipment Corporation"], a: "d", topic: "topic4" }
+        ];
+
+        // ---------------------------------------------------------
+        // RENDER FUNCTION
+        // ---------------------------------------------------------
+        function renderMCQs(filterTopic = 'all') {
+            const listContainer = document.getElementById('mcq-list-container');
+            listContainer.innerHTML = '';
+
+            // Update Tab Buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if (btn.onclick.toString().includes(filterTopic)) {
+                    btn.classList.add('active-tab');
+                    btn.classList.remove('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                } else {
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('hover:bg-gray-50', 'text-slate-600', 'border-gray-200');
+                }
+            });
+
+            const filteredData = filterTopic === 'all' 
+                ? mcqData 
+                : mcqData.filter(item => item.topic === filterTopic);
+
+            filteredData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow';
+                div.innerHTML = `
+                    <div class="flex gap-3">
+                        <span class="font-bold text-slate-400 shrink-0 w-8 text-right">${item.id}.</span>
+                        <div class="w-full">
+                            <p class="font-medium text-slate-800 mb-2">${item.q}</p>
+                            <div class="space-y-1 mb-3">
+                                ${item.opts.map(opt => `<div class="text-sm text-slate-600">${opt}</div>`).join('')}
+                            </div>
+                            <details class="group">
+                                <summary class="text-xs font-bold text-indigo-600 cursor-pointer hover:text-indigo-800 select-none list-none flex items-center gap-1">
+                                    <span>Show Answer</span>
+                                    <i data-lucide="chevron-down" class="w-3 h-3 transition-transform group-open:rotate-180"></i>
+                                </summary>
+                                <div class="mt-2 p-2 bg-green-50 text-green-800 text-sm rounded font-medium border border-green-100 inline-block">
+                                    Correct Answer: ${item.a}
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+            
+            // Re-init icons for newly created elements
+            if(typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Expose filter function globally
+        window.filterMCQs = renderMCQs;
+
+        // Sidebar Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+
+        // Accordion Logic
+        const accBtns = document.querySelectorAll('.accordion-btn');
+        accBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+
+        // Scroll to Section Logic
+        function scrollToSection(id) {
+            if (window.innerWidth < 1024 && isMenuOpen) toggleMenu();
+            const sectionContent = document.querySelector(`#${id} .accordion-content`);
+            const sectionBtn = document.querySelector(`#${id} .accordion-btn`);
+            if (sectionContent && !sectionContent.classList.contains('active')) {
+                sectionContent.classList.add('active');
+                sectionBtn.classList.add('active');
+            }
+            // Update Active Nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if(item.dataset.target === id) {
+                    item.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-900/50');
+                    item.classList.remove('text-slate-400', 'hover:bg-slate-800');
+                } else {
+                    item.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-900/50');
+                    item.classList.add('text-slate-400', 'hover:bg-slate-800');
+                }
+            });
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = 80;
+                const elementRect = element.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: elementRect - offset, behavior: 'smooth' });
+            }
+        }
+        window.scrollToSection = scrollToSection; // Make global
+
+        // Scroll to Top Logic
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollBtn.classList.remove('translate-y-16', 'opacity-0');
+                scrollBtn.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                scrollBtn.classList.add('translate-y-16', 'opacity-0');
+                scrollBtn.classList.remove('translate-y-0', 'opacity-100');
+            }
+        });
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMCQs('all');
+        });
+
+        // Set initial active state
+        const initialNav = document.querySelector('.nav-item[data-target="definitions"]');
+        if(initialNav) {
+            initialNav.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-900/50');
+            initialNav.classList.remove('text-slate-400');
+        }
+
+    </script>
+</body>
+</html>
