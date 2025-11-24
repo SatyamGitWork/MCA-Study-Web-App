@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 3: Greedy Algorithms - ADA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+        
+        /* Code Tabs Styling */
+        .code-tabs {
+            margin: 1rem 0;
+        }
+        
+        .tab-header {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        
+        .tab-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            color: #a855f7;
+            background-color: #faf5ff;
+        }
+        
+        .tab-btn.active {
+            color: #a855f7;
+            border-bottom-color: #a855f7;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-content pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .tab-content code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-purple-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <a href="../index.html" class="inline-block mb-4 text-purple-700 hover:text-purple-900 font-medium">
+                ← Back to Home
+            </a>
+            <h1 class="text-2xl font-bold text-purple-700 mb-2">ADA Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">Unit 3: Greedy Algorithms</p>
+            <ul class="space-y-2">
+                <li><a href="Unit1.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 1</a></li>
+                <li><a href="Unit2.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 2</a></li>
+                <li><a href="Unit3.html" class="block px-4 py-2 rounded-lg font-medium bg-purple-100 text-purple-700">Unit 3</a></li>
+                <li><a href="Unit4.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 4</a></li>
+                <li><a href="Unit5.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 5</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h1 class="text-3xl font-bold text-purple-800 mb-2">Unit 3</h1>
+                <p class="text-lg text-gray-600">Greedy Strategy: Huffman, Kruskal's, Job Scheduling</p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">Short Answer Questions</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Explain the general characteristics that define a Greedy Algorithm and briefly describe the two essential components required for a problem to be solved optimally using this strategy.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Answer:</strong> A Greedy Algorithm makes the locally optimal choice at each stage with the hope of finding a global optimum solution. The two main characteristics are the Greedy Choice Property and the Optimal Substructure Property.</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>The <strong>Greedy Choice Property</strong> means that a globally optimal solution can be reached by making a locally optimal (greedy) choice, and this choice remains part of the final solution.</li>
+                    <li>The <strong>Optimal Substructure Property</strong> implies that an optimal solution to the overall problem contains optimal solutions to its subproblems.</li>
+                </ul>
+                <p>This strategy is myopic as it doesn't reconsider past choices or worry about future consequences, only focusing on the best immediate benefit. If a problem exhibits both these properties, a greedy algorithm is often the most efficient choice for an optimal solution.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Describe the working principle of Kruskal's Algorithm for finding a Minimum Spanning Tree (MST) and state its primary data structure requirement.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Answer:</strong> Kruskal's Algorithm finds an MST by treating the graph as a forest and adding edges one at a time to connect trees until a single tree spanning all vertices is formed. The core principle is to always select the lightest (lowest-weight) edge that does not form a cycle with the previously selected edges.</p>
+                <p>First, all edges in the graph are sorted by weight in non-decreasing order. The algorithm then iterates through this sorted list, selecting an edge if its inclusion does not connect two vertices already in the same set (i.e., does not form a cycle). To efficiently check for cycles and manage the sets of connected components (trees), the algorithm primarily uses a <strong>Disjoint-Set Data Structure (or Union-Find)</strong>. This data structure allows for fast FIND operations (to check if two vertices are already connected) and UNION operations (to merge two sets/trees when a valid edge is added).</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Briefly differentiate between the Fractional Knapsack Problem and the 0/1 Knapsack Problem and explain why the greedy approach works for one but not the other.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Answer:</strong> The Knapsack Problem involves filling a knapsack of limited capacity with items to maximize the total value. The key difference lies in the divisibility of the items.</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>In the <strong>Fractional Knapsack Problem</strong>, we can take fractions of items (e.g., take 2.5 kg of a 4 kg gold dust item). For this, the greedy algorithm works by selecting items in decreasing order of their value-to-weight ratio until the knapsack is full, potentially taking a fraction of the last item.</li>
+                    <li>Conversely, the <strong>0/1 Knapsack Problem</strong> requires us to either take the entire item or leave it (0 or 1), no fractions allowed. Here, the greedy approach fails because a locally optimal choice (taking an item with a high value-to-weight ratio) might leave insufficient space to accommodate an extremely valuable, though less density-efficient, item later. Therefore, 0/1 Knapsack requires the more complex Dynamic Programming approach.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-purple-800 mb-4">Long Answer Questions</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Generate codes using Huffman Coding Technique for the following Data Set: <br>
+            Characters: A, B, C, D, E, F <br>
+            Frequency: 8, 5, 10, 3, 7, 4</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Constructing the Huffman Tree</strong></p>
+                <p>The Huffman tree is constructed using a min-priority queue (or min-heap) of the characters, sorted by their frequency.</p>
+                
+                <p><strong>Steps:</strong></p>
+                <ol>
+                    <li><strong>Start:</strong> Treat each character as a leaf node with its frequency. <br>
+                    Nodes: A(8), B(5), C(10), D(3), E(7), F(4)</li>
+                    <li><strong>Combine the two lowest frequency nodes:</strong> <br>
+                    Lowest: D(3) and F(4). Combine them into a new parent node DF(7). <br>
+                    Nodes: A(8), B(5), C(10), E(7), DF(7)</li>
+                    <li><strong>Combine the two lowest frequency nodes:</strong> <br>
+                    Lowest: B(5) and E(7). (Note: DF(7) is also low, but B(5) is the second lowest). Combine them into a new parent node BE(12). <br>
+                    Nodes: A(8), C(10), DF(7), BE(12)</li>
+                    <li><strong>Combine the two lowest frequency nodes:</strong> <br>
+                    Lowest: DF(7) and A(8). Combine them into a new parent node DFA(15). <br>
+                    Nodes: C(10), BE(12), DFA(15)</li>
+                    <li><strong>Combine the two lowest frequency nodes:</strong> <br>
+                    Lowest: C(10) and BE(12). Combine them into a new parent node CBE(22). <br>
+                    Nodes: DFA(15), CBE(22)</li>
+                    <li><strong>Combine the final two nodes:</strong> <br>
+                    Combine DFA(15) and CBE(22) into the Root node DFA+CBE(37).</li>
+                </ol>
+                <p><strong>Tree Structure Rule:</strong> Assign 0 to the left branch. Assign 1 to the right branch.</p>
+                
+                <p><strong>Generating Huffman Codes:</strong> The code for each character is found by traversing from the root to the leaf node, collecting the 0s and 1s along the path.</p>
+                <table>
+                    <tr><th>Character</th><th>Path from Root</th><th>Huffman Code</th></tr>
+                    <tr><td>A</td><td>Root -> DFA -> A</td><td>101</td></tr>
+                    <tr><td>B</td><td>Root -> CBE -> BE -> B</td><td>010</td></tr>
+                    <tr><td>C</td><td>Root -> CBE -> C</td><td>00</td></tr>
+                    <tr><td>D</td><td>Root -> DFA -> DF -> D</td><td>110</td></tr>
+                    <tr><td>E</td><td>Root -> CBE -> BE -> E</td><td>011</td></tr>
+                    <tr><td>F</td><td>Root -> DFA -> DF -> F</td><td>111</td></tr>
+                </table>
+                <p><strong>Observation:</strong> The most frequent character, C (10), has the shortest code, 00 (2 bits). The least frequent characters, D (3) and F (4), have the longest codes, 110 and 111 (3 bits). This demonstrates the compression benefit.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: You are given four Jobs as per the below given data. Apply Job Scheduling Method to maximize the profit with deadline. <br>
+            Jobs: J1(d=2, p=30), J2(d=1, p=25), J3(d=3, p=40), J4(d=2, p=35), J5(d=1, p=20)</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Step 1: Sort by Profit (Descending)</strong></p>
+                <table>
+                    <tr><th>Job</th><th>Profit (p)</th><th>Deadline (d)</th></tr>
+                    <tr><td>J3</td><td>40</td><td>3</td></tr>
+                    <tr><td>J4</td><td>35</td><td>2</td></tr>
+                    <tr><td>J1</td><td>30</td><td>2</td></tr>
+                    <tr><td>J2</td><td>25</td><td>1</td></tr>
+                    <tr><td>J5</td><td>20</td><td>1</td></tr>
+                </table>
+
+                <p><strong>Step 2: Determine Schedule Size</strong></p>
+                <p>The maximum deadline in the sorted list is d_max = 3. This means we have 3 available time slots: Slot 1, Slot 2, and Slot 3. We use an array to represent the schedule: Schedule[1...3].</p>
+
+                <p><strong>Step 3: Build the Schedule</strong></p>
+                <ol>
+                    <li>Process J3 (Profit 40, Deadline 3): Latest slot available is 3. Schedule J3 at Slot 3. Schedule=[_, _, J3]. Total Profit = 40.</li>
+                    <li>Process J4 (Profit 35, Deadline 2): Latest slot available is 2. Schedule J4 at Slot 2. Schedule=[_, J4, J3]. Total Profit = 40+35=75.</li>
+                    <li>Process J1 (Profit 30, Deadline 2): Latest slot available is 1 (Slot 2 and 3 are taken). Schedule J1 at Slot 1. Schedule=[J1, J4, J3]. Total Profit = 75+30=105.</li>
+                    <li>Process J2 (Profit 25, Deadline 1): Latest slot available is 1. Slot 1 is already taken. J2 is rejected.</li>
+                    <li>Process J5 (Profit 20, Deadline 1): Latest slot available is 1. Slot 1 is already taken. J5 is rejected.</li>
+                </ol>
+
+                <p><strong>Final Solution:</strong></p>
+                <p>Optimal Sequence (Execution Order): J1 → J4 → J3</p>
+                <p>Maximum Total Profit: 30 + 35 + 40 = 105.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Implement the Kruskal Algorithm for finding minimum spanning tree in C/C++/Java/Python.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <div class="code-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" onclick="openTab(event, 'kruskal-cpp')">C++</button>
+                        <button class="tab-btn" onclick="openTab(event, 'kruskal-java')">Java</button>
+                        <button class="tab-btn" onclick="openTab(event, 'kruskal-python')">Python</button>
+                    </div>
+                    
+                    <div id="kruskal-cpp" class="tab-content active">
+<pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+struct Edge {
+    int src, dest, weight;
+};
+
+struct Graph {
+    int V, E;
+    vector&lt;Edge&gt; edges;
+};
+
+struct Subset {
+    int parent, rank;
+};
+
+int find(vector&lt;Subset&gt;&amp; subsets, int i) {
+    if (subsets[i].parent != i)
+        subsets[i].parent = find(subsets, subsets[i].parent);
+    return subsets[i].parent;
+}
+
+void Union(vector&lt;Subset&gt;&amp; subsets, int x, int y) {
+    int xroot = find(subsets, x);
+    int yroot = find(subsets, y);
+    
+    if (subsets[xroot].rank &lt; subsets[yroot].rank)
+        subsets[xroot].parent = yroot;
+    else if (subsets[xroot].rank &gt; subsets[yroot].rank)
+        subsets[yroot].parent = xroot;
+    else {
+        subsets[yroot].parent = xroot;
+        subsets[xroot].rank++;
+    }
+}
+
+bool compareEdges(Edge a, Edge b) {
+    return a.weight &lt; b.weight;
+}
+
+void KruskalMST(Graph&amp; graph) {
+    vector&lt;Edge&gt; result;
+    sort(graph.edges.begin(), graph.edges.end(), compareEdges);
+    
+    vector&lt;Subset&gt; subsets(graph.V);
+    for (int i = 0; i &lt; graph.V; i++) {
+        subsets[i].parent = i;
+        subsets[i].rank = 0;
+    }
+    
+    int e = 0, i = 0;
+    while (e &lt; graph.V - 1 &amp;&amp; i &lt; graph.E) {
+        Edge next_edge = graph.edges[i++];
+        int x = find(subsets, next_edge.src);
+        int y = find(subsets, next_edge.dest);
+        
+        if (x != y) {
+            result.push_back(next_edge);
+            Union(subsets, x, y);
+            e++;
+        }
+    }
+    
+    cout &lt;&lt; "Edges in MST:\n";
+    int totalWeight = 0;
+    for (auto edge : result) {
+        cout &lt;&lt; edge.src &lt;&lt; " -- " &lt;&lt; edge.dest &lt;&lt; " == " &lt;&lt; edge.weight &lt;&lt; endl;
+        totalWeight += edge.weight;
+    }
+    cout &lt;&lt; "Total weight: " &lt;&lt; totalWeight &lt;&lt; endl;
+}
+
+int main() {
+    Graph graph;
+    graph.V = 4;
+    graph.E = 5;
+    graph.edges = {{0, 1, 10}, {0, 2, 6}, {0, 3, 5}, {1, 3, 15}, {2, 3, 4}};
+    
+    KruskalMST(graph);
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div id="kruskal-java" class="tab-content">
+<pre><code>import java.util.*;
+
+class Edge implements Comparable&lt;Edge&gt; {
+    int src, dest, weight;
+    
+    public int compareTo(Edge other) {
+        return this.weight - other.weight;
+    }
+}
+
+class Subset {
+    int parent, rank;
+}
+
+public class KruskalAlgorithm {
+    int V, E;
+    Edge[] edges;
+    
+    KruskalAlgorithm(int v, int e) {
+        V = v;
+        E = e;
+        edges = new Edge[e];
+        for (int i = 0; i &lt; e; i++)
+            edges[i] = new Edge();
+    }
+    
+    int find(Subset[] subsets, int i) {
+        if (subsets[i].parent != i)
+            subsets[i].parent = find(subsets, subsets[i].parent);
+        return subsets[i].parent;
+    }
+    
+    void union(Subset[] subsets, int x, int y) {
+        int xroot = find(subsets, x);
+        int yroot = find(subsets, y);
+        
+        if (subsets[xroot].rank &lt; subsets[yroot].rank)
+            subsets[xroot].parent = yroot;
+        else if (subsets[xroot].rank &gt; subsets[yroot].rank)
+            subsets[yroot].parent = xroot;
+        else {
+            subsets[yroot].parent = xroot;
+            subsets[xroot].rank++;
+        }
+    }
+    
+    void KruskalMST() {
+        Edge[] result = new Edge[V];
+        int e = 0, i = 0;
+        
+        for (i = 0; i &lt; V; i++)
+            result[i] = new Edge();
+        
+        Arrays.sort(edges);
+        
+        Subset[] subsets = new Subset[V];
+        for (i = 0; i &lt; V; i++) {
+            subsets[i] = new Subset();
+            subsets[i].parent = i;
+            subsets[i].rank = 0;
+        }
+        
+        i = 0;
+        while (e &lt; V - 1) {
+            Edge next_edge = edges[i++];
+            int x = find(subsets, next_edge.src);
+            int y = find(subsets, next_edge.dest);
+            
+            if (x != y) {
+                result[e++] = next_edge;
+                union(subsets, x, y);
+            }
+        }
+        
+        System.out.println("Edges in MST:");
+        int totalWeight = 0;
+        for (i = 0; i &lt; e; i++) {
+            System.out.println(result[i].src + " -- " + result[i].dest + " == " + result[i].weight);
+            totalWeight += result[i].weight;
+        }
+        System.out.println("Total weight: " + totalWeight);
+    }
+    
+    public static void main(String[] args) {
+        int V = 4, E = 5;
+        KruskalAlgorithm graph = new KruskalAlgorithm(V, E);
+        
+        graph.edges[0].src = 0; graph.edges[0].dest = 1; graph.edges[0].weight = 10;
+        graph.edges[1].src = 0; graph.edges[1].dest = 2; graph.edges[1].weight = 6;
+        graph.edges[2].src = 0; graph.edges[2].dest = 3; graph.edges[2].weight = 5;
+        graph.edges[3].src = 1; graph.edges[3].dest = 3; graph.edges[3].weight = 15;
+        graph.edges[4].src = 2; graph.edges[4].dest = 3; graph.edges[4].weight = 4;
+        
+        graph.KruskalMST();
+    }
+}</code></pre>
+                    </div>
+                    
+                    <div id="kruskal-python" class="tab-content">
+<pre><code>class Graph:
+    def __init__(self, vertices):
+        self.V = vertices
+        self.edges = []
+    
+    def add_edge(self, u, v, w):
+        self.edges.append([u, v, w])
+    
+    def find(self, parent, i):
+        if parent[i] != i:
+            parent[i] = self.find(parent, parent[i])
+        return parent[i]
+    
+    def union(self, parent, rank, x, y):
+        xroot = self.find(parent, x)
+        yroot = self.find(parent, y)
+        
+        if rank[xroot] &lt; rank[yroot]:
+            parent[xroot] = yroot
+        elif rank[xroot] &gt; rank[yroot]:
+            parent[yroot] = xroot
+        else:
+            parent[yroot] = xroot
+            rank[xroot] += 1
+    
+    def kruskal_mst(self):
+        result = []
+        i, e = 0, 0
+        
+        self.edges = sorted(self.edges, key=lambda item: item[2])
+        
+        parent = []
+        rank = []
+        
+        for node in range(self.V):
+            parent.append(node)
+            rank.append(0)
+        
+        while e &lt; self.V - 1:
+            u, v, w = self.edges[i]
+            i += 1
+            x = self.find(parent, u)
+            y = self.find(parent, v)
+            
+            if x != y:
+                e += 1
+                result.append([u, v, w])
+                self.union(parent, rank, x, y)
+        
+        print("Edges in MST:")
+        total_weight = 0
+        for u, v, weight in result:
+            print(f"{u} -- {v} == {weight}")
+            total_weight += weight
+        print(f"Total weight: {total_weight}")
+
+# Example usage
+g = Graph(4)
+g.add_edge(0, 1, 10)
+g.add_edge(0, 2, 6)
+g.add_edge(0, 3, 5)
+g.add_edge(1, 3, 15)
+g.add_edge(2, 3, 4)
+
+g.kruskal_mst()</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 4: Implement the Job Scheduling Algorithm in C/C++/Java/Python.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <div class="code-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" onclick="openTab(event, 'job-cpp')">C++</button>
+                        <button class="tab-btn" onclick="openTab(event, 'job-java')">Java</button>
+                        <button class="tab-btn" onclick="openTab(event, 'job-python')">Python</button>
+                    </div>
+                    
+                    <div id="job-cpp" class="tab-content active">
+<pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+struct Job {
+    char id;
+    int deadline;
+    int profit;
+};
+
+bool comparison(Job a, Job b) {
+    return a.profit &gt; b.profit;
+}
+
+void jobScheduling(vector&lt;Job&gt;&amp; jobs, int n) {
+    sort(jobs.begin(), jobs.end(), comparison);
+    
+    int maxDeadline = 0;
+    for (int i = 0; i &lt; n; i++)
+        maxDeadline = max(maxDeadline, jobs[i].deadline);
+    
+    vector&lt;char&gt; result(maxDeadline, '-');
+    vector&lt;bool&gt; slot(maxDeadline, false);
+    
+    int totalProfit = 0;
+    
+    for (int i = 0; i &lt; n; i++) {
+        for (int j = min(maxDeadline, jobs[i].deadline) - 1; j &gt;= 0; j--) {
+            if (!slot[j]) {
+                result[j] = jobs[i].id;
+                slot[j] = true;
+                totalProfit += jobs[i].profit;
+                break;
+            }
+        }
+    }
+    
+    cout &lt;&lt; "Job Sequence: ";
+    for (int i = 0; i &lt; maxDeadline; i++) {
+        if (result[i] != '-')
+            cout &lt;&lt; result[i] &lt;&lt; " ";
+    }
+    cout &lt;&lt; "\nMaximum Profit: " &lt;&lt; totalProfit &lt;&lt; endl;
+}
+
+int main() {
+    vector&lt;Job&gt; jobs = {
+        {'J1', 2, 30},
+        {'J2', 1, 25},
+        {'J3', 3, 40},
+        {'J4', 2, 35},
+        {'J5', 1, 20}
+    };
+    
+    jobScheduling(jobs, jobs.size());
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div id="job-java" class="tab-content">
+<pre><code>import java.util.*;
+
+class Job {
+    char id;
+    int deadline, profit;
+    
+    Job(char id, int deadline, int profit) {
+        this.id = id;
+        this.deadline = deadline;
+        this.profit = profit;
+    }
+}
+
+public class JobScheduling {
+    static void jobScheduling(Job[] jobs, int n) {
+        Arrays.sort(jobs, (a, b) -&gt; b.profit - a.profit);
+        
+        int maxDeadline = 0;
+        for (int i = 0; i &lt; n; i++)
+            maxDeadline = Math.max(maxDeadline, jobs[i].deadline);
+        
+        char[] result = new char[maxDeadline];
+        boolean[] slot = new boolean[maxDeadline];
+        
+        Arrays.fill(result, '-');
+        
+        int totalProfit = 0;
+        
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = Math.min(maxDeadline - 1, jobs[i].deadline - 1); j &gt;= 0; j--) {
+                if (!slot[j]) {
+                    result[j] = jobs[i].id;
+                    slot[j] = true;
+                    totalProfit += jobs[i].profit;
+                    break;
+                }
+            }
+        }
+        
+        System.out.print("Job Sequence: ");
+        for (int i = 0; i &lt; maxDeadline; i++) {
+            if (result[i] != '-')
+                System.out.print(result[i] + " ");
+        }
+        System.out.println("\nMaximum Profit: " + totalProfit);
+    }
+    
+    public static void main(String[] args) {
+        Job[] jobs = {
+            new Job('A', 2, 30),
+            new Job('B', 1, 25),
+            new Job('C', 3, 40),
+            new Job('D', 2, 35),
+            new Job('E', 1, 20)
+        };
+        
+        jobScheduling(jobs, jobs.length);
+    }
+}</code></pre>
+                    </div>
+                    
+                    <div id="job-python" class="tab-content">
+<pre><code>class Job:
+    def __init__(self, job_id, deadline, profit):
+        self.id = job_id
+        self.deadline = deadline
+        self.profit = profit
+
+def job_scheduling(jobs, n):
+    # Sort jobs by profit in descending order
+    jobs.sort(key=lambda x: x.profit, reverse=True)
+    
+    # Find maximum deadline
+    max_deadline = max(job.deadline for job in jobs)
+    
+    # Initialize result and slot arrays
+    result = ['-'] * max_deadline
+    slot = [False] * max_deadline
+    
+    total_profit = 0
+    
+    # Iterate through all jobs
+    for job in jobs:
+        # Find a free slot for this job (starting from the last possible slot)
+        for j in range(min(max_deadline - 1, job.deadline - 1), -1, -1):
+            if not slot[j]:
+                result[j] = job.id
+                slot[j] = True
+                total_profit += job.profit
+                break
+    
+    print("Job Sequence:", end=" ")
+    for job_id in result:
+        if job_id != '-':
+            print(job_id, end=" ")
+    print(f"\nMaximum Profit: {total_profit}")
+
+# Example usage
+jobs = [
+    Job('J1', 2, 30),
+    Job('J2', 1, 25),
+    Job('J3', 3, 40),
+    Job('J4', 2, 35),
+    Job('J5', 1, 20)
+]
+
+job_scheduling(jobs, len(jobs))</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    </div>
+
+    <script>
+    function openTab(evt, tabName) {
+        var i, tabContent, tabBtns;
+        
+        // Get all elements with class="tab-content" and hide them
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].classList.remove("active");
+        }
+        
+        // Get all elements with class="tab-btn" and remove the class "active"
+        tabBtns = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
+        
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-purple-900 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2025 MCA Study Portal | Happy Learning! 🎓</p>
+            <p class="mb-2">Developed by - <a href="../Developer.html" class="underline font-semibold hover:text-purple-300">Satyam Sharma</a></p>
+            <p>
+                <a href="../Developer.html" class="underline hover:text-purple-300">Email: satyamxwork@gmail.com</a> | 
+                <a href="../Developer.html" class="underline hover:text-purple-300">Mob: 6264616250</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

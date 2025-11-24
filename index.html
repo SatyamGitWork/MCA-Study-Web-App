@@ -99,6 +99,92 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
+        .portfolio-card {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+        }
+
+        .portfolio-card h2 {
+            color: white;
+            border-bottom: 3px solid white;
+        }
+
+        .portfolio-card p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .portfolio-button {
+            display: block;
+            padding: 15px 20px;
+            background: white;
+            color: #19547b;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .portfolio-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .portfolio-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .portfolio-banner:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .portfolio-banner-content {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .portfolio-banner h3 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .portfolio-banner p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+            margin: 0;
+        }
+
+        .portfolio-banner-button {
+            background: white;
+            color: #667eea;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .portfolio-banner-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+        }
+
         .placeholder {
             background: #f0f0f0;
             color: #999;
@@ -134,6 +220,15 @@
             <p>Your comprehensive resource hub for MCA courses</p>
         </header>
 
+        <!-- Portfolio Banner -->
+        <div class="portfolio-banner">
+            <div class="portfolio-banner-content">
+                <h3>👨‍💻 Developer Portfolio</h3>
+                <p>Explore my projects, skills, and professional journey</p>
+            </div>
+            <a href="Developer.html" class="portfolio-banner-button">View Portfolio →</a>
+        </div>
+
         <div class="subjects-grid">
             <!-- Full Stack Section -->
             <div class="subject-card">
@@ -164,16 +259,23 @@
             <div class="subject-card">
                 <h2>⚡ Algorithm &amp; Design (ADA)</h2>
                 <p>Deep dive into algorithm design, analysis, and optimization techniques.</p>
-                <div class="placeholder">
-                    Content coming soon...
-                </div>
+                <ul class="units-list">
+                    <li><a href="ADA/Unit1.html">Unit 1</a></li>
+                    <li><a href="ADA/Unit2.html">Unit 2</a></li>
+                    <li><a href="ADA/Unit3.html">Unit 3</a></li>
+                    <li><a href="ADA/Unit4.html">Unit 4</a></li>
+                    <li><a href="ADA/Unit5.html">Unit 5</a></li>
+                </ul>
             </div>
         </div>
 
         <footer>
             <p>&copy; 2025 MCA Study Portal | Happy Learning! 🎓 </p>
-            <p>Developed by - Satyam Sharma</p>
-            <p>Email: satyamxwork@gmail.com | Mob: 6264616250</p>
+            <p>Developed by - <a href="Developer.html" style="color: white; text-decoration: underline; font-weight: bold;">Satyam Sharma</a></p>
+            <p>
+                <a href="Developer.html" style="color: white; text-decoration: underline;">Email: satyamxwork@gmail.com</a> | 
+                <a href="Developer.html" style="color: white; text-decoration: underline;">Mob: 6264616250</a>
+            </p>
             <!-- <p>Donate If you find this resource helpful!</p> -->
         </footer>
     </div>

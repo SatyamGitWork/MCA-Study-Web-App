@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: Analysis of Algorithms - ADA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-purple-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <a href="../index.html" class="inline-block mb-4 text-purple-700 hover:text-purple-900 font-medium">
+                ← Back to Home
+            </a>
+            <h1 class="text-2xl font-bold text-purple-700 mb-2">ADA Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">Unit 1: Analysis of Algorithms</p>
+            <ul class="space-y-2">
+                <li><a href="Unit1.html" class="block px-4 py-2 rounded-lg font-medium bg-purple-100 text-purple-700">Unit 1</a></li>
+                <li><a href="Unit2.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 2</a></li>
+                <li><a href="Unit3.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 3</a></li>
+                <li><a href="Unit4.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 4</a></li>
+                <li><a href="Unit5.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 5</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h1 class="text-3xl font-bold text-purple-800 mb-2">Unit 1</h1>
+                <p class="text-lg text-gray-600">Recurrence Relations & Asymptotic Notation</p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">Short Answer Questions</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Define a recurrence relation and describe how the substitution method is used to solve it. Provide a step-by-step explanation using a simple example, such as T(n)=T(n-1)+1, and identify its Big O complexity.</div>
+                <div class="text-gray-700 space-y-3">
+                    <p><strong>Answer:</strong> A recurrence relation is an equation that defines a function in terms of its value on smaller inputs. The substitution method is a technique for solving a recurrence by guessing a solution and then proving the guess correct using mathematical induction.</p>
+                    <p>First, we guess the solution's form, for instance, for T(n)=T(n-1)+1 a reasonable guess is T(n)=O(n).</p>
+                    <p>Next, we assume our guess holds for smaller values, i.e., T(k)≤ ck for all k&lt;n. We then substitute this assumption back into the recurrence to show that it holds for n as well.</p>
+                    <p>So, T(n)=T(n-1)+1 ≤ c(n-1)+1 = cn-c+1.</p>
+                    <p>To complete the proof, we must show that cn-c+1 ≤ cn, which is true if c≥1. Since we found a constant c for which the inequality holds, our guess is correct.</p>
+                    <p>Therefore, the solution for T(n)=T(n-1)+1 is O(n), indicating a linear time complexity.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Explain the fundamental purpose of analyzing algorithms. Why is asymptotic notation, such as Big O, Big Omega, and Big Theta, a more practical and powerful tool for this analysis than measuring exact running time?</div>
+                <div class="text-gray-700 space-y-3">
+                    <p><strong>Answer:</strong> The primary purpose of algorithm analysis is to predict an algorithm's resource requirements, primarily time and space complexity, as a function of its input size. Instead of measuring the exact runtime on a specific machine, which is affected by factors like processor speed, compiler optimization, and programming language, we seek a more general measure of efficiency. This is where asymptotic notation becomes indispensable. It allows us to abstract away these hardware- and software-specific details and focus on the algorithm's intrinsic growth rate.</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Big O (O):</strong> provides an upper bound, representing the worst-case scenario.</li>
+                        <li><strong>Big Omega (Ω):</strong> provides a lower bound, representing the best-case performance.</li>
+                        <li><strong>Big Theta (Θ):</strong> provides a tight bound, capturing the exact growth rate for both the upper and lower limits.</li>
+                    </ul>
+                    <p>By using this notation, we can compare the efficiency of two different algorithms on a universal scale, predicting which one will perform better as the input size becomes very large.</p>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-purple-800 mb-4 mt-8">Long Answer Questions</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Analyze the time complexity of the Merge Sort algorithm, which is an example of the Divide-and-Conquer paradigm. Formulate the Recurrence Relation that describes its running time, and then apply the Master Theorem to solve this recurrence and determine its asymptotic tight bound (Theta). Explain the conditions under which the Master Theorem is applicable and why its result is preferred over an exact solution.</div>
+                <div class="text-gray-700 space-y-3">
+                    <p><strong>Answer:</strong> Merge Sort is a classic Divide-and-Conquer algorithm that recursively divides an array into two halves, sorts them, and then merges the sorted halves.</p>
+                    
+                    <p><strong>Recurrence Relation:</strong></p>
+                    <p>The running time T(n) of Merge Sort can be expressed as:</p>
+                    <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li><strong>Divide:</strong> Splitting the array takes constant time O(1)</li>
+                        <li><strong>Conquer:</strong> Recursively sort two subarrays of size n/2, taking 2T(n/2) time</li>
+                        <li><strong>Combine:</strong> Merging two sorted arrays takes O(n) time</li>
+                    </ul>
+                    <p>This gives us the recurrence: <strong>T(n) = 2T(n/2) + O(n)</strong>, with base case T(1) = O(1)</p>
+
+                    <p><strong>Applying the Master Theorem:</strong></p>
+                    <p>The Master Theorem solves recurrences of the form T(n) = aT(n/b) + f(n), where:</p>
+                    <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li>a = 2 (number of subproblems)</li>
+                        <li>b = 2 (factor by which problem size is reduced)</li>
+                        <li>f(n) = O(n) (work done outside recursive calls)</li>
+                    </ul>
+                    <p>We compare f(n) with n<sup>log<sub>b</sub>a</sup> = n<sup>log₂2</sup> = n<sup>1</sup> = n</p>
+                    <p>Since f(n) = Θ(n<sup>log<sub>b</sub>a</sup>), we apply <strong>Case 2 of the Master Theorem</strong>:</p>
+                    <p><strong>T(n) = Θ(n<sup>log<sub>b</sub>a</sup> log n) = Θ(n log n)</strong></p>
+
+                    <p><strong>Why Master Theorem is Preferred:</strong></p>
+                    <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li>Provides a quick, rigorous solution without tedious expansion</li>
+                        <li>Gives asymptotic bounds which are sufficient for algorithm comparison</li>
+                        <li>Eliminates need for exact constant factors which vary by implementation</li>
+                        <li>Focuses on scalability rather than machine-dependent measurements</li>
+                    </ul>
+                    <p>The Master Theorem is applicable when the recurrence has the form T(n) = aT(n/b) + f(n) with a ≥ 1, b > 1, and f(n) is asymptotically positive.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Critically discuss the three principal types of Asymptotic Notation—Big O, Big Omega and Big Theta. Define each notation mathematically and explain their unique purpose in the analysis of algorithms. Provide an example of a Standard Notation function that fits both O(n²) and Omega(n²), thus making its tight bound Theta(n²).</div>
+                <div class="text-gray-700 space-y-3">
+                    <p>The three principal types of asymptotic notation provide a rigorous way to describe the growth rate of an algorithm's running time f(n) relative to a comparison function g(n).</p>
+                    <ul class="list-disc list-inside space-y-1 ml-4">
+                        <li><strong>Big O notation</strong>, denoted O(g(n)), gives the asymptotic upper bound; f(n)=O(g(n)) if there exist positive constants c and n₀ such that 0 ≤ f(n) ≤ cg(n) for all n ≥ n₀. It represents the algorithm's worst-case running time.</li>
+                        <li><strong>Big Omega notation</strong>, Ω(g(n)), provides the asymptotic lower bound; f(n)=Ω(g(n)) if there exist positive constants c and n₀ such that 0 ≤ cg(n) ≤ f(n) for all n ≥ n₀. This describes the algorithm's best-case running time.</li>
+                        <li><strong>Big Theta notation</strong>, Θ(g(n)), defines the asymptotic tight bound; f(n)=Θ(g(n)) if f(n) is both O(g(n)) and Ω(g(n)), meaning f(n) is bounded both above and below by constant multiples of g(n).</li>
+                    </ul>
+                    <p>The unique purpose is to give a precise measure of an algorithm's efficiency, stating that its minimum and maximum running times grow at the same rate.</p>
+                    <p><strong>Example:</strong> An example of a Standard Notation function that fits both O(n²) and Ω(n²) is f(n)=5n² + 100n + 50. For this function, we can clearly say that f(n)=O(n²) because 5n² + 100n + 50 ≤ 6n² for sufficiently large n. Similarly, f(n)=Ω(n²) because 5n² + 100n + 50 ≥ 5n² for all positive n. Since f(n) is bounded both above and below by the same quadratic function n², its tight bound is Θ(n²).</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Give various Big-O cases with examples.</div>
+                <div class="text-gray-700 space-y-4">
+                    <div>
+                        <p class="font-bold text-gray-800">1. Constant Time: O(1)</p>
+                        <p>An algorithm runs in constant time if its runtime is independent of the input size n. No matter how big the input is, it takes the same amount of time. <br><em>Example:</em> Accessing an element in an array by its index. A[5] always takes the same amount of time, regardless of how large the array is.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">2. Logarithmic Time: O(log n)</p>
+                        <p>The runtime grows very slowly. If you double the input size, the time increases by only a constant amount. <br><em>Example:</em> Binary search. Every step, you are cutting the search space in half. The number of steps is the logarithm of the input size.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">3. Linear Time: O(n)</p>
+                        <p>The runtime is directly proportional to the input size n. If you double the input size, the time roughly doubles. <br><em>Example:</em> Finding the maximum element in an unsorted array. You have to look at every single element once.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">4. Log-linear Time: O(n log n)</p>
+                        <p>This is a very common complexity for efficient sorting algorithms. It's a bit slower than linear but much faster than quadratic. <br><em>Example:</em> Merge Sort, Heap Sort.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">5. Quadratic Time: O(n²)</p>
+                        <p>The runtime is proportional to the square of the input size. If you double the input size, the time increases by a factor of four. <br><em>Example:</em> Simple sorting algorithms like Bubble Sort or Selection Sort. They often involve a nested loop, where for each element, you might iterate through the rest of the elements.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">6. Polynomial Time: O(nᵏ)</p>
+                        <p>This is a general category for any algorithm whose runtime is a polynomial function of n, like n², n³, etc. Algorithms in this category are generally considered efficient enough to be practical.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">7. Exponential Time: O(2ⁿ)</p>
+                        <p>The runtime doubles with every single addition to the input size. These algorithms are incredibly slow and become impractical very quickly, even for small values of n. <br><em>Example:</em> Finding all subsets of a set. The number of subsets is 2ⁿ.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-purple-900 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2025 MCA Study Portal | Happy Learning! 🎓</p>
+            <p class="mb-2">Developed by - <a href="../Developer.html" class="underline font-semibold hover:text-purple-300">Satyam Sharma</a></p>
+            <p>
+                <a href="../Developer.html" class="underline hover:text-purple-300">Email: satyamxwork@gmail.com</a> | 
+                <a href="../Developer.html" class="underline hover:text-purple-300">Mob: 6264616250</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 4: Dynamic Programming - ADA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+        
+        /* Code Tabs Styling */
+        .code-tabs {
+            margin: 1rem 0;
+        }
+        
+        .tab-header {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        
+        .tab-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            color: #a855f7;
+            background-color: #faf5ff;
+        }
+        
+        .tab-btn.active {
+            color: #a855f7;
+            border-bottom-color: #a855f7;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-content pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .tab-content code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-purple-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <a href="../index.html" class="inline-block mb-4 text-purple-700 hover:text-purple-900 font-medium">
+                ← Back to Home
+            </a>
+            <h1 class="text-2xl font-bold text-purple-700 mb-2">ADA Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">Unit 4: Dynamic Programming</p>
+            <ul class="space-y-2">
+                <li><a href="Unit1.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 1</a></li>
+                <li><a href="Unit2.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 2</a></li>
+                <li><a href="Unit3.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 3</a></li>
+                <li><a href="Unit4.html" class="block px-4 py-2 rounded-lg font-medium bg-purple-100 text-purple-700">Unit 4</a></li>
+                <li><a href="Unit5.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 5</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h1 class="text-3xl font-bold text-purple-800 mb-2">Unit 4</h1>
+                <p class="text-lg text-gray-600">Dynamic Programming & Backtracking</p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">Short Answer Questions</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Explain the core concept of Dynamic Programming (DP) and the two main properties that problems must exhibit for DP to be an effective solution strategy.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Answer:</strong> Dynamic Programming is a powerful algorithmic technique primarily used for solving complex problems by breaking them down into simpler, overlapping subproblems. It solves each subproblem only once and stores their solutions, typically in a table, to avoid recomputing them later. This systematic approach is often formalized through a recurrence relation.</p>
+                <p>For a problem to be solvable by DP, it must possess two key properties:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li><strong>Optimal Substructure:</strong> meaning the optimal solution to the problem contains optimal solutions to its subproblems.</li>
+                    <li><strong>Overlapping Subproblems:</strong> where the same subproblems are encountered repeatedly during the problem's recursive solution.</li>
+                </ul>
+                <p>A classic application is finding the Longest Common Subsequence.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Briefly describe the problem of Matrix Chain Multiplication and how the Dynamic Programming approach efficiently solves it.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Answer:</strong> The Matrix Chain Multiplication problem involves determining the most efficient order (parenthesization) to multiply a sequence of matrices. Matrix multiplication is associative, meaning the order of operations can change without affecting the result, but the number of scalar multiplications required can vary drastically. The goal is to minimize this total number of scalar multiplications.</p>
+                <p>DP solves this by defining M[i,j] as the minimum cost to multiply matrices Aᵢ through Aⱼ. It applies the optimal substructure property: the minimum cost to multiply Aᵢ...Aⱼ is found by trying every possible split point k (i ≤ k &lt; j) and recursively finding the minimum cost for the subchains Aᵢ...Aₖ and Aₖ₊₁...Aⱼ, then adding the cost of the final multiplication. This bottom-up filling of the M[i,j] table eliminates the overlapping subproblems inherent in a purely recursive solution.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Differentiate between the Backtracking and Branch and Bound search strategies, and name a classic problem solved by each.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><strong>Answer:</strong> Both Backtracking and Branch and Bound are state-space search techniques that explore a tree structure of possible solutions.</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li><strong>Backtracking</strong> is primarily used for solving constraint satisfaction problems (like finding a solution), where the goal is to build a solution incrementally, and if a partial solution violates constraints, the algorithm immediately "backs up" to the previous decision point to try a different path.</li>
+                    <li><strong>Branch and Bound</strong>, on the other hand, is generally used for optimization problems (like finding the best solution), especially in contexts like the Traveling Salesman Problem. It systematically explores the solution space while using a bounding function to estimate the best possible solution achievable from the current node. If the current best estimate is worse than an already found feasible solution, that entire "branch" of the search tree is "pruned" or discarded, potentially saving significant computation.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-purple-800 mb-4">Long Answer Questions</h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Apply DFS on the following graph and Give the sequence and resultant spanning tree.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <p><em>(Refer to graph in original document)</em></p>
+                <p><strong>Answer:</strong> &lt;Refer notes for the solution&gt;</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Implement the MinMax Algorithm in C/C++/Java/Python.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <div class="code-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" onclick="openTab(event, 'minmax-cpp')">C++</button>
+                        <button class="tab-btn" onclick="openTab(event, 'minmax-java')">Java</button>
+                        <button class="tab-btn" onclick="openTab(event, 'minmax-python')">Python</button>
+                    </div>
+                    
+                    <div id="minmax-cpp" class="tab-content active">
+<pre><code>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+using namespace std;
+
+// MinMax Algorithm for Tic-Tac-Toe
+struct Move {
+    int row, col;
+};
+
+char player = 'X', opponent = 'O';
+
+bool isMovesLeft(char board[3][3]) {
+    for (int i = 0; i &lt; 3; i++)
+        for (int j = 0; j &lt; 3; j++)
+            if (board[i][j] == '_')
+                return true;
+    return false;
+}
+
+int evaluate(char board[3][3]) {
+    // Check rows for victory
+    for (int row = 0; row &lt; 3; row++) {
+        if (board[row][0] == board[row][1] &amp;&amp; 
+            board[row][1] == board[row][2]) {
+            if (board[row][0] == player)
+                return +10;
+            else if (board[row][0] == opponent)
+                return -10;
+        }
+    }
+    
+    // Check columns for victory
+    for (int col = 0; col &lt; 3; col++) {
+        if (board[0][col] == board[1][col] &amp;&amp; 
+            board[1][col] == board[2][col]) {
+            if (board[0][col] == player)
+                return +10;
+            else if (board[0][col] == opponent)
+                return -10;
+        }
+    }
+    
+    // Check diagonals for victory
+    if (board[0][0] == board[1][1] &amp;&amp; board[1][1] == board[2][2]) {
+        if (board[0][0] == player)
+            return +10;
+        else if (board[0][0] == opponent)
+            return -10;
+    }
+    
+    if (board[0][2] == board[1][1] &amp;&amp; board[1][1] == board[2][0]) {
+        if (board[0][2] == player)
+            return +10;
+        else if (board[0][2] == opponent)
+            return -10;
+    }
+    
+    return 0; // No winner
+}
+
+int minimax(char board[3][3], int depth, bool isMax) {
+    int score = evaluate(board);
+    
+    if (score == 10) return score - depth;
+    if (score == -10) return score + depth;
+    if (!isMovesLeft(board)) return 0;
+    
+    if (isMax) {
+        int best = INT_MIN;
+        for (int i = 0; i &lt; 3; i++) {
+            for (int j = 0; j &lt; 3; j++) {
+                if (board[i][j] == '_') {
+                    board[i][j] = player;
+                    best = max(best, minimax(board, depth + 1, !isMax));
+                    board[i][j] = '_';
+                }
+            }
+        }
+        return best;
+    } else {
+        int best = INT_MAX;
+        for (int i = 0; i &lt; 3; i++) {
+            for (int j = 0; j &lt; 3; j++) {
+                if (board[i][j] == '_') {
+                    board[i][j] = opponent;
+                    best = min(best, minimax(board, depth + 1, !isMax));
+                    board[i][j] = '_';
+                }
+            }
+        }
+        return best;
+    }
+}
+
+Move findBestMove(char board[3][3]) {
+    int bestVal = INT_MIN;
+    Move bestMove = {-1, -1};
+    
+    for (int i = 0; i &lt; 3; i++) {
+        for (int j = 0; j &lt; 3; j++) {
+            if (board[i][j] == '_') {
+                board[i][j] = player;
+                int moveVal = minimax(board, 0, false);
+                board[i][j] = '_';
+                
+                if (moveVal &gt; bestVal) {
+                    bestMove.row = i;
+                    bestMove.col = j;
+                    bestVal = moveVal;
+                }
+            }
+        }
+    }
+    
+    return bestMove;
+}
+
+int main() {
+    char board[3][3] = {
+        {'X', 'O', 'X'},
+        {'O', 'O', 'X'},
+        {'_', '_', '_'}
+    };
+    
+    Move bestMove = findBestMove(board);
+    cout &lt;&lt; "Best Move: Row = " &lt;&lt; bestMove.row 
+         &lt;&lt; ", Col = " &lt;&lt; bestMove.col &lt;&lt; endl;
+    
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div id="minmax-java" class="tab-content">
+<pre><code>public class MinMaxAlgorithm {
+    static char player = 'X', opponent = 'O';
+    
+    static class Move {
+        int row, col;
+    }
+    
+    static boolean isMovesLeft(char[][] board) {
+        for (int i = 0; i &lt; 3; i++)
+            for (int j = 0; j &lt; 3; j++)
+                if (board[i][j] == '_')
+                    return true;
+        return false;
+    }
+    
+    static int evaluate(char[][] board) {
+        // Check rows
+        for (int row = 0; row &lt; 3; row++) {
+            if (board[row][0] == board[row][1] &amp;&amp; 
+                board[row][1] == board[row][2]) {
+                if (board[row][0] == player)
+                    return +10;
+                else if (board[row][0] == opponent)
+                    return -10;
+            }
+        }
+        
+        // Check columns
+        for (int col = 0; col &lt; 3; col++) {
+            if (board[0][col] == board[1][col] &amp;&amp; 
+                board[1][col] == board[2][col]) {
+                if (board[0][col] == player)
+                    return +10;
+                else if (board[0][col] == opponent)
+                    return -10;
+            }
+        }
+        
+        // Check diagonals
+        if (board[0][0] == board[1][1] &amp;&amp; board[1][1] == board[2][2]) {
+            if (board[0][0] == player)
+                return +10;
+            else if (board[0][0] == opponent)
+                return -10;
+        }
+        
+        if (board[0][2] == board[1][1] &amp;&amp; board[1][1] == board[2][0]) {
+            if (board[0][2] == player)
+                return +10;
+            else if (board[0][2] == opponent)
+                return -10;
+        }
+        
+        return 0;
+    }
+    
+    static int minimax(char[][] board, int depth, boolean isMax) {
+        int score = evaluate(board);
+        
+        if (score == 10) return score - depth;
+        if (score == -10) return score + depth;
+        if (!isMovesLeft(board)) return 0;
+        
+        if (isMax) {
+            int best = Integer.MIN_VALUE;
+            for (int i = 0; i &lt; 3; i++) {
+                for (int j = 0; j &lt; 3; j++) {
+                    if (board[i][j] == '_') {
+                        board[i][j] = player;
+                        best = Math.max(best, minimax(board, depth + 1, !isMax));
+                        board[i][j] = '_';
+                    }
+                }
+            }
+            return best;
+        } else {
+            int best = Integer.MAX_VALUE;
+            for (int i = 0; i &lt; 3; i++) {
+                for (int j = 0; j &lt; 3; j++) {
+                    if (board[i][j] == '_') {
+                        board[i][j] = opponent;
+                        best = Math.min(best, minimax(board, depth + 1, !isMax));
+                        board[i][j] = '_';
+                    }
+                }
+            }
+            return best;
+        }
+    }
+    
+    static Move findBestMove(char[][] board) {
+        int bestVal = Integer.MIN_VALUE;
+        Move bestMove = new Move();
+        bestMove.row = -1;
+        bestMove.col = -1;
+        
+        for (int i = 0; i &lt; 3; i++) {
+            for (int j = 0; j &lt; 3; j++) {
+                if (board[i][j] == '_') {
+                    board[i][j] = player;
+                    int moveVal = minimax(board, 0, false);
+                    board[i][j] = '_';
+                    
+                    if (moveVal &gt; bestVal) {
+                        bestMove.row = i;
+                        bestMove.col = j;
+                        bestVal = moveVal;
+                    }
+                }
+            }
+        }
+        
+        return bestMove;
+    }
+    
+    public static void main(String[] args) {
+        char[][] board = {
+            {'X', 'O', 'X'},
+            {'O', 'O', 'X'},
+            {'_', '_', '_'}
+        };
+        
+        Move bestMove = findBestMove(board);
+        System.out.println("Best Move: Row = " + bestMove.row + 
+                         ", Col = " + bestMove.col);
+    }
+}</code></pre>
+                    </div>
+                    
+                    <div id="minmax-python" class="tab-content">
+<pre><code>import math
+
+player = 'X'
+opponent = 'O'
+
+def is_moves_left(board):
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == '_':
+                return True
+    return False
+
+def evaluate(board):
+    # Check rows
+    for row in range(3):
+        if board[row][0] == board[row][1] == board[row][2]:
+            if board[row][0] == player:
+                return 10
+            elif board[row][0] == opponent:
+                return -10
+    
+    # Check columns
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col]:
+            if board[0][col] == player:
+                return 10
+            elif board[0][col] == opponent:
+                return -10
+    
+    # Check diagonals
+    if board[0][0] == board[1][1] == board[2][2]:
+        if board[0][0] == player:
+            return 10
+        elif board[0][0] == opponent:
+            return -10
+    
+    if board[0][2] == board[1][1] == board[2][0]:
+        if board[0][2] == player:
+            return 10
+        elif board[0][2] == opponent:
+            return -10
+    
+    return 0
+
+def minimax(board, depth, is_max):
+    score = evaluate(board)
+    
+    if score == 10:
+        return score - depth
+    if score == -10:
+        return score + depth
+    if not is_moves_left(board):
+        return 0
+    
+    if is_max:
+        best = -math.inf
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == '_':
+                    board[i][j] = player
+                    best = max(best, minimax(board, depth + 1, not is_max))
+                    board[i][j] = '_'
+        return best
+    else:
+        best = math.inf
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == '_':
+                    board[i][j] = opponent
+                    best = min(best, minimax(board, depth + 1, not is_max))
+                    board[i][j] = '_'
+        return best
+
+def find_best_move(board):
+    best_val = -math.inf
+    best_move = (-1, -1)
+    
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == '_':
+                board[i][j] = player
+                move_val = minimax(board, 0, False)
+                board[i][j] = '_'
+                
+                if move_val &gt; best_val:
+                    best_move = (i, j)
+                    best_val = move_val
+    
+    return best_move
+
+# Example usage
+board = [
+    ['X', 'O', 'X'],
+    ['O', 'O', 'X'],
+    ['_', '_', '_']
+]
+
+best_move = find_best_move(board)
+print(f"Best Move: Row = {best_move[0]}, Col = {best_move[1]}")</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Implement the 8-Queen Problem in C/C++/Java/Python.</div>
+            <div class="text-gray-700 leading-relaxed">
+                <div class="code-tabs">
+                    <div class="tab-header">
+                        <button class="tab-btn active" onclick="openTab(event, 'queen-cpp')">C++</button>
+                        <button class="tab-btn" onclick="openTab(event, 'queen-java')">Java</button>
+                        <button class="tab-btn" onclick="openTab(event, 'queen-python')">Python</button>
+                    </div>
+                    
+                    <div id="queen-cpp" class="tab-content active">
+<pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+#define N 8
+
+void printSolution(vector&lt;vector&lt;int&gt;&gt;&amp; board) {
+    for (int i = 0; i &lt; N; i++) {
+        for (int j = 0; j &lt; N; j++)
+            cout &lt;&lt; (board[i][j] ? "Q " : ". ");
+        cout &lt;&lt; endl;
+    }
+    cout &lt;&lt; endl;
+}
+
+bool isSafe(vector&lt;vector&lt;int&gt;&gt;&amp; board, int row, int col) {
+    // Check this row on left side
+    for (int i = 0; i &lt; col; i++)
+        if (board[row][i])
+            return false;
+    
+    // Check upper diagonal on left side
+    for (int i = row, j = col; i &gt;= 0 &amp;&amp; j &gt;= 0; i--, j--)
+        if (board[i][j])
+            return false;
+    
+    // Check lower diagonal on left side
+    for (int i = row, j = col; j &gt;= 0 &amp;&amp; i &lt; N; i++, j--)
+        if (board[i][j])
+            return false;
+    
+    return true;
+}
+
+bool solveNQUtil(vector&lt;vector&lt;int&gt;&gt;&amp; board, int col) {
+    if (col &gt;= N)
+        return true;
+    
+    for (int i = 0; i &lt; N; i++) {
+        if (isSafe(board, i, col)) {
+            board[i][col] = 1;
+            
+            if (solveNQUtil(board, col + 1))
+                return true;
+            
+            board[i][col] = 0; // Backtrack
+        }
+    }
+    
+    return false;
+}
+
+bool solveNQ() {
+    vector&lt;vector&lt;int&gt;&gt; board(N, vector&lt;int&gt;(N, 0));
+    
+    if (!solveNQUtil(board, 0)) {
+        cout &lt;&lt; "Solution does not exist" &lt;&lt; endl;
+        return false;
+    }
+    
+    printSolution(board);
+    return true;
+}
+
+int main() {
+    cout &lt;&lt; "8-Queen Problem Solution:" &lt;&lt; endl;
+    solveNQ();
+    return 0;
+}</code></pre>
+                    </div>
+                    
+                    <div id="queen-java" class="tab-content">
+<pre><code>public class EightQueen {
+    final static int N = 8;
+    
+    static void printSolution(int[][] board) {
+        for (int i = 0; i &lt; N; i++) {
+            for (int j = 0; j &lt; N; j++)
+                System.out.print(board[i][j] == 1 ? "Q " : ". ");
+            System.out.println();
+        }
+        System.out.println();
+    }
+    
+    static boolean isSafe(int[][] board, int row, int col) {
+        // Check this row on left side
+        for (int i = 0; i &lt; col; i++)
+            if (board[row][i] == 1)
+                return false;
+        
+        // Check upper diagonal on left side
+        for (int i = row, j = col; i &gt;= 0 &amp;&amp; j &gt;= 0; i--, j--)
+            if (board[i][j] == 1)
+                return false;
+        
+        // Check lower diagonal on left side
+        for (int i = row, j = col; j &gt;= 0 &amp;&amp; i &lt; N; i++, j--)
+            if (board[i][j] == 1)
+                return false;
+        
+        return true;
+    }
+    
+    static boolean solveNQUtil(int[][] board, int col) {
+        if (col &gt;= N)
+            return true;
+        
+        for (int i = 0; i &lt; N; i++) {
+            if (isSafe(board, i, col)) {
+                board[i][col] = 1;
+                
+                if (solveNQUtil(board, col + 1))
+                    return true;
+                
+                board[i][col] = 0; // Backtrack
+            }
+        }
+        
+        return false;
+    }
+    
+    static boolean solveNQ() {
+        int[][] board = new int[N][N];
+        
+        if (!solveNQUtil(board, 0)) {
+            System.out.println("Solution does not exist");
+            return false;
+        }
+        
+        printSolution(board);
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("8-Queen Problem Solution:");
+        solveNQ();
+    }
+}</code></pre>
+                    </div>
+                    
+                    <div id="queen-python" class="tab-content">
+<pre><code>N = 8
+
+def print_solution(board):
+    for i in range(N):
+        for j in range(N):
+            print("Q" if board[i][j] == 1 else ".", end=" ")
+        print()
+    print()
+
+def is_safe(board, row, col):
+    # Check this row on left side
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+    
+    # Check upper diagonal on left side
+    i, j = row, col
+    while i &gt;= 0 and j &gt;= 0:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
+    
+    # Check lower diagonal on left side
+    i, j = row, col
+    while j &gt;= 0 and i &lt; N:
+        if board[i][j] == 1:
+            return False
+        i += 1
+        j -= 1
+    
+    return True
+
+def solve_nq_util(board, col):
+    if col &gt;= N:
+        return True
+    
+    for i in range(N):
+        if is_safe(board, i, col):
+            board[i][col] = 1
+            
+            if solve_nq_util(board, col + 1):
+                return True
+            
+            board[i][col] = 0  # Backtrack
+    
+    return False
+
+def solve_nq():
+    board = [[0 for _ in range(N)] for _ in range(N)]
+    
+    if not solve_nq_util(board, 0):
+        print("Solution does not exist")
+        return False
+    
+    print_solution(board)
+    return True
+
+# Example usage
+print("8-Queen Problem Solution:")
+solve_nq()</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    </div>
+
+    <script>
+    function openTab(evt, tabName) {
+        var i, tabContent, tabBtns;
+        
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].classList.remove("active");
+        }
+        
+        tabBtns = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
+        
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-purple-900 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2025 MCA Study Portal | Happy Learning! 🎓</p>
+            <p class="mb-2">Developed by - <a href="../Developer.html" class="underline font-semibold hover:text-purple-300">Satyam Sharma</a></p>
+            <p>
+                <a href="../Developer.html" class="underline hover:text-purple-300">Email: satyamxwork@gmail.com</a> | 
+                <a href="../Developer.html" class="underline hover:text-purple-300">Mob: 6264616250</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

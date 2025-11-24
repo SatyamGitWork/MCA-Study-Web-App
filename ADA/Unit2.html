@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 2: Divide and Conquer - ADA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-purple-50 text-gray-800">
+
+    <div class="flex flex-col lg:flex-row">
+        
+        <nav class="lg:w-1/4 xl:w-1/5 bg-white shadow-lg p-6 lg:p-8 sidebar">
+            <a href="../index.html" class="inline-block mb-4 text-purple-700 hover:text-purple-900 font-medium">
+                ← Back to Home
+            </a>
+            <h1 class="text-2xl font-bold text-purple-700 mb-2">ADA Guide</h1>
+            <p class="text-sm text-gray-600 mb-8">Unit 2: Divide and Conquer</p>
+            <ul class="space-y-2">
+                <li><a href="Unit1.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 1</a></li>
+                <li><a href="Unit2.html" class="block px-4 py-2 rounded-lg font-medium bg-purple-100 text-purple-700">Unit 2</a></li>
+                <li><a href="Unit3.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 3</a></li>
+                <li><a href="Unit4.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 4</a></li>
+                <li><a href="Unit5.html" class="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700">Unit 5</a></li>
+            </ul>
+        </nav>
+
+        <main class="w-full lg:w-3/4 xl:w-4/5 p-6 md:p-10 lg:p-12">
+            
+            <div class="bg-white rounded-lg shadow-md p-6 lg:p-8 mb-8">
+                <h1 class="text-3xl font-bold text-purple-800 mb-2">Unit 2</h1>
+                <p class="text-lg text-gray-600">Divide & Conquer: Merge Sort, Quick Sort, Strassen's Algorithm</p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">Short Answer Questions</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Define the Divide and Conquer paradigm and briefly explain the three main steps involved in its implementation.</div>
+                <div class="text-gray-700 leading-relaxed">
+                    <p><strong>Answer:</strong> The Divide and Conquer paradigm is a powerful problem-solving technique that involves breaking a large problem into smaller, similar subproblems. The core idea is that solving these smaller instances and combining their solutions yields the final solution to the original problem. This technique typically involves three main steps: Divide, Conquer, and Combine.</p>
+                    <ul>
+                        <li>In the <strong>Divide</strong> step, the problem is broken down into one or more smaller subproblems.</li>
+                        <li>The <strong>Conquer</strong> step then recursively solves these subproblems; if a subproblem is small enough, it is solved directly.</li>
+                        <li>Finally, the <strong>Combine</strong> step merges the solutions of the subproblems to get a solution for the original problem instance.</li>
+                    </ul>
+                    <p>Many efficient algorithms, like Merge Sort, Quick Sort, and Strassen's matrix multiplication, are based on this technique.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Compare and contrast the working principles of Quick Sort and Merge Sort, highlighting a key difference in their approach to sorting.</div>
+                <div class="text-gray-700 leading-relaxed">
+                    <p><strong>Answer:</strong> Both Quick Sort and Merge Sort are efficient sorting algorithms that employ the Divide and Conquer paradigm, but they differ significantly in their approach. Quick Sort is an in-place sorting algorithm that works by selecting a pivot element and partitioning the array around it, such that all elements smaller than the pivot come before it, and all greater elements come after. The actual sorting effort is done during the divide (partitioning) phase.</p>
+                    <p>Conversely, Merge Sort divides the unsorted list into n sublists, each containing one element, and then repeatedly merges sublists to produce new sorted sublists until there is only one sorted list. The primary key difference is that Quick Sort's main work is in partitioning (dividing), while Merge Sort's main work is in merging (combining) the sorted sublists.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Explain why Strassen's algorithm is an improvement over the basic divide and conquer matrix multiplication, and state its time complexity.</div>
+                <div class="text-gray-700 leading-relaxed">
+                    <p><strong>Answer:</strong> Strassen's algorithm improves upon the standard Θ(n³) matrix multiplication and the naive Θ(n³) divide-and-conquer approach by cleverly reducing the number of multiplications required. The standard divide-and-conquer method for n x n matrices involves eight recursive calls for the sub-matrices, which maintains the Θ(n³) complexity. Strassen's method, however, uses an algebraic trick to compute the product using only seven recursive matrix multiplications and several additions/subtractions.</p>
+                <p>This reduction in the number of recursive calls is significant in the recurrence relation, T(n)=7T(n/2) + Θ(n²). Consequently, the time complexity of Strassen's algorithm is O(n<sup>log₂7</sup>), which is approximately O(n<sup>2.807</sup>), making it asymptotically faster for sufficiently large matrices.</p>
+            </div>
+        </div>
+
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">Long Answer Questions</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Solve the following matrix multiplication with Strassen method: <br>
+                A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]</div>
+                <div class="text-gray-700 leading-relaxed">
+                    <p><strong>1. Compute the 7 products (M₁ to M₇):</strong></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li>M₁ = (a₁₁+a₂₂)(b₁₁+b₂₂) = (1+4)(5+8) = (5)(13) = 65</li>
+                        <li>M₂ = (a₂₁+a₂₂)b₁₁ = (3+4)(5) = (7)(5) = 35</li>
+                        <li>M₃ = a₁₁(b₁₂-b₂₂) = (1)(6-8) = (1)(-2) = -2</li>
+                        <li>M₄ = a₂₂(b₂₁-b₁₁) = (4)(7-5) = (4)(2) = 8</li>
+                        <li>M₅ = (a₁₁+a₁₂)b₂₂ = (1+2)(8) = (3)(8) = 24</li>
+                        <li>M₆ = (a₂₁-a₁₁)(b₁₁+b₁₂) = (3-1)(5+6) = (2)(11) = 22</li>
+                        <li>M₇ = (a₁₂-a₂₂)(b₂₁+b₂₂) = (2-4)(7+8) = (-2)(15) = -30</li>
+                    </ul>
+
+                    <p><strong>2. Compute the elements of C:</strong></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li>c₁₁ = M₁ + M₄ - M₅ + M₇ = 65 + 8 - 24 + (-30) = 73 - 54 = 19</li>
+                        <li>c₁₂ = M₃ + M₅ = -2 + 24 = 22</li>
+                        <li>c₂₁ = M₂ + M₄ = 35 + 8 = 43</li>
+                        <li>c₂₂ = M₁ - M₂ + M₃ + M₆ = 65 - 35 + (-2) + 22 = 30 - 2 + 22 = 50</li>
+                    </ul>
+
+                    <p><strong>3. Final Result:</strong></p>
+                    <p>C = AB = [[19, 22], [43, 50]]</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Solve the following matrix multiplication with Strassen method: <br>
+                A = [[5, 0], [1, 2]], B = [[3, 4], [6, 1]]</div>
+                <div class="text-gray-700 leading-relaxed">
+                    <p><strong>1. Compute the 7 products (M₁ to M₇):</strong></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li>M₁ = (a₁₁+a₂₂)(b₁₁+b₂₂) = (5+2)(3+1) = (7)(4) = 28</li>
+                        <li>M₂ = (a₂₁+a₂₂)b₁₁ = (1+2)(3) = (3)(3) = 9</li>
+                        <li>M₃ = a₁₁(b₁₂-b₂₂) = (5)(4-1) = (5)(3) = 15</li>
+                        <li>M₄ = a₂₂(b₂₁-b₁₁) = (2)(6-3) = (2)(3) = 6</li>
+                        <li>M₅ = (a₁₁+a₁₂)b₂₂ = (5+0)(1) = (5)(1) = 5</li>
+                        <li>M₆ = (a₂₁-a₁₁)(b₁₁+b₁₂) = (1-5)(3+4) = (-4)(7) = -28</li>
+                        <li>M₇ = (a₁₂-a₂₂)(b₂₁+b₂₂) = (0-2)(6+1) = (-2)(7) = -14</li>
+                    </ul>
+
+                    <p><strong>2. Compute the elements of C:</strong></p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li>c₁₁ = M₁ + M₄ - M₅ + M₇ = 28 + 6 - 5 + (-14) = 34 - 19 = 15</li>
+                        <li>c₁₂ = M₃ + M₅ = 15 + 5 = 20</li>
+                        <li>c₂₁ = M₂ + M₄ = 9 + 6 = 15</li>
+                        <li>c₂₂ = M₁ - M₂ + M₃ + M₆ = 28 - 9 + 15 + (-28) = 43 - 37 = 6</li>
+                    </ul>
+
+                    <p><strong>3. Final Result:</strong></p>
+                    <p>C = [[15, 20], [15, 6]]</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: Derive for the worst case analysis of Merge Sort with example. The worst-case time complexity is O(nlogn).</div>
+                <div class="text-gray-700 leading-relaxed">
+                    <p>To analyze the running time of a recursive algorithm, we use a recurrence relation. This is a mathematical equation that describes the running time of the algorithm in terms of the running time on smaller inputs.</p>
+                    <p>Let T(n) be the running time of Merge Sort on an input array of size n.</p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li><strong>Divide:</strong> The work done to split the array is constant. Let's call it c1.</li>
+                        <li><strong>Conquer:</strong> We recursively call Merge Sort on two subarrays of size n/2. This takes T(n/2) + T(n/2) = 2T(n/2) time.</li>
+                        <li><strong>Combine:</strong> The work done to merge the two sorted subarrays of size n/2 into one array of size n is linear, taking O(n) time. Let's say this is c2n.</li>
+                    </ul>
+                    <p>Putting it all together, we get the recurrence relation: <strong>T(n) = 2T(n/2) + O(n)</strong></p>
+                    <p>For the base case, when the array has only one element (n=1), it's already sorted, so the time taken is constant. We can write this as: T(1) = O(1).</p>
+
+                    <p><strong>Solving the Recurrence Relation</strong></p>
+                    <p>There are a few methods to solve this, but a simple and intuitive way is using a recursion tree.</p>
+                    <ul class="list-disc list-inside ml-4 space-y-1">
+                        <li><strong>Level 0:</strong> The top level represents the initial problem of size n. The work done is cn.</li>
+                        <li><strong>Level 1:</strong> The problem is divided into two subproblems of size n/2. The work done at this level is 2 × c(n/2) = cn.</li>
+                        <li><strong>Level 2:</strong> Each of the two subproblems is further divided. We have four subproblems of size n/4. The work done is 4 × c(n/4) = cn.</li>
+                        <li>...and so on.</li>
+                    </ul>
+                    <p>Notice a pattern: at each level of the recursion tree, the total work done is cn.</p>
+                    <p>Now, how many levels are there? The array size is halved at each step until it reaches a size of 1. <br>
+                    n → n/2 → n/4 → ... → 1 <br>
+                    This is equivalent to asking: n/2ᵏ = 1, where k is the number of levels. n = 2ᵏ => k = log₂n.</p>
+                    <p>So, the recursion tree has log₂n + 1 levels.</p>
+                    <p>The total running time is the sum of the work done at each level: Total time = (Work per level) * (Number of levels)</p>
+                    <p><strong>T(n) = cn × log₂n = O(n log n)</strong></p>
+                    <p>This result is consistent with the Master Theorem, a more formal method for solving such recurrences.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-purple-900 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2025 MCA Study Portal | Happy Learning! 🎓</p>
+            <p class="mb-2">Developed by - <a href="../Developer.html" class="underline font-semibold hover:text-purple-300">Satyam Sharma</a></p>
+            <p>
+                <a href="../Developer.html" class="underline hover:text-purple-300">Email: satyamxwork@gmail.com</a> | 
+                <a href="../Developer.html" class="underline hover:text-purple-300">Mob: 6264616250</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
