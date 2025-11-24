@@ -200,24 +200,63 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="text-lg font-semibold text-purple-700 mb-3">Question 1: Define the complexity classes P and NP, and briefly explain the relationship between them.</div>
             <div class="text-gray-700 leading-relaxed">
-                <p><strong>Answer:</strong> The class P (Polynomial time) includes all decision problems that can be solved by a deterministic Turing machine in polynomial time, meaning an efficient algorithm exists to find the solution. The class NP (Non-deterministic Polynomial time) includes all decision problems for which a potential solution, or "certificate," can be verified in polynomial time by a deterministic Turing machine.</p>
-                <p>Every problem in P is also in NP \((P \subseteq NP)\), because if a problem can be solved quickly, its solution can certainly be verified quickly. The central, unanswered question in computer science is whether \(P=NP\), which essentially asks if problems that are easy to check are also easy to solve.</p>
+                <p><strong>Answer:</strong></p>
+                <p class="mb-3"><strong>Class P (Polynomial Time):</strong> This class contains all decision problems that can be solved by a computer in polynomial time - meaning there's an efficient algorithm that can find the answer. Think of it as the "easy to solve" problems. For example, sorting a list of numbers belongs to class P because we have algorithms like merge sort that can do it efficiently.</p>
+                
+                <p class="mb-3"><strong>Class NP (Non-deterministic Polynomial Time):</strong> This class contains decision problems where, if someone gives you a potential solution, you can verify whether it's correct in polynomial time. Think of it as "easy to check" problems. For example, Sudoku is in NP - while solving it might be hard, checking if a completed Sudoku is correct is easy.</p>
+                
+                <p class="mb-3"><strong>Relationship:</strong> Every problem in P is automatically in NP because if you can solve something quickly, you can definitely check a solution quickly. Mathematically: \(P \subseteq NP\). The million-dollar question is whether \(P = NP\) - does "easy to check" mean "easy to solve"? Most computer scientists believe P ≠ NP, but no one has proven it yet!</p>
+                
+                <div class="bg-blue-50 p-3 rounded-lg mt-3">
+                    <p class="text-sm"><strong>Real-world analogy:</strong> It's like a jigsaw puzzle. Solving it from scratch is hard (NP), but checking if someone completed it correctly is easy (P). We know checking is easier than solving, but the question is: are they fundamentally different or just different approaches to the same thing?</p>
+                </div>
             </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="text-lg font-semibold text-purple-700 mb-3">Question 2: Explain the concepts of Polynomial Reduction and NP-Hardness.</div>
             <div class="text-gray-700 leading-relaxed">
-                <p><strong>Answer:</strong> A Polynomial Reduction (or polynomial-time transformation) is a procedure where an instance of one problem, A, is transformed into an equivalent instance of another problem, B, such that the transformation takes polynomial time. If A can be reduced to B \((A \le_{P} B)\), then B is at least as hard as A.</p>
-                <p>A decision problem H is NP-Hard if every problem in NP can be reduced to H in polynomial time. If an NP-Hard problem H is also in the class NP itself, it is then called NP-Complete (NPC). Proving a problem is NPC requires showing it's in NP and then showing a known NPC problem reduces to it.</p>
+                <p><strong>Answer:</strong></p>
+                
+                <p class="mb-3"><strong>Polynomial Reduction:</strong> This is a way of comparing how hard different problems are. If we can transform problem A into problem B in polynomial time, we say "A reduces to B" (\(A \le_{P} B\)). This means: if we have a solution for B, we automatically have a solution for A. It's like saying "if you can solve B, you can solve A too."</p>
+                
+                <p class="mb-3"><strong>Example:</strong> Imagine you want to know if a number is even. You could reduce this to "is the number divisible by 2?" If you can answer the second question, you've answered the first. The transformation is simple and quick (polynomial time).</p>
+                
+                <p class="mb-3"><strong>NP-Hard Problems:</strong> These are the "toughest problems" in computer science. A problem H is NP-Hard if every single problem in NP can be reduced to H. Essentially, if you could solve any NP-Hard problem efficiently, you could solve all NP problems efficiently. They're at least as hard as the hardest problems in NP.</p>
+                
+                <p class="mb-3"><strong>NP-Complete Problems:</strong> These are NP-Hard problems that are also in NP (meaning solutions can be verified quickly). They're the "sweet spot" - just hard enough to be in the hardest category, but still verifiable. Examples: Traveling Salesman Problem, Graph Coloring, Knapsack Problem.</p>
+                
+                <div class="bg-purple-50 p-3 rounded-lg mt-3">
+                    <p class="text-sm"><strong>Why it matters:</strong> If you prove any NP-Complete problem can be solved in polynomial time, you've proven P = NP and won a million dollars! Conversely, proving one is impossible to solve efficiently proves P ≠ NP.</p>
+                </div>
             </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="text-lg font-semibold text-purple-700 mb-3">Question 3: State Cook's Theorem.</div>
             <div class="text-gray-700 leading-relaxed">
-                <p><strong>Answer:</strong> Cook's Theorem (formally the Cook-Levin Theorem) states that the Satisfiability Problem (SAT) is NP-Complete. SAT is the problem of determining whether the variables of a given Boolean formula can be assigned values (TRUE/FALSE) to make the formula evaluate to TRUE.</p>
-                <p>The theorem's significance is profound because it established the first known NP-Complete problem. By showing that any problem in the complexity class NP can be reduced to SAT in polynomial time, it provided a concrete starting point. Subsequently, all other NP-Complete problems were proven by reduction from SAT.</p>
+                <p><strong>Answer:</strong></p>
+                
+                <p class="mb-3"><strong>Cook's Theorem (Cook-Levin Theorem):</strong> This groundbreaking theorem states that the Boolean Satisfiability Problem (SAT) is NP-Complete. SAT asks: "Given a logical formula with variables that can be TRUE or FALSE, can you assign values to make the entire formula TRUE?"</p>
+                
+                <p class="mb-3"><strong>Example of SAT:</strong> Consider the formula: \((A \lor B) \land (\neg A \lor C)\). Can you make this TRUE by choosing values for A, B, and C? (Answer: Yes - set A=TRUE, B=TRUE, C=TRUE)</p>
+                
+                <p class="mb-3"><strong>Why it's revolutionary:</strong> Cook proved two things:
+                    <ol class="list-decimal list-inside ml-4 mt-2">
+                        <li>SAT is in NP (you can verify solutions quickly)</li>
+                        <li>Every problem in NP can be reduced to SAT in polynomial time</li>
+                    </ol>
+                </p>
+                
+                <p class="mb-3">This made SAT the first known NP-Complete problem. Before Cook, we didn't even know if NP-Complete problems existed! His theorem opened the floodgates - once you have one NP-Complete problem, you can prove others by reducing from it.</p>
+                
+                <div class="bg-green-50 p-3 rounded-lg mt-3">
+                    <p class="text-sm"><strong>Historical impact:</strong> Stephen Cook published this in 1971, earning him the Turing Award (the "Nobel Prize of Computing"). Since then, thousands of problems have been proven NP-Complete by reducing them from SAT or other known NP-Complete problems. It's the foundation of computational complexity theory.</p>
+                </div>
+                
+                <div class="bg-yellow-50 p-3 rounded-lg mt-3">
+                    <p class="text-sm"><strong>Practical meaning:</strong> If you encounter a new problem and prove it's NP-Complete, you know not to waste time looking for a perfect efficient algorithm. Instead, you look for approximations, heuristics, or special cases that work well enough in practice.</p>
+                </div>
             </div>
         </div>
 
